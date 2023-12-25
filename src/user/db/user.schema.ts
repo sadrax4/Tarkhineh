@@ -7,8 +7,8 @@ class OTP {
     @Prop()
     code: number;
 
-    @Prop({ type: Date, default: Date.now() })
-    expireIn: Date
+    @Prop()
+    expireIn: number
 }
 
 @Schema({ _id: false })
@@ -39,11 +39,11 @@ export class User extends AbstractDocument {
     @Prop({ required: true })
     phone: string;
 
-    @Prop({ type: OTP })
-    otp: OTP;
-
     @Prop({ required: true })
     username: string;
+
+    @Prop({ type: OTP })
+    otp: OTP;
 
     @Prop()
     email: string;
