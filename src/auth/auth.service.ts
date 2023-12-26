@@ -4,8 +4,7 @@ import { generateOtpCode } from './utils/generate-otp-code';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/constant/error.constant';
-import { json } from 'stream/consumers';
-import { Response } from 'express';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -16,8 +15,7 @@ export class AuthService {
     async login(loginUserDto: LoginUserDto, response) {
 
     }
-
-    async getOtp(phone: string, response: Response) {
+    async getOtp(phone: string, response: any) {
         const otpCode: number = generateOtpCode();
         const date = new Date()
         const expireIn = date.setSeconds(
@@ -25,6 +23,23 @@ export class AuthService {
         );
         try {
             await this.userService.saveOtp(phone, otpCode, expireIn);
+            const result = await axios.post(
+                "https://rest.payamak-panel.com/api/SendSMS/SendSMS",
+                {
+                    username: this.configService.get('SMS_USERNAME'),
+                    password: this.configService.get('SMS_PASSWORD'),
+                    from: this.configService.get('SMS_CONSUMER'),
+                    to: "09338008554",
+                    text: `ترخینه
+                    کد تایید : ${otpCode}
+                    `
+                }
+            )
+            console.log(result);
+            return response.status(HttpStatus.OK).json({
+                message: "کد با موفقیت ارسال شد",
+                statusCode: HttpStatus.OK
+            })
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
