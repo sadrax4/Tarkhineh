@@ -1,8 +1,8 @@
 import axios from "axios";
 import { ConfigService } from '@nestjs/config'
-import { HttpException, HttpStatus } from "@nestjs/common";
 const configService = new ConfigService()
-export async function SmsPanel(phone: string, otpCode: number): Promise<void> {
+
+export async function SmsPanel(phone: string, otpCode: number , text:string): Promise<void> {
     const result = await axios.post(
         configService.get('SMS_URL'),
         {
@@ -10,9 +10,7 @@ export async function SmsPanel(phone: string, otpCode: number): Promise<void> {
             password: configService.get('SMS_PASSWORD'),
             from: configService.get('SMS_CONSUMER'),
             to: phone,
-            text: `ترخینه
-            کد تایید : ${otpCode}
-            `
+            text
         }
     )
     // if (result.data.Value.length <= 4) {

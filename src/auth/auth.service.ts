@@ -4,9 +4,9 @@ import { generateOtpCode } from './utils/generate-otp-code';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/constant/error.constant';
-import axios from 'axios';
 import { SmsPanel } from './utils/sms-panel';
 import { ResendCodeDto } from './dto/resend-code-dto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +25,10 @@ export class AuthService {
         );
         try {
             await this.userService.saveOtp(phone, otpCode, expireIn);
-            await SmsPanel(phone, otpCode);
+            const text = `ترخینه
+            کد تایید : ${otpCode}
+            `;
+            await SmsPanel(phone, otpCode, text);
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -38,10 +41,28 @@ export class AuthService {
                 HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
-
     }
-    async resendCode({ phone }: ResendCodeDto) {
+    async resendCode(response: Response, { phone }: ResendCodeDto) {
+        try {
+            const user = await this.userService.findUser(phone);
+
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+
         const otpCode: number = generateOtpCode();
-        return await SmsPanel(phone, otpCode);
+        const text = `ترخینه
+            ارسال مجدد : ${otpCode}
+            `;
+        await SmsPanel(phone, otpCode, text);
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "",
+                statusCode: HttpStatus.OK
+            })
     }
 }

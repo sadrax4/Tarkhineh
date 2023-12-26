@@ -37,7 +37,7 @@ export class AuthController {
     @ApiConsumes(MIMETYPE.FORM_URL_ENCODED)
     @ApiResponse({ type: ResponseMessage, status: 200 })
     @Post('resend-code')
-    async resendCode(@Body() resendCodeDto: ResendCodeDto){
-        return this.authService.resendCode(resendCodeDto);
+    async resendCode(@Res() response: Response, @Body() resendCodeDto: ResendCodeDto) {
+        return this.authService.resendCode(response, resendCodeDto);
     }
 }
