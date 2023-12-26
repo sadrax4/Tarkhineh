@@ -6,6 +6,7 @@ import { Response } from 'express';
 import { ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MIMETYPE } from 'src/constant/mimeType.constant';
 import { ResponseMessage } from 'src/constant/api-response';
+import { ResendCodeDto } from './dto/resend-code-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -29,5 +30,10 @@ export class AuthController {
             await this.userService.createUser(loginUserDto)
         }
         return await this.authService.getOtp(loginUserDto.phone, response);
+    }
+
+    @Post('resend-code')
+    async resendCode(@Body() resendCodeDto: ResendCodeDto){
+        return this.authService.resendCode(resendCodeDto);
     }
 }

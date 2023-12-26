@@ -5,6 +5,8 @@ import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/constant/error.constant';
 import axios from 'axios';
+import { SmsPanel } from './utils/sms-panel';
+import { ResendCodeDto } from './dto/resend-code-dto';
 
 @Injectable()
 export class AuthService {
@@ -23,34 +25,23 @@ export class AuthService {
         );
         try {
             await this.userService.saveOtp(phone, otpCode, expireIn);
-            const result = await axios.post(
-                "https://rest.payamak-panel.com/api/SendSMS/SendSMS",
-                {
-                    username: this.configService.get('SMS_USERNAME'),
-                    password: this.configService.get('SMS_PASSWORD'),
-                    from: this.configService.get('SMS_CONSUMER'),
-                    to: "09338008554",
-                    text: `ترخینه
-                    کد تایید : ${otpCode}
-                    `
-                }
-            )
-            console.log(result);
-            return response.status(HttpStatus.OK).json({
-                message: "کد با موفقیت ارسال شد",
-                statusCode: HttpStatus.OK
-            })
+            await SmsPanel(phone, otpCode);
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    message: "کد با موفقیت ارسال شد",
+                    statusCode: HttpStatus.OK
+                })
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
                 HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
-        return response
-            .status(HttpStatus.OK)
-            .json({
-                message: "کد با موفقیت ارسال شد",
-                statusCode: HttpStatus.OK
-            })
+
+    }
+    async resendCode({ phone }: ResendCodeDto) {
+        const otpCode: number = generateOtpCode();
+        return await SmsPanel(phone, otpCode);
     }
 }
