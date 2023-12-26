@@ -28,7 +28,7 @@ export class AuthService {
             const text = `ترخینه
             کد تایید : ${otpCode}
             `;
-            await SmsPanel(phone, otpCode, text);
+            SmsPanel(phone, otpCode, text);
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -52,7 +52,6 @@ export class AuthService {
                 HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
-
         const otpCode: number = generateOtpCode();
         const text = `ترخینه
             ارسال مجدد : ${otpCode}
@@ -61,7 +60,7 @@ export class AuthService {
         return response
             .status(HttpStatus.OK)
             .json({
-                message: "",
+                message: "کد با موفقیت ارسال شد",
                 statusCode: HttpStatus.OK
             })
     }
