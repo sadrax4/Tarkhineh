@@ -13,6 +13,7 @@ async function bootstrap() {
       return new BadRequestException(result[0]);
     }
   }));
+  app.enableCors();
   app.setGlobalPrefix('v1');
   SwaggerInit(app);
   app.enableVersioning({ type: VersioningType.URI })
