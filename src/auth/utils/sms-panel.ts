@@ -13,8 +13,5 @@ export async function SmsPanel(phone: string, otpCode: number , text:string): Pr
             text
         }
     )
-    // if (result.data.Value.length <= 4) {
-    //     throw new HttpException("خطا در ارسال کد", HttpStatus.INTERNAL_SERVER_ERROR)
-    // }
 }
 

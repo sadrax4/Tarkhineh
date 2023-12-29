@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { AbstractDocument } from "libs/database";
-import mongoose from "mongoose";
+import mongoose, { now } from "mongoose";
 
 @Schema({ _id: false })
 class OTP {
@@ -20,16 +20,36 @@ class FavoriteFood {
 }
 
 @Schema({ _id: false })
-class Address {
+class AnotherReceiver {
 
     @Prop({ required: true })
     addressTitle: string;
 
     @Prop({ required: true })
+    description: string;
+
+    @Prop({ required: true })
     phone: string;
 
     @Prop({ required: true })
-    address: string;
+    name: string;
+
+}
+
+@Schema()
+class Address extends AbstractDocument {
+
+    @Prop()
+    addressTitle: string;
+
+    @Prop()
+    description: string;
+
+    @Prop({ required: true })
+    ownReceiver: boolean;
+
+    @Prop({ type: AnotherReceiver })
+    anotherReceiver: AnotherReceiver;
 
 }
 
@@ -57,11 +77,20 @@ export class User extends AbstractDocument {
     @Prop()
     image: string;
 
-    @Prop({ type: Address })
-    address: Address;
+    @Prop({ type: [Address] })
+    address: Address[];
 
     @Prop({ type: FavoriteFood })
     favoriteFood: FavoriteFood;
+
+    @Prop()
+    hashRT: string;
+
+    @Prop({default: now()})
+    createdAt: Date;
+
+    @Prop({default: now()})
+    updatedAt: Date;
 
 }
 export const UserSchema = SchemaFactory.createForClass(User)

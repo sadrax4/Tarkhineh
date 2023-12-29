@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from 'libs/database';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    ProfileModule
   ],
   controllers: [],
   providers: [],
