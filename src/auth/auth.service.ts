@@ -29,7 +29,7 @@ export class AuthService {
             const text = `ترخینه
             کد تایید : ${otpCode}
             `;
-            //SmsPanel(phone, otpCode, text);
+            SmsPanel(phone, otpCode, text);
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -64,14 +64,22 @@ export class AuthService {
         const d = new Date();
         response.cookie(
             'access-token',
-            tokens.accessToken,
-            { httpOnly: true, secure: true, maxAge: (d.getTime() + 1 * 3600 * 1000) }
+            tokens.accessToken, {
+            httpOnly: true,
+            secure: false,
+            maxAge: (d.getTime() + 1 * 3600 * 1000),
+        }
         );
         response.cookie(
             "refresh-token",
             tokens.refreshToken,
-            { httpOnly: true, secure: true, maxAge: (d.getTime() + 3 * 3600 * 24 * 1000) }
+            {
+                httpOnly: true,
+                secure: false,
+                maxAge: (d.getTime() + 3 * 3600 * 24 * 1000),
+            }
         );
+        console.log(response);
         const successMessage = "ورود با موفقیت انجام شد";
         return response
             .status(HttpStatus.OK)

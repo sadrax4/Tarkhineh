@@ -14,10 +14,6 @@ import { User, UserSchema } from './db/user.schema';
   exports: [UserService]
 })
 export class UserModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer
-  //     .apply(SwaggerAddressMiddleware)
-  //     .forRoutes('user');
-  // }
+
 
 }

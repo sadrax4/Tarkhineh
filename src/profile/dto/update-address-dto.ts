@@ -17,8 +17,7 @@ class AnotherReceiver {
     @ApiProperty({ required: false })
     name: string;
 }
-export class CreateAddressDto {
-
+export class UpdateAddressDto {
 
     @ApiProperty({
         title: "enter  title of address",

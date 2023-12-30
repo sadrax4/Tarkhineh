@@ -3,13 +3,13 @@ import { UserService } from '../user/user.service';
 import { CheckOtpDto, LoginUserDto } from './dto';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { ApiBody, ApiConsumes, ApiProduces, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { MIMETYPE } from 'src/common/constant/mimeType.constant';
 import { OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { ResendCodeDto } from './dto/resend-code-dto';
-import { Token } from './types';
 import { JwtGuard, RefreshGuard } from './guards';
-import { GetCurrentUser, GetCurrentUserCookies } from './decorator';
+import {  GetCurrentUserCookies } from './decorator';
+import { GetCurrentUser } from 'src/common/decorators';
 
 @Controller('auth')
 export class AuthController {
@@ -54,7 +54,6 @@ export class AuthController {
         @Body() checkOtpDto: CheckOtpDto,
         @Res() response: Response
     ) {
-        console.log(typeof checkOtpDto.otpCode)
         return await this.authService.checkOtp(
             checkOtpDto.phone,
             checkOtpDto.otpCode,

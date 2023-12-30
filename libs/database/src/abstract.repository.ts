@@ -16,7 +16,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     }
     async findOne(
         entityFilterQuery: FilterQuery<string | unknown>,
-        projection?: Record<string, Document>
+        projection?: any
     ): Promise<TDocument | null> {
         return this.entityModel.findOne(
             entityFilterQuery,

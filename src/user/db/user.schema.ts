@@ -37,19 +37,19 @@ class AnotherReceiver {
 }
 
 @Schema()
-class Address extends AbstractDocument {
+class Address extends AbstractDocument  {
 
     @Prop()
-    addressTitle: string;
+    addressTitle?: string;
 
     @Prop()
-    description: string;
+    description?: string;
 
     @Prop({ required: true })
     ownReceiver: boolean;
 
     @Prop({ type: AnotherReceiver })
-    anotherReceiver: AnotherReceiver;
+    anotherReceiver?: AnotherReceiver;
 
 }
 

@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UserRepository } from '../user/db/user.repository';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { User } from './db/user.schema';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant/error.constant';
 import { CreateAddressDto } from '../profile/dto/create-address-dto';
-import { Response } from 'express';
 import { deleteInvalidValue } from 'src/common/utils';
+import { UpdateAddressDto } from 'src/profile/dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,7 @@ export class UserService {
     async createUser(
         createUser: CreateUserDto,
     ): Promise<void> {
+        deleteInvalidValue(createUser);
         const userData = {
             _id: new Types.ObjectId(),
             username: this.generateUsername(createUser.phone),
@@ -31,47 +33,74 @@ export class UserService {
     }
 
     async createAddress(
-        response: Response,
+        phone: string,
         createAddressDto: CreateAddressDto
-    ): Promise<Response> {
+    ): Promise<void> {
         deleteInvalidValue(createAddressDto);
-        console.log(createAddressDto)
-        if (createAddressDto.ownReceiver) {
+        const addressData = {
+            _id: new Types.ObjectId(),
+            ...createAddressDto
+        }
+        try {
             await this.userRepository.findOneAndUpdate(
-                { phone: createAddressDto.phone },
+                { phone },
                 {
-                    $set: {
-                        "address.ownReceiver": createAddressDto?.ownReceiver,
-                        "address.addressTitle": createAddressDto?.addressTitle,
-                        "address.description": createAddressDto?.description,
-                    }
-                })
-        } else {
-            await this.userRepository.findOneAndUpdate(
-                { phone: createAddressDto.phone },
-                {
-                    $set: {
-                        "address.ownReceiver": createAddressDto?.ownReceiver,
-                        "address.addressTitle": createAddressDto?.addressTitle,
-                        "address.description": createAddressDto?.description,
-                        "address.anotherReceiver.addressTitle": createAddressDto?.anotherReceiver.addressTitle,
-                        "address.anotherReceiver.phone": createAddressDto?.anotherReceiver.phone,
-                        "address.anotherReceiver.name": createAddressDto?.anotherReceiver.name,
-                        "address.anotherReceiver.description": createAddressDto?.anotherReceiver.description,
+                    $push: {
+                        address: addressData
                     }
                 }
             )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
         }
-        return response
-            .status(HttpStatus.CREATED)
-            .json({
-                message: "ادرس با موفقیت ثبت شد",
-                statusCode: HttpStatus.CREATED
-            })
     }
-    
-    async updateAddress() {
 
+    async updateAddress(
+        addressId: string,
+        updateAddressDto: UpdateAddressDto,
+    ): Promise<void> {
+        deleteInvalidValue(updateAddressDto);
+        try {
+            const updateData = {
+                _id: new Types.ObjectId(addressId),
+                ...updateAddressDto
+            }
+            await this.userRepository.findOneAndUpdate(
+                { "address._id": new ObjectId(addressId) },
+                {
+                    $set: {
+                        "address.$": updateData
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async deleteAddress(addressId: string): Promise<void> {
+        try {
+            await this.userRepository.deleteOne({
+                "address._id": new ObjectId(addressId)
+            })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async getAddress(phone: string) {
+        const user = await this.userRepository.findOne({ phone }, { address: 1 });
+        console.log(user);
+        return user.address;
     }
 
     async findUser(phone: string): Promise<User> {
@@ -139,4 +168,6 @@ export class UserService {
             )
         }
     }
+
+
 }
