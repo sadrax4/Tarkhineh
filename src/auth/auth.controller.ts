@@ -8,7 +8,7 @@ import { MIMETYPE } from 'src/common/constant/mimeType.constant';
 import { OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { ResendCodeDto } from './dto/resend-code-dto';
 import { JwtGuard, RefreshGuard } from './guards';
-import {  GetCurrentUserCookies } from './decorator';
+import { GetCurrentUserCookies } from './decorator';
 import { GetCurrentUser } from 'src/common/decorators';
 
 @Controller('auth')
@@ -31,7 +31,9 @@ export class AuthController {
         @Body() loginUserDto: LoginUserDto,
         @Res() response: Response
     ): Promise<Response> {
-        const haveAccount: boolean = await this.userService.haveAccount(loginUserDto.phone);
+        const haveAccount: boolean = await this.userService.haveAccount(
+            loginUserDto.phone
+        );
         if (!haveAccount) {
             await this.userService.createUser(loginUserDto)
         }
@@ -53,7 +55,7 @@ export class AuthController {
     async checkOtp(
         @Body() checkOtpDto: CheckOtpDto,
         @Res() response: Response
-    ) {
+    ): Promise<Response> {
         return await this.authService.checkOtp(
             checkOtpDto.phone,
             checkOtpDto.otpCode,
@@ -72,7 +74,7 @@ export class AuthController {
     async resendCode(
         @Res() response: Response,
         @Body() resendCodeDto: ResendCodeDto
-    ) {
+    ): Promise<Response> {
         return this.authService.resendCode(response, resendCodeDto);
     }
 
@@ -92,8 +94,11 @@ export class AuthController {
         @GetCurrentUserCookies("refresh-token") refreshToken: string,
         @Req() request: Request,
         @Res() response: Response
-    ) {
-        return await this.authService.refreshToken(response, refreshToken, phone);
+    ): Promise<Response | void> {
+        return await this.authService.refreshToken(
+            response,
+            refreshToken,
+            phone);
     }
 
     @UseGuards(JwtGuard)

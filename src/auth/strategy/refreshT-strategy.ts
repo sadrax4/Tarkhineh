@@ -28,9 +28,12 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
             }])
         })
     }
-    async validate(request: Request, payload: JwtPayload): Promise<{ phone: string }> {
+    async validate(
+        request: Request,
+        payload: JwtPayload
+    ): Promise<{ phone: string }> {
         if (!payload || payload == null) {
-            throw new HttpException("توکن نا معتبر ", HttpStatus.UNAUTHORIZED);
+            throw new HttpException("توکن نا معتبر ", HttpStatus.FORBIDDEN);
         }
         const refreshToken = request?.cookies["refresh-token"];
         const phone = await this.authService.validRefreshToken(refreshToken, payload.phone);

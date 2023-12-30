@@ -48,14 +48,57 @@ export class ProfileService {
         response: Response
     ) {
         await this.userService.deleteAddress(addressId);
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "ادرس با موفقیت حذف  شد",
+                statusCode: HttpStatus.OK
+            })
     }
 
     async getAddress(
         phone: string,
+        username: string,
         response: Response
-    ) {
-        const userAddress = await this.userService.getAddress(phone);
-        console.log(userAddress);
-        return { userAddress }
+    ): Promise<Response> {
+        const userAddresses = await this.userService.getAddress(phone);
+        const addresses = userAddresses.map(
+            (address) => {
+                if (!address.ownReceiver) {
+                    let {
+                        addressTitle,
+                        description,
+                        phone,
+                        name
+                    } = address.anotherReceiver;
+                    return {
+                        _id: address._id,
+                        addressTitle,
+                        description,
+                        phone, name,
+                        ownReceiver: address.ownReceiver
+                    }
+                } else {
+                    const {
+                        addressTitle,
+                        description,
+                        ownReceiver,
+                        _id,
+                    } = address
+                    return {
+                        _id,
+                        phone,
+                        name: username,
+                        addressTitle,
+                        description,
+                        ownReceiver
+                    }
+                }
+            })
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                data: addresses
+            })
     }
 }

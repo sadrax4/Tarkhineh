@@ -86,9 +86,14 @@ export class UserService {
 
     async deleteAddress(addressId: string): Promise<void> {
         try {
-            await this.userRepository.deleteOne({
-                "address._id": new ObjectId(addressId)
-            })
+            const user = await this.userRepository.findOneAndUpdate(
+                { "address._id": new ObjectId(addressId) },
+                {
+                    $pull: {
+                        "address": { _id: new ObjectId(addressId) }
+                    }
+                }
+            )
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
@@ -97,14 +102,21 @@ export class UserService {
         }
     }
 
-    async getAddress(phone: string) {
-        const user = await this.userRepository.findOne({ phone }, { address: 1 });
-        console.log(user);
-        return user.address;
+    async findAllUsers() {
+        const users = await this.userRepository.find({});
+        return users;
     }
 
-    async findUser(phone: string): Promise<User> {
-        const user = await this.userRepository.findOne({ phone });
+    async getAddress(phone: string) {
+        const { address } = await this.userRepository.findOne(
+            { phone },
+            { address: 1, _id: false }
+        );
+        return address;
+    }
+
+    async findUser(phone: string, projection: {} = undefined): Promise<User> {
+        const user = await this.userRepository.findOne({ phone }, projection);
         return user;
     }
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsPhoneNumber } from "class-validator";
+import { IsNotEmpty, IsNumber, IsPhoneNumber } from "class-validator";
 
 const errorMessage = "شماره تلفن وارد شده صحیح نمیباشد";
 export class LoginUserDto {
@@ -12,5 +12,4 @@ export class LoginUserDto {
         nullable: false
     })
     readonly phone: string;
-
 }

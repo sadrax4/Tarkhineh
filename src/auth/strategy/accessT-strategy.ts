@@ -22,14 +22,15 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
                 }
                 return data;
             }])
-        }
-        )
+        })
     }
-    async validate(payload: JwtPayload): Promise<{ phone: string }> {
+    async validate(
+        payload: JwtPayload
+    ): Promise<{ phone: string, username: string }> {
         if (!payload || payload == null) {
             throw new HttpException("توکن نا معتبر ", HttpStatus.UNAUTHORIZED);
         }
-        const { phone } = await this.userService.findUser(payload.phone)
-        return { phone };
+        const { phone, username } = await this.userService.findUser(payload.phone)
+        return { phone, username };
     }
 }

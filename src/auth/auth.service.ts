@@ -18,7 +18,11 @@ export class AuthService {
         private configService: ConfigService,
         private jwtService: JwtService
     ) { }
-    async getOtp(phone: string, response: any) {
+
+    async getOtp(
+        phone: string,
+        response: any
+    ): Promise<Response> {
         const otpCode: number = generateOtpCode();
         const date = new Date()
         const expireIn = date.setSeconds(
@@ -29,7 +33,7 @@ export class AuthService {
             const text = `ترخینه
             کد تایید : ${otpCode}
             `;
-            SmsPanel(phone, otpCode, text);
+            //SmsPanel(phone, otpCode, text);
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -53,10 +57,14 @@ export class AuthService {
         const { expireIn: otpExpireIn, code: userCode } = user.otp;
         const now: number = new Date().getTime();
         if (now > otpExpireIn) {
-            throw new HttpException("کد وارد شده منقضی شده است", HttpStatus.UNAUTHORIZED)
+            throw new HttpException(
+                "کد وارد شده منقضی شده است", HttpStatus.UNAUTHORIZED
+            )
         }
         if (userCode !== otpCode) {
-            throw new HttpException("کد وارد شده اشتباه است", HttpStatus.UNAUTHORIZED)
+            throw new HttpException(
+                "کد وارد شده اشتباه است", HttpStatus.UNAUTHORIZED
+            )
         }
         const tokens: Token = await this.getTokens(user.phone, user.username);
         const hashRT = await bcrypt.hash(tokens.refreshToken, 10);
@@ -65,8 +73,9 @@ export class AuthService {
         response.cookie(
             'access-token',
             tokens.accessToken, {
-            httpOnly: true,
-            secure: false,
+            httpOnly: false,
+            secure: true,
+            sameSite: "none",
             maxAge: (d.getTime() + 1 * 3600 * 1000),
         }
         );
@@ -74,12 +83,12 @@ export class AuthService {
             "refresh-token",
             tokens.refreshToken,
             {
-                httpOnly: true,
-                secure: false,
+                httpOnly: false,
+                secure: true,
                 maxAge: (d.getTime() + 3 * 3600 * 24 * 1000),
+                sameSite: "none"
             }
         );
-        console.log(response);
         const successMessage = "ورود با موفقیت انجام شد";
         return response
             .status(HttpStatus.OK)
@@ -94,30 +103,51 @@ export class AuthService {
         refreshToken: string,
         userPhone: string
     ): Promise<Response | void> {
-        const { hashRT, phone, username } = await this.userService.findUser(userPhone);
+        const {
+            hashRT,
+            phone,
+            username
+        } = await this.userService.findUser(userPhone);
         const isTokensEqual: boolean = await bcrypt.compare(refreshToken, hashRT);
         if (!isTokensEqual) {
-            return response.redirect("https://tarkhineh.liara.run/v1/auth/get-otp");
+            return response.redirect(
+                "https://tarkhineh.liara.run/v1/auth/get-otp"
+            );
         }
         const isValidToken = await this.jwtService.verify(
             refreshToken,
-            { secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET") }
+            {
+                secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET")
+            }
         )
         if (!isValidToken) {
-            return response.redirect("https://tarkhineh.liara.run/v1/auth/get-otp");
+            return response.redirect(
+                "https://tarkhineh.liara.run/v1/auth/get-otp"
+            );
         }
         const tokens: Token = await this.getTokens(phone, username);
-        await this.userService.saveRefreshToken(phone, tokens.refreshToken);
+        const hashRefresh = await bcrypt.hash(tokens.refreshToken, 10);
+        await this.userService.saveRefreshToken(phone, hashRefresh);
         const d = new Date();
         response.cookie(
             'access-token',
             tokens.accessToken,
-            { httpOnly: true, secure: true, maxAge: (d.getTime() + 1 * 3600 * 1000) }
+            {
+                httpOnly: false,
+                secure: true,
+                sameSite: 'none',
+                maxAge: (d.getTime() + 1 * 3600 * 1000)
+            }
         );
         response.cookie(
             "refresh-token",
             tokens.refreshToken,
-            { httpOnly: true, secure: true, maxAge: (d.getTime() + 3 * 3600 * 24 * 1000) }
+            {
+                httpOnly: false,
+                secure: true,
+                sameSite: 'none',
+                maxAge: (d.getTime() + 3 * 3600 * 24 * 1000)
+            }
         );
         const responseMessage = 'توکن جدید تولید شد'
         return response
@@ -155,8 +185,13 @@ export class AuthService {
             })
     }
 
-    async resendCode(response: Response, { phone }: ResendCodeDto) {
-        const { otp: { expireIn: otpExpireIn } } = await this.userService.findUser(phone);
+    async resendCode
+        (response: Response,
+            { phone }: ResendCodeDto
+        ): Promise<Response> {
+        const {
+            otp: { expireIn: otpExpireIn }
+        } = await this.userService.findUser(phone);
         const now: number = new Date().getTime();
         if (now < otpExpireIn) {
             throw new HttpException(
@@ -176,7 +211,9 @@ export class AuthService {
             })
     }
 
-    async getTokens(phone: string, userId: string): Promise<Token> {
+    async getTokens(
+        phone: string, userId: string
+    ): Promise<Token> {
         const jwtPayload: JwtPayload = {
             sub: userId,
             phone
@@ -199,22 +236,28 @@ export class AuthService {
         }
     }
 
-    async validRefreshToken(refreshToken: string, userPhone: string): Promise<string> {
+    async validRefreshToken(
+        refreshToken: string,
+        userPhone: string
+    ): Promise<string> {
         const { hashRT, phone } = await this.userService.findUser(userPhone);
         const isTokensEqual: boolean = await bcrypt.compare(refreshToken, hashRT);
         if (!isTokensEqual) {
-            throw new HttpException("توکن نا معتبر ", HttpStatus.UNAUTHORIZED);
+            throw new HttpException(
+                "توکن نا معتبر ", HttpStatus.UNAUTHORIZED
+            );
         }
         const isValidToken = await this.jwtService.verify(
             refreshToken,
-            { secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET") }
+            {
+                secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET")
+            }
         )
         if (!isValidToken) {
-            throw new HttpException("توکن نا معتبر ", HttpStatus.UNAUTHORIZED);
+            throw new HttpException(
+                "توکن نا معتبر ", HttpStatus.UNAUTHORIZED
+            );
         }
         return phone;
     }
-
-
-
 }

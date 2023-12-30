@@ -1,5 +1,5 @@
 import { UpdateFilter } from "mongodb";
-import mongoose, { Aggregate, AggregateOptions, Document, FilterQuery, Model, PipelineStage, PopulateOptions, QueryOptions, Types, UpdateQuery } from "mongoose";
+import mongoose, { Aggregate, AggregateOptions, Document, FilterQuery, Model, PipelineStage, PopulateOptions, ProjectionType, QueryOptions, Types, UpdateQuery } from "mongoose";
 import { AbstractDocument } from "./abstract.schema";
 
 export abstract class AbstractRepository<TDocument extends AbstractDocument> {
@@ -14,13 +14,14 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
         });
         return entity.save();
     }
+
     async findOne(
         entityFilterQuery: FilterQuery<string | unknown>,
-        projection?: any
+        projection?: ProjectionType<TDocument | null>,
     ): Promise<TDocument | null> {
         return this.entityModel.findOne(
             entityFilterQuery,
-            { _id: 0, __v: 0, ...projection }
+            projection
         ).exec();
     }
     async findByIdAndUpdate(

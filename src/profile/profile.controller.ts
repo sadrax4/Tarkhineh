@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiConsumes, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { CreateAddressDto, UpdateAddressDto } from './dto';
 import { JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
@@ -15,7 +15,7 @@ export class ProfileController {
 
     @UseGuards(JwtGuard)
     @ApiBody({ type: CreateAddressDto, required: true })
-    @ApiTags('profile')
+    @ApiTags('profile-address')
     @ApiConsumes(MIMETYPE.JSON)
     @ApiResponse({ type: OkResponseMessage, status: 201 })
     @Post('address')
@@ -33,9 +33,15 @@ export class ProfileController {
 
     @UseGuards(JwtGuard)
     @ApiBody({ type: UpdateAddressDto, required: true })
-    @ApiTags('profile')
-    @ApiConsumes(MIMETYPE.JSON)
-    @ApiResponse({ type: OkResponseMessage, status: 200 })
+    @ApiTags('profile-address')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
     @Patch('address/:id')
     async updateAddress(
         @Res() response: Response,
@@ -50,14 +56,20 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
-    @ApiTags('profile')
-    @ApiConsumes(MIMETYPE.JSON)
-    @ApiResponse({ type: OkResponseMessage, status: 200 })
+    @ApiTags('profile-address')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
     @Delete('address/:id')
     async deleteAddress(
         @Res() response: Response,
         @Param('id') addressId: string
-    ) {
+    ): Promise<Response> {
         return await this.profileService.deleteAddress(
             addressId,
             response,
@@ -65,16 +77,25 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
-    @ApiTags('profile')
+    @ApiTags('profile-address')
     @ApiConsumes(MIMETYPE.JSON)
-    @ApiResponse({ type: OkResponseMessage, status: 200 })
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
     @Get('address')
     async getAddress(
         @GetCurrentUser('phone') phone: string,
+        @GetCurrentUser('username') username: string,
         @Res() response: Response,
-    ) {
-        await this.profileService.getAddress(
+    ): Promise<Response> {
+        return await this.profileService.getAddress(
             phone,
+            username,
             response
         );
     }
