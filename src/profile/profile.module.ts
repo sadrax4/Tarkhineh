@@ -7,6 +7,7 @@ import { UserRepository } from 'src/user/db/user.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/user/db/user.schema';
 import { AddressSwaggerMiddleware } from './middleware/address-swagger-middleware';
+import { MergeNameSwaggerMiddleware } from './middleware/merge-name-middleware';
 
 @Module({
   imports: [
@@ -27,7 +28,12 @@ export class ProfileModule implements NestModule {
     consumer
       .apply(AddressSwaggerMiddleware)
       .forRoutes(
-        'profile'
+        'profile/address'
+      );
+    consumer
+      .apply(MergeNameSwaggerMiddleware)
+      .forRoutes(
+        'profile/user'
       );
   }
 }

@@ -16,7 +16,6 @@ class FavoriteFood {
 
     @Prop({ type: [mongoose.Types.ObjectId], required: true })
     foodID: [mongoose.Types.ObjectId];
-
 }
 
 @Schema({ _id: false })
@@ -37,7 +36,7 @@ class AnotherReceiver {
 }
 
 @Schema()
-class Address extends AbstractDocument  {
+class Address extends AbstractDocument {
 
     @Prop()
     addressTitle?: string;
@@ -53,7 +52,7 @@ class Address extends AbstractDocument  {
 
 }
 
-@Schema({ versionKey: false, collection: 'user' })
+@Schema({ timestamps: true, versionKey: false, collection: 'user' })
 export class User extends AbstractDocument {
 
     @Prop({ required: true })
@@ -86,10 +85,10 @@ export class User extends AbstractDocument {
     @Prop()
     hashRT: string;
 
-    @Prop({default: now()})
+    @Prop({ default: now() })
     createdAt: Date;
 
-    @Prop({default: now()})
+    @Prop({ default: now() })
     updatedAt: Date;
 
 }

@@ -1,13 +1,54 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
-import { CreateAddressDto, UpdateAddressDto } from './dto';
+import {
+    CreateAddressDto,
+    DeleteUserDto,
+    UpdateAddressDto,
+    UpdateUserDto
+} from './dto';
 import { Response } from 'express';
+import { deleteInvalidValue } from 'src/common/utils';
 
 @Injectable()
 export class ProfileService {
     constructor(
         private userService: UserService
     ) { }
+
+    async updateUser(
+        updateUserDto: UpdateUserDto,
+        phone: string,
+        response: Response
+    ): Promise<Response> {
+        await this.userService.checkUsernameExists(
+            updateUserDto.username,
+            phone
+        )
+        deleteInvalidValue(updateUserDto);
+        await this.userService.updateUser(
+            updateUserDto,
+            phone
+        )
+        return response
+            .status(HttpStatus.CREATED)
+            .json({
+                message: "کاربر با موفقیت به روز رسانی  شد",
+                statusCode: HttpStatus.CREATED
+            })
+    }
+
+    async deleteUser(
+        deleteUserDto: DeleteUserDto,
+        response: Response
+    ): Promise<Response> {
+        await this.userService.deleteUser(deleteUserDto)
+        return response
+            .status(HttpStatus.CREATED)
+            .json({
+                message: "کاربر با موفقیت حذف شد",
+                statusCode: HttpStatus.CREATED
+            })
+    }
 
     async createAddress(
         phone: string,
@@ -46,7 +87,7 @@ export class ProfileService {
     async deleteAddress(
         addressId: string,
         response: Response
-    ) {
+    ): Promise<Response> {
         await this.userService.deleteAddress(addressId);
         return response
             .status(HttpStatus.OK)
@@ -59,9 +100,18 @@ export class ProfileService {
     async getAddress(
         phone: string,
         username: string,
+        page: number,
+        limit: number,
         response: Response
     ): Promise<Response> {
-        const userAddresses = await this.userService.getAddress(phone);
+        const [
+            maxPage,
+            userAddresses
+        ] = await this.userService.getAddress(
+            phone,
+            page,
+            limit
+        );
         const addresses = userAddresses.map(
             (address) => {
                 if (!address.ownReceiver) {
@@ -84,7 +134,7 @@ export class ProfileService {
                         description,
                         ownReceiver,
                         _id,
-                    } = address
+                    } = address;
                     return {
                         _id,
                         phone,
@@ -98,7 +148,8 @@ export class ProfileService {
         return response
             .status(HttpStatus.OK)
             .json({
-                data: addresses
+                data: addresses,
+                maxPage
             })
     }
 }

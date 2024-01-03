@@ -28,11 +28,11 @@ export class UserController {
             hashRT: 0,
             otp: 0
         };
-        const user = await this.userService.findUser(phone, projection);
+        let user: any = await this.userService.findUser(phone, projection);
         return response
             .status(HttpStatus.OK)
             .json({
-                data: user,
+                data: user ,
                 statusCode: HttpStatus.OK
             })
     }

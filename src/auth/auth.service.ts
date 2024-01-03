@@ -26,7 +26,7 @@ export class AuthService {
         const otpCode: number = generateOtpCode();
         const date = new Date()
         const expireIn = date.setSeconds(
-            date.getSeconds() + 11120
+            date.getSeconds() + 111120
         );
         try {
             await this.userService.saveOtp(phone, otpCode, expireIn);
@@ -54,7 +54,10 @@ export class AuthService {
         response: Response
     ): Promise<Response> {
         const user = await this.userService.findUser(phone);
-        const { expireIn: otpExpireIn, code: userCode } = user.otp;
+        const {
+            expireIn: otpExpireIn,
+            code: userCode
+        } = user.otp;
         const now: number = new Date().getTime();
         if (now > otpExpireIn) {
             throw new HttpException(
@@ -218,7 +221,10 @@ export class AuthService {
             sub: userId,
             phone
         }
-        const [accessToken, refreshToken] = await Promise.all([
+        const [
+            accessToken,
+            refreshToken
+        ] = await Promise.all([
             this.jwtService.signAsync(
                 jwtPayload, {
                 secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
@@ -240,8 +246,14 @@ export class AuthService {
         refreshToken: string,
         userPhone: string
     ): Promise<string> {
-        const { hashRT, phone } = await this.userService.findUser(userPhone);
-        const isTokensEqual: boolean = await bcrypt.compare(refreshToken, hashRT);
+        const {
+            hashRT,
+            phone
+        } = await this.userService.findUser(userPhone);
+        const isTokensEqual: boolean = await bcrypt.compare(
+            refreshToken,
+            hashRT
+        );
         if (!isTokensEqual) {
             throw new HttpException(
                 "توکن نا معتبر ", HttpStatus.UNAUTHORIZED

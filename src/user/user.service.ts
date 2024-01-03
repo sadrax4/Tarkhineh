@@ -5,9 +5,11 @@ import mongoose, { Types } from 'mongoose';
 import { User } from './db/user.schema';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant/error.constant';
 import { CreateAddressDto } from '../profile/dto/create-address-dto';
-import { deleteInvalidValue } from 'src/common/utils';
+import { deleteInvalidValue, pagination } from 'src/common/utils';
 import { UpdateAddressDto } from 'src/profile/dto';
 import { ObjectId } from 'mongodb';
+import { UpdateUserDto } from '../profile/dto/update-user-dto';
+import { DeleteUserDto } from '../profile/dto/delete-user-dto';
 
 @Injectable()
 export class UserService {
@@ -27,7 +29,40 @@ export class UserService {
         const createResult = await this.userRepository.create(userData);
         if (!createResult) {
             throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR
+                INTERNAL_SERVER_ERROR_MESSAGE,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async updateUser(
+        updateUserDto: UpdateUserDto,
+        phone: string
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                { phone },
+                { $set: updateUserDto }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async deleteUser(
+        deleteUserDto: DeleteUserDto
+    ): Promise<void> {
+        try {
+            await this.userRepository.deleteOne(
+                deleteUserDto
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
     }
@@ -84,9 +119,11 @@ export class UserService {
         }
     }
 
-    async deleteAddress(addressId: string): Promise<void> {
+    async deleteAddress(
+        addressId: string
+    ): Promise<void> {
         try {
-            const user = await this.userRepository.findOneAndUpdate(
+            await this.userRepository.findOneAndUpdate(
                 { "address._id": new ObjectId(addressId) },
                 {
                     $pull: {
@@ -102,25 +139,34 @@ export class UserService {
         }
     }
 
-    async findAllUsers() {
+    async findAllUsers(): Promise<User[]> {
         const users = await this.userRepository.find({});
         return users;
     }
 
-    async getAddress(phone: string) {
+    async getAddress(
+        phone: string,
+        page: number,
+        limit: number
+    ): Promise<[number, any]> {
         const { address } = await this.userRepository.findOne(
             { phone },
-            { address: 1, _id: false }
+            { address: 1, _id: false },
         );
-        return address;
+        const maxPage = Math.ceil(address.length / limit)
+        const newAddress = pagination(
+            address,
+            limit,
+            page)
+        return [
+            maxPage,
+            newAddress
+        ];
     }
 
-    async findUser(phone: string, projection: {} = undefined): Promise<User> {
-        const user = await this.userRepository.findOne({ phone }, projection);
-        return user;
-    }
-
-    async haveAccount(phone: string): Promise<boolean> {
+    async haveAccount(
+        phone: string
+    ): Promise<boolean> {
         const user = await this.findUser(phone);
         if (!user) {
             return false;
@@ -128,13 +174,19 @@ export class UserService {
         return true;
     }
 
-    private generateUsername(phone: string): string {
+    private generateUsername(
+        phone: string
+    ): string {
         const phoneSlice: string = phone.slice(7, 11);
         const username: string = ('user' + phoneSlice);
         return username;
     }
 
-    async saveOtp(phone: string, code: number, expireIn: number): Promise<void> {
+    async saveOtp(
+        phone: string,
+        code: number,
+        expireIn: number
+    ): Promise<void> {
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
@@ -153,7 +205,10 @@ export class UserService {
         }
     }
 
-    async saveRefreshToken(phone: string, refreshToken: string): Promise<void> {
+    async saveRefreshToken(
+        phone: string,
+        refreshToken: string
+    ): Promise<void> {
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
@@ -167,7 +222,9 @@ export class UserService {
         }
     }
 
-    async removeRefreshToken(phone: string): Promise<void> {
+    async removeRefreshToken(
+        phone: string
+    ): Promise<void> {
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
@@ -181,5 +238,32 @@ export class UserService {
         }
     }
 
+    async checkUsernameExists(
+        username: string,
+        phone: string
+    ): Promise<void> {
+        const findUser = await this.userRepository.findOne({
+            phone: { $ne: phone },
+            username
+        })
+        if (findUser) {
+            throw new HttpException(
+                "این نام کاربری قبلا مورد استفاده قرار گرفته است",
+                HttpStatus.CONFLICT
+            )
+        }
+    }
 
+    async findUser(
+        phone: string,
+        projection: {} = undefined
+    ): Promise<User> {
+        const user = await this.userRepository.findOne(
+            { phone },
+            projection
+        );
+        return user;
+    }
 }
+
+

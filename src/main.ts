@@ -5,7 +5,7 @@ import { SwaggerInit } from './swagger/swagger.config';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({
     exceptionFactory: (errors) => {
@@ -16,9 +16,9 @@ async function bootstrap() {
     }
   }));
   app.enableCors({
-    origin: '*',
-    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    credentials: true,
+    origin: 'http://localhost:3000',
+    //methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    credentials: true
   });
   app.setGlobalPrefix('v1');
   SwaggerInit(app);

@@ -7,3 +7,6 @@ export function deleteInvalidValue(data = {}, blackList = []) {
         if (process.env.NULL_DATA.includes(data[key])) delete data[key]
     })
 }
+export function pagination(array: any, page_size: number, page_number: number) {
+    return array.slice((page_number - 1) * page_size, page_number * page_size)
+}

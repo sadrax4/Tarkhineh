@@ -4,6 +4,8 @@ import { DatabaseModule } from 'libs/database';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
+import { FoodModule } from './food/food.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { ProfileModule } from './profile/profile.module';
     }),
     UserModule,
     AuthModule,
-    ProfileModule
+    ProfileModule,
+    FoodModule,
+    CategoryModule
   ],
   controllers: [],
   providers: [],

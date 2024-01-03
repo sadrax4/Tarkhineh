@@ -11,7 +11,6 @@ export class AddressSwaggerMiddleware implements NestMiddleware {
             delete req?.body?.addressTitle;
             delete req?.body?.description;
         }
-
         next();
     }
 }

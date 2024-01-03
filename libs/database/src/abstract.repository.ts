@@ -18,10 +18,12 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     async findOne(
         entityFilterQuery: FilterQuery<string | unknown>,
         projection?: ProjectionType<TDocument | null>,
+        options?: QueryOptions<TDocument> | null
     ): Promise<TDocument | null> {
         return this.entityModel.findOne(
             entityFilterQuery,
-            projection
+            projection,
+            options
         ).exec();
     }
     async findByIdAndUpdate(
