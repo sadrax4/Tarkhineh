@@ -33,7 +33,7 @@ export class AuthService {
             const text = `ترخینه
             کد تایید : ${otpCode}
             `;
-            //SmsPanel(phone, otpCode, text);
+            SmsPanel(phone, otpCode, text);
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -205,7 +205,7 @@ export class AuthService {
         const text = `ترخینه
             ارسال مجدد : ${otpCode}
             `;
-        //SmsPanel(phone, otpCode, text);
+        SmsPanel(phone, otpCode, text);
         return response
             .status(HttpStatus.OK)
             .json({

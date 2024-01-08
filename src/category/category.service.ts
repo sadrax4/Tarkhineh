@@ -45,6 +45,25 @@ export class CategoryService {
             });
     }
 
+    async getCategories(
+        response: Response
+    ): Promise<Response> {
+        try {
+            const categories = await this.categoryRepository.find({});
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    data: categories,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
     async deleteCategory(
         deleteCategoryDto: DeleteCategoryDto,
         response: Response

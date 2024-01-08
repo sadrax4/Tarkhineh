@@ -32,6 +32,23 @@ export class CategoryController {
         );
     }
 
+
+    @ApiTags('category')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Get("list")
+    async deleteCategory(
+        @Body() deleteCategoryDto: DeleteCategoryDto,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.categoryService.deleteCategory(
+            deleteCategoryDto,
+            response
+        );
+    }
+
     @ApiBody({
         type: DeleteCategoryDto,
         required: true
