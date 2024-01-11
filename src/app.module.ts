@@ -11,7 +11,7 @@ import { CategoryModule } from './category/category.module';
   imports: [
     DatabaseModule,
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     UserModule,
     AuthModule,

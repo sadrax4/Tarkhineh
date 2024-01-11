@@ -1,15 +1,15 @@
-import { FileTypeValidator, HttpException, HttpStatus, MaxFileSizeValidator, ParseFilePipe, UploadedFile } from "@nestjs/common";
+import { FileTypeValidator, HttpException, HttpStatus, MaxFileSizeValidator, ParseFilePipe, UploadedFile, UploadedFiles } from "@nestjs/common";
 
 export function CheckRequiredUploadedFile(
     fileType: string | RegExp,
-    size: number = 10
+    size: number = 5
 ) {
-    return UploadedFile(
+    return UploadedFiles(
         new ParseFilePipe({
             fileIsRequired: false,
             validators: [
                 new MaxFileSizeValidator({ maxSize: size * 1024 * 1024 }),
-                new FileTypeValidator({ fileType, }),
+                new FileTypeValidator({ fileType }),
             ],
             exceptionFactory(error) {
                 throw new HttpException(
@@ -24,7 +24,7 @@ export function CheckOptionalUploadedFile(
     fileType: string | RegExp,
     size: number = 10
 ) {
-    return UploadedFile(
+    return UploadedFiles(
         new ParseFilePipe({
             fileIsRequired: false,
             validators: [

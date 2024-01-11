@@ -22,20 +22,18 @@ export class FoodController {
     @ApiConsumes(MIMETYPE.MULTIPART)
     @ApiResponse({
         type: OkResponseMessage,
-        status: HttpStatus.OK
+        status: HttpStatus.CREATED
     })
     @Post()
     async createFood(
-        @UploadedFiles() images: Array<Express.Multer.File>,
-        //@CheckRequiredUploadedFile(MIME_TYPE.IMAGE) images: Array<MulterFile>,
+        @CheckRequiredUploadedFile(MIME_TYPE.IMAGE) images: Array<MulterFile>,
         @Body() createFoodDto: CreateFoodDto,
         @Res() response: Response
-    ) {
-        console.log("in",images)
+    ): Promise<Response> {
+        createFoodDto.images = images.map(image => image.filename)
         return this.foodService.createFood(
             createFoodDto,
             response
         )
     }
-
 }

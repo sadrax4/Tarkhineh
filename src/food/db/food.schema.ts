@@ -1,7 +1,8 @@
-import { Prop, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import { AbstractDocument } from "libs/database";
 import mongoose from "mongoose";
 
+@Schema({ collection: 'foods', versionKey: false })
 export class Food extends AbstractDocument {
 
     @Prop()

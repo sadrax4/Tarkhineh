@@ -1,7 +1,36 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
-import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateUserDto, UpdateUserSwagger } from './dto';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpStatus,
+    Param,
+    Patch,
+    Post,
+    Query,
+    Res,
+    UseGuards
+} from '@nestjs/common';
+import {
+    ApiBody,
+    ApiConsumes,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
+    ApiUnauthorizedResponse
+} from '@nestjs/swagger';
+import {
+    MIMETYPE,
+    OkResponseMessage,
+    UnAuthorizeResponseMessage
+} from 'src/common/constant';
+import {
+    CreateAddressDto,
+    DeleteUserDto,
+    UpdateAddressDto,
+    UpdateUserDto,
+    UpdateUserSwagger
+} from './dto';
 import { JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
 import { ProfileService } from './profile.service';
@@ -39,7 +68,7 @@ export class ProfileController {
         );
     }
 
-    //@UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     @ApiBody({
         type: DeleteUserDto,
         required: true

@@ -21,7 +21,6 @@ export class UserController {
     })
     @Get()
     async getUser(
-        @Req() request: Request,
         @Res() response: Response,
         @GetCurrentUser('phone') phone: string,
     ) {
@@ -30,7 +29,6 @@ export class UserController {
             otp: 0
         };
         let user: any = await this.userService.findUser(phone, projection);
-        console.log(request, response);
         return response
             .status(HttpStatus.OK)
             .json({

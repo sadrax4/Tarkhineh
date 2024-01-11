@@ -28,5 +28,5 @@ export class CreateFoodDto {
     subCategory?: string[];
 
     @ApiProperty({ format: 'binary', isArray: true, required: false })
-    images?: string;
+    images?: string[];
 }
