@@ -4,6 +4,8 @@ export class UpdateUserDto {
 
     name?: string;
 
+    family?: string;
+
     birthday?: string;
 
     email?: string;

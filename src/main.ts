@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { BadRequestException, ValidationPipe, VersioningType } from '@nestjs/common';
 import { SwaggerInit } from './swagger/swagger.config';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
+import { BadRequestException, ValidationPipe, VersioningType } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({
     exceptionFactory: (errors) => {
@@ -16,13 +17,18 @@ async function bootstrap() {
     }
   }));
   app.enableCors({
-    origin: 'http://localhost:3000',
-    //methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    credentials: true
+    credentials: true,
+    origin:
+      [
+        'https://tarkhine.liara.run',
+        'https://tarkhineh.liara.run',
+        'http://localhost:3000'
+      ],
+    //preflightContinue: true,
   });
   app.setGlobalPrefix('v1');
-  SwaggerInit(app);
   app.enableVersioning({ type: VersioningType.URI });
+  SwaggerInit(app);
   const port = 3000;
   await app.listen(port, "0.0.0.0");
 }

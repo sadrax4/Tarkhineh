@@ -71,6 +71,9 @@ export class User extends AbstractDocument {
     name: string;
 
     @Prop()
+    family: string;
+
+    @Prop()
     birthday: string;
 
     @Prop()

@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
@@ -21,18 +21,20 @@ export class UserController {
     })
     @Get()
     async getUser(
+        @Req() request: Request,
+        @Res() response: Response,
         @GetCurrentUser('phone') phone: string,
-        @Res() response: Response
     ) {
         const projection = {
             hashRT: 0,
             otp: 0
         };
         let user: any = await this.userService.findUser(phone, projection);
+        console.log(request, response);
         return response
             .status(HttpStatus.OK)
             .json({
-                data: user ,
+                data: user,
                 statusCode: HttpStatus.OK
             })
     }

@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant/error.constant';
 import { SmsPanel } from './utils';
 import { ResendCodeDto } from './dto/resend-code-dto';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { JwtPayload } from './types/jwt-payload-type';
 import { JwtService } from '@nestjs/jwt';
 import { Token } from './types';
@@ -21,19 +21,23 @@ export class AuthService {
 
     async getOtp(
         phone: string,
-        response: any
+        response: Response
     ): Promise<Response> {
         const otpCode: number = generateOtpCode();
-        const date = new Date()
+        const date = new Date();
         const expireIn = date.setSeconds(
             date.getSeconds() + 111120
         );
         try {
-            await this.userService.saveOtp(phone, otpCode, expireIn);
+            await this.userService.saveOtp(
+                phone,
+                otpCode,
+                expireIn
+            );
             const text = `ترخینه
             کد تایید : ${otpCode}
             `;
-            SmsPanel(phone, otpCode, text);
+            //SmsPanel(phone, otpCode, text);
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -61,35 +65,46 @@ export class AuthService {
         const now: number = new Date().getTime();
         if (now > otpExpireIn) {
             throw new HttpException(
-                "کد وارد شده منقضی شده است", HttpStatus.UNAUTHORIZED
+                "کد وارد شده منقضی شده است",
+                HttpStatus.UNAUTHORIZED
             )
         }
         if (userCode !== otpCode) {
             throw new HttpException(
-                "کد وارد شده اشتباه است", HttpStatus.UNAUTHORIZED
+                "کد وارد شده اشتباه است",
+                HttpStatus.UNAUTHORIZED
             )
         }
-        const tokens: Token = await this.getTokens(user.phone, user.username);
-        const hashRT = await bcrypt.hash(tokens.refreshToken, 10);
+        const tokens: Token = await this.getTokens(
+            user.phone,
+            user.username
+        );
+        const hashRT = await bcrypt.hash(
+            tokens.refreshToken,
+            10
+        );
         await this.userService.saveRefreshToken(phone, hashRT);
         const d = new Date();
         response.cookie(
             'access-token',
-            tokens.accessToken, {
-            httpOnly: false,
-            secure: true,
-            sameSite: "none",
-            maxAge: (d.getTime() + 1 * 3600 * 1000),
-        }
+            tokens.accessToken,
+            {
+                sameSite: 'none',
+                httpOnly: true,
+                secure: true,
+                //domain: "tarkhineh.liara.run",
+                maxAge: (1 * 3600 * 1000),
+            }
         );
         response.cookie(
             "refresh-token",
             tokens.refreshToken,
             {
-                httpOnly: false,
+                sameSite: 'none',
+                httpOnly: true,
                 secure: true,
-                maxAge: (d.getTime() + 3 * 3600 * 24 * 1000),
-                sameSite: "none"
+                maxAge: (3 * 3600 * 24 * 1000),
+                //domain: "tarkhineh.liara.run"
             }
         );
         const successMessage = "ورود با موفقیت انجام شد";
@@ -111,10 +126,13 @@ export class AuthService {
             phone,
             username
         } = await this.userService.findUser(userPhone);
-        const isTokensEqual: boolean = await bcrypt.compare(refreshToken, hashRT);
+        const isTokensEqual: boolean = await bcrypt.compare(
+            refreshToken,
+            hashRT
+        );
         if (!isTokensEqual) {
             return response.redirect(
-                "https://tarkhineh.liara.run/v1/auth/get-otp"
+                "https://tarkhine.liara.run/v1/auth/get-otp"
             );
         }
         const isValidToken = await this.jwtService.verify(
@@ -125,12 +143,21 @@ export class AuthService {
         )
         if (!isValidToken) {
             return response.redirect(
-                "https://tarkhineh.liara.run/v1/auth/get-otp"
+                "https://tarkhine.liara.run/v1/auth/get-otp"
             );
         }
-        const tokens: Token = await this.getTokens(phone, username);
-        const hashRefresh = await bcrypt.hash(tokens.refreshToken, 10);
-        await this.userService.saveRefreshToken(phone, hashRefresh);
+        const tokens: Token = await this.getTokens(
+            phone,
+            username
+        );
+        const hashRefresh = await bcrypt.hash(
+            tokens.refreshToken,
+            10
+        );
+        await this.userService.saveRefreshToken(
+            phone,
+            hashRefresh
+        );
         const d = new Date();
         response.cookie(
             'access-token',
@@ -138,8 +165,9 @@ export class AuthService {
             {
                 httpOnly: false,
                 secure: true,
-                sameSite: 'none',
-                maxAge: (d.getTime() + 1 * 3600 * 1000)
+                sameSite: "lax",
+                domain: "https://tarkhine.liara.run/",
+                maxAge: (d.getTime() + 1 * 3600 * 1000),
             }
         );
         response.cookie(
@@ -148,8 +176,9 @@ export class AuthService {
             {
                 httpOnly: false,
                 secure: true,
-                sameSite: 'none',
-                maxAge: (d.getTime() + 3 * 3600 * 24 * 1000)
+                sameSite: "lax",
+                domain: "https://tarkhine.liara.run/",
+                maxAge: (d.getTime() + 3 * 3600 * 24 * 1000),
             }
         );
         const responseMessage = 'توکن جدید تولید شد'
@@ -259,13 +288,13 @@ export class AuthService {
                 "توکن نا معتبر ", HttpStatus.UNAUTHORIZED
             );
         }
-        const isValidToken = await this.jwtService.verify(
+        const isTokenValid = await this.jwtService.verify(
             refreshToken,
             {
                 secret: this.configService.get<string>("JWT_REFRESH_TOKEN_SECRET")
             }
         )
-        if (!isValidToken) {
+        if (!isTokenValid) {
             throw new HttpException(
                 "توکن نا معتبر ", HttpStatus.UNAUTHORIZED
             );

@@ -16,6 +16,7 @@ class AnotherReceiver {
 
     @ApiProperty({ required: false })
     name: string;
+
 }
 export class UpdateAddressDto {
 

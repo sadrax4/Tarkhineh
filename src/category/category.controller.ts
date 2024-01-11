@@ -39,12 +39,10 @@ export class CategoryController {
         status: HttpStatus.OK
     })
     @Get("list")
-    async deleteCategory(
-        @Body() deleteCategoryDto: DeleteCategoryDto,
+    async getCategories(
         @Res() response: Response
     ): Promise<Response> {
-        return this.categoryService.deleteCategory(
-            deleteCategoryDto,
+        return this.categoryService.getCategories(
             response
         );
     }

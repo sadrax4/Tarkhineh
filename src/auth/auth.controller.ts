@@ -54,9 +54,9 @@ export class AuthController {
     })
     async checkOtp(
         @Body() checkOtpDto: CheckOtpDto,
-        @Res() response: Response
+        @Res() response: Response,
     ): Promise<Response> {
-        return await this.authService.checkOtp(
+        return this.authService.checkOtp(
             checkOtpDto.phone,
             checkOtpDto.otpCode,
             response
@@ -114,7 +114,6 @@ export class AuthController {
     @Get('logout')
     async logout(
         @GetCurrentUser("phone") phone: string,
-        @Req() request: Request,
         @Res() response: Response
     ) {
         await this.authService.logout(phone, response);
