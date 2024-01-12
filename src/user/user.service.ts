@@ -258,8 +258,9 @@ export class UserService {
         phone: string,
         projection: {} = undefined
     ): Promise<User> {
-        const user = await this.userRepository.findOne(
-            { phone },
+        const user = await this.userRepository.findOne({
+            phone
+        },
             projection
         );
         return user;

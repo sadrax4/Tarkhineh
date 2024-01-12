@@ -103,8 +103,8 @@ export class AuthService {
                 sameSite: 'none',
                 httpOnly: true,
                 secure: true,
-                maxAge: (3 * 3600 * 24 * 1000),
                 //domain: "tarkhineh.liara.run"
+                maxAge: (3 * 3600 * 24 * 1000),
             }
         );
         const successMessage = "ورود با موفقیت انجام شد";
@@ -163,22 +163,22 @@ export class AuthService {
             'access-token',
             tokens.accessToken,
             {
-                httpOnly: false,
+                sameSite: 'none',
+                httpOnly: true,
                 secure: true,
-                sameSite: "lax",
-                domain: "https://tarkhine.liara.run/",
-                maxAge: (d.getTime() + 1 * 3600 * 1000),
+                //domain: "tarkhineh.liara.run",
+                maxAge: (1 * 3600 * 1000),
             }
         );
         response.cookie(
             "refresh-token",
             tokens.refreshToken,
             {
-                httpOnly: false,
+                sameSite: 'none',
+                httpOnly: true,
                 secure: true,
-                sameSite: "lax",
-                domain: "https://tarkhine.liara.run/",
-                maxAge: (d.getTime() + 3 * 3600 * 24 * 1000),
+                //domain: "tarkhineh.liara.run"
+                maxAge: (3 * 3600 * 24 * 1000),
             }
         );
         const responseMessage = 'توکن جدید تولید شد'
@@ -197,11 +197,18 @@ export class AuthService {
         const d = new Date();
         response.clearCookie(
             "refresh-token",
-            { httpOnly: true, secure: true }
+            {
+                httpOnly: true,
+                secure: true
+            }
         );
+
         response.clearCookie(
             "access-token",
-            { httpOnly: true, secure: true }
+            {
+                httpOnly: true,
+                secure: true
+            }
         );
         delete response?.req?.user;
         delete response?.req?.cookies;

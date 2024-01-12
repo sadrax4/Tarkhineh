@@ -1,8 +1,11 @@
 import { FileTypeValidator, HttpException, HttpStatus, MaxFileSizeValidator, ParseFilePipe, UploadedFile, UploadedFiles } from "@nestjs/common";
+import { UploadFile } from "../interceptors";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { MulterFile } from "../types";
 
 export function CheckRequiredUploadedFile(
     fileType: string | RegExp,
-    size: number = 5
+    size: number 
 ) {
     return UploadedFiles(
         new ParseFilePipe({
@@ -16,7 +19,7 @@ export function CheckRequiredUploadedFile(
                     error,
                     HttpStatus.INTERNAL_SERVER_ERROR
                 )
-            },
+            }
         })
     )
 }
