@@ -24,8 +24,8 @@ export class AuthController {
     @ApiBody({ type: LoginUserDto, required: true })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiResponse({
-        type: OkResponseMessage
-        , status: HttpStatus.OK
+        type: OkResponseMessage,
+        status: HttpStatus.OK
     })
     async getOtp(
         @Body() loginUserDto: LoginUserDto,

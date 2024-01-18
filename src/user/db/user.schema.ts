@@ -94,5 +94,8 @@ export class User extends AbstractDocument {
     @Prop({ default: now() })
     updatedAt: Date;
 
+    @Prop({ type: [mongoose.Types.ObjectId] })
+    comments: [mongoose.Types.ObjectId]
+
 }
 export const UserSchema = SchemaFactory.createForClass(User)

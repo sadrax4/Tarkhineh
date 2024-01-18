@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Binary } from "mongodb";
 
 export class CreateFoodDto {
 

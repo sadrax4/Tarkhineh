@@ -1,13 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
-import {
-    CreateAddressDto,
-    DeleteUserDto,
-    UpdateAddressDto,
-    UpdateUserDto
-} from './dto';
+import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateUserDto } from './dto';
 import { Response } from 'express';
 import { deleteInvalidValue } from 'src/common/utils';
+import { MulterFile } from 'src/common/types';
 
 @Injectable()
 export class ProfileService {
@@ -151,5 +147,23 @@ export class ProfileService {
                 data: addresses,
                 maxPage
             })
+    }
+
+    async updateImage(
+        phone: string,
+        image: string,
+        response: Response
+    ) {
+        await this.userService.updateImage(
+            phone,
+            image
+        )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "بروفایل کاربر با موفیقیت به روز رسانی شد",
+                statusCode: HttpStatus.OK
+            })
+
     }
 }

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { UserRepository } from './db/user.repository';
@@ -14,6 +14,5 @@ import { User, UserSchema } from './db/user.schema';
   exports: [UserService]
 })
 export class UserModule {
-
 
 }

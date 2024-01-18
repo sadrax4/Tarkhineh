@@ -39,6 +39,7 @@ export class UserService {
         updateUserDto: UpdateUserDto,
         phone: string
     ): Promise<void> {
+        deleteInvalidValue(updateUserDto);
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
@@ -139,6 +140,27 @@ export class UserService {
         }
     }
 
+    async updateComment(
+        userId: string,
+        commentId: ObjectId
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                { _id: new ObjectId(userId) },
+                {
+                    $push: {
+                        comments: commentId
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
     async findAllUsers(): Promise<User[]> {
         const users = await this.userRepository.find({});
         return users;
@@ -151,13 +173,17 @@ export class UserService {
     ): Promise<[number, any]> {
         const { address } = await this.userRepository.findOne(
             { phone },
-            { address: 1, _id: false },
+            {
+                address: 1,
+                _id: false
+            }
         );
         const maxPage = Math.ceil(address.length / limit)
         const newAddress = pagination(
             address,
             limit,
-            page)
+            page
+        )
         return [
             maxPage,
             newAddress
@@ -168,10 +194,7 @@ export class UserService {
         phone: string
     ): Promise<boolean> {
         const user = await this.findUser(phone);
-        if (!user) {
-            return false;
-        }
-        return true;
+        return user ? true : false;
     }
 
     private generateUsername(
@@ -222,6 +245,77 @@ export class UserService {
         }
     }
 
+    async deleteComment(
+        commentId: string
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                {
+                    comments: {
+                        $in: new mongoose.Types.ObjectId(commentId)
+                    }
+                },
+                {
+                    $pull: {
+                        ['comments']: new mongoose.Types.ObjectId(commentId)
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async getComments(
+        userId: string
+    ): Promise<object> {
+        try {
+            const commentProjection = {
+                phone: 0,
+                _id: 0,
+                address: 0,
+                birthday: 0,
+                createdAt: 0,
+                email: 0,
+                family: 0,
+                favoriteFood: 0,
+                hashRT: 0,
+                image: 0,
+                name: 0,
+                otp: 0,
+                updatedAt: 0,
+                username: 0
+            }
+            const [comments] = await this.userRepository.aggregate([
+                {
+                    $match: {
+                        '_id': new mongoose.Types.ObjectId(userId)
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'comments',
+                        localField: 'comments',
+                        foreignField: '_id',
+                        as: 'comments'
+                    },
+                },
+                {
+                    $project: commentProjection
+                }
+            ])
+            return comments;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
     async removeRefreshToken(
         phone: string
     ): Promise<void> {
@@ -242,11 +336,11 @@ export class UserService {
         username: string,
         phone: string
     ): Promise<void> {
-        const findUser = await this.userRepository.findOne({
+        const isDuplicateUsername = await this.userRepository.findOne({
             phone: { $ne: phone },
             username
         })
-        if (findUser) {
+        if (isDuplicateUsername) {
             throw new HttpException(
                 "این نام کاربری قبلا مورد استفاده قرار گرفته است",
                 HttpStatus.CONFLICT
@@ -258,12 +352,32 @@ export class UserService {
         phone: string,
         projection: {} = undefined
     ): Promise<User> {
-        const user = await this.userRepository.findOne({
-            phone
-        },
+        const user = await this.userRepository.findOne(
+            { phone },
             projection
         );
         return user;
+    }
+
+    async updateImage(
+        phone: string,
+        image: string
+    ) {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                { phone },
+                {
+                    $set: {
+                        image
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
     }
 }
 

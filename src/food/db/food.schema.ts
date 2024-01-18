@@ -31,6 +31,10 @@ export class Food extends AbstractDocument {
 
     @Prop()
     images: string[];
+
+    @Prop({type:[mongoose.Types.ObjectId]})
+    comments: [mongoose.Types.ObjectId]
+
 }
 
 export const FoodSchema = SchemaFactory.createForClass(Food);

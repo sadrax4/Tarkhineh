@@ -9,7 +9,9 @@ import {
     Post,
     Query,
     Res,
-    UseGuards
+    UploadedFile,
+    UseGuards,
+    UseInterceptors
 } from '@nestjs/common';
 import {
     ApiBody,
@@ -28,6 +30,7 @@ import {
     CreateAddressDto,
     DeleteUserDto,
     UpdateAddressDto,
+    UpdateImageDto,
     UpdateUserDto,
     UpdateUserSwagger
 } from './dto';
@@ -36,6 +39,8 @@ import { GetCurrentUser } from 'src/common/decorators';
 import { ProfileService } from './profile.service';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { UploadFile } from 'src/common/interceptors';
+import { MulterFile } from 'src/common/types';
 
 @Controller('profile')
 export class ProfileController {
@@ -194,6 +199,32 @@ export class ProfileController {
             limit ? limit : this.configService.get<number>("LIMIT"),
             response
         );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiBody({
+        type: UpdateImageDto,
+        required: true
+    })
+    @ApiTags('profile-user')
+    @ApiConsumes(MIMETYPE.MULTIPART)
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Patch('image')
+    @UseInterceptors(UploadFile('image'))
+    async updateImage(
+        @UploadedFile() {filename}: MulterFile,
+        @GetCurrentUser('phone') phone: string,
+        @Res() response: Response
+    ) {
+        return await this.profileService.updateImage(
+            phone,
+            filename,
+            response
+        )
+
     }
 
 }
