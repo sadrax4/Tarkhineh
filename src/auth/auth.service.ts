@@ -84,14 +84,13 @@ export class AuthService {
             10
         );
         await this.userService.saveRefreshToken(phone, hashRT);
-        const d = new Date();
         response.cookie(
             'access-token',
             tokens.accessToken,
             {
-                sameSite: 'none',
-                httpOnly: true,
-                secure: true,
+                sameSite: 'lax',
+                httpOnly: false,
+                secure: false,
                 //domain: "tarkhineh.liara.run",
                 maxAge: (1 * 3600 * 1000),
             }
@@ -100,9 +99,9 @@ export class AuthService {
             "refresh-token",
             tokens.refreshToken,
             {
-                sameSite: 'none',
-                httpOnly: true,
-                secure: true,
+                sameSite: 'lax',
+                httpOnly: false,
+                secure: false,
                 //domain: "tarkhineh.liara.run"
                 maxAge: (3 * 3600 * 24 * 1000),
             }
@@ -158,27 +157,26 @@ export class AuthService {
             phone,
             hashRefresh
         );
-        const d = new Date();
         response.cookie(
             'access-token',
             tokens.accessToken,
             {
-                sameSite: 'none',
-                httpOnly: true,
-                secure: true,
+                sameSite: 'lax',
+                httpOnly: false,
+                secure: false,
                 //domain: "tarkhineh.liara.run",
-                maxAge: (1 * 3600 * 1000),
+                maxAge: (1 * 3600 * 1000)
             }
         );
         response.cookie(
             "refresh-token",
             tokens.refreshToken,
             {
-                sameSite: 'none',
-                httpOnly: true,
-                secure: true,
+                sameSite: 'lax',
+                httpOnly: false,
+                secure: false,
                 //domain: "tarkhineh.liara.run"
-                maxAge: (3 * 3600 * 24 * 1000),
+                maxAge: (3 * 3600 * 24 * 1000)
             }
         );
         const responseMessage = 'توکن جدید تولید شد'
@@ -198,7 +196,8 @@ export class AuthService {
         response.clearCookie(
             "refresh-token",
             {
-                httpOnly: true,
+                sameSite: 'none',
+                httpOnly: false,
                 secure: true
             }
         );
@@ -206,7 +205,8 @@ export class AuthService {
         response.clearCookie(
             "access-token",
             {
-                httpOnly: true,
+                sameSite: 'none',
+                httpOnly: false,
                 secure: true
             }
         );

@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { AbstractDocument } from "libs/database";
 import mongoose, { now } from "mongoose";
+import * as fs from 'fs';
+import { hostname } from "os";
 
 @Schema({ _id: false })
 class OTP {
@@ -52,7 +54,12 @@ class Address extends AbstractDocument {
 
 }
 
-@Schema({ timestamps: true, versionKey: false, collection: 'user' })
+@Schema({
+    timestamps: true,
+    versionKey: false,
+    collection: 'user',
+    virtuals: true,
+})
 export class User extends AbstractDocument {
 
     @Prop({ required: true })
@@ -97,5 +104,9 @@ export class User extends AbstractDocument {
     @Prop({ type: [mongoose.Types.ObjectId] })
     comments: [mongoose.Types.ObjectId]
 
+    @Prop()
+    imageUrl: string
+
 }
 export const UserSchema = SchemaFactory.createForClass(User)
+

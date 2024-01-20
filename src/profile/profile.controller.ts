@@ -1,46 +1,14 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    HttpStatus,
-    Param,
-    Patch,
-    Post,
-    Query,
-    Res,
-    UploadedFile,
-    UseGuards,
-    UseInterceptors
-} from '@nestjs/common';
-import {
-    ApiBody,
-    ApiConsumes,
-    ApiQuery,
-    ApiResponse,
-    ApiTags,
-    ApiUnauthorizedResponse
-} from '@nestjs/swagger';
-import {
-    MIMETYPE,
-    OkResponseMessage,
-    UnAuthorizeResponseMessage
-} from 'src/common/constant';
-import {
-    CreateAddressDto,
-    DeleteUserDto,
-    UpdateAddressDto,
-    UpdateImageDto,
-    UpdateUserDto,
-    UpdateUserSwagger
-} from './dto';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
+import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateImageDto, UpdateUserDto, UpdateUserSwagger } from './dto';
 import { JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
 import { ProfileService } from './profile.service';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { UploadFile } from 'src/common/interceptors';
-import { MulterFile } from 'src/common/types';
+import {  UploadFileAws } from 'src/common/interceptors';
+
 
 @Controller('profile')
 export class ProfileController {
@@ -213,18 +181,35 @@ export class ProfileController {
         status: HttpStatus.OK
     })
     @Patch('image')
-    @UseInterceptors(UploadFile('image'))
+    @UseInterceptors(UploadFileAws('image'))
     async updateImage(
-        @UploadedFile() {filename}: MulterFile,
+        @UploadedFile() file: Express.Multer.File,
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ) {
+        console.log(file);
         return await this.profileService.updateImage(
             phone,
-            filename,
+            file,
             response
         )
+    }
 
+    @UseGuards(JwtGuard)
+    @ApiTags('profile-user')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Delete('image')
+    async deleteImage(
+        @GetCurrentUser('phone') phone: string,
+        @Res() response: Response
+    ) {
+        return await this.profileService.deleteImage(
+            phone,
+            response
+        )
     }
 
 }

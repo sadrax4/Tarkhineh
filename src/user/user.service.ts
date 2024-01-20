@@ -10,11 +10,16 @@ import { UpdateAddressDto } from 'src/profile/dto';
 import { ObjectId } from 'mongodb';
 import { UpdateUserDto } from '../profile/dto/update-user-dto';
 import { DeleteUserDto } from '../profile/dto/delete-user-dto';
+import * as fs from 'fs';
+import { USER_FOLDER, UploadPath } from 'src/common/constant';
+import * as path from 'path';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class UserService {
     constructor(
-        private readonly userRepository: UserRepository
+        private readonly userRepository: UserRepository,
+        private readonly storageService: StorageService
     ) { }
 
     async createUser(
@@ -356,19 +361,46 @@ export class UserService {
             { phone },
             projection
         );
+        if (user?.image) {
+            const imageUrl = this.storageService.getFileLink(
+                user.image,
+                USER_FOLDER
+            )
+            user.imageUrl = imageUrl;
+        }
         return user;
     }
 
     async updateImage(
         phone: string,
         image: string
-    ) {
+    ): Promise<void> {
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
                 {
                     $set: {
                         image
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async deleteImage(
+        phone: string,
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                { phone },
+                {
+                    $set: {
+                        image: null
                     }
                 }
             )

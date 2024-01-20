@@ -2,9 +2,9 @@ import { Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/
 import { UserService } from './user.service';
 import { JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
-import { Response } from 'express';
-import { ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
+import { Request, Response } from 'express';
+import {  ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {  UnAuthorizeResponseMessage } from 'src/common/constant';
 
 
 @Controller('user')
@@ -22,6 +22,7 @@ export class UserController {
     @Get()
     async getUser(
         @Res() response: Response,
+        @Req() request: Request,
         @GetCurrentUser('phone') phone: string,
     ) {
         const projection = {

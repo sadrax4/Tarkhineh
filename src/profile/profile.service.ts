@@ -1,14 +1,16 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateUserDto } from './dto';
 import { Response } from 'express';
 import { deleteInvalidValue } from 'src/common/utils';
-import { MulterFile } from 'src/common/types';
+import { StorageService } from 'src/storage/storage.service';
+import { USER_FOLDER } from 'src/common/constant';
 
 @Injectable()
 export class ProfileService {
     constructor(
-        private userService: UserService
+        private userService: UserService,
+        private storageService: StorageService
     ) { }
 
     async updateUser(
@@ -151,19 +153,57 @@ export class ProfileService {
 
     async updateImage(
         phone: string,
-        image: string,
+        file: Express.Multer.File,
         response: Response
-    ) {
-        await this.userService.updateImage(
-            phone,
-            image
+    ): Promise<Response> {
+        const storageQuery = this.storageService.upload(
+            file.filename,
+            file.buffer,
+            USER_FOLDER
         )
+        const userQuery = this.userService.updateImage(
+            phone,
+            file.filename
+        )
+        await Promise.all([
+            storageQuery,
+            userQuery
+        ])
         return response
             .status(HttpStatus.OK)
             .json({
-                message: "بروفایل کاربر با موفیقیت به روز رسانی شد",
+                message: "بروفایل کاربر با موفقیت به روز رسانی شد",
                 statusCode: HttpStatus.OK
             })
+    }
 
+    async deleteImage(
+        phone: string,
+        response: Response
+    ): Promise<Response> {
+        const { image } = await this.userService.findUser(phone);
+        if (!image) {
+            throw new HttpException(
+                "کاربر فاقد عکس میباشد",
+                HttpStatus.BAD_REQUEST
+            )
+        }
+        const storageQuery = this.storageService.deleteFile(
+            image,
+            USER_FOLDER
+        )
+        const userQuery = this.userService.deleteImage(
+            phone
+        )
+        await Promise.all([
+            storageQuery,
+            userQuery
+        ])
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "بروفایل کاربر با موفقیت به حذف شد",
+                statusCode: HttpStatus.OK
+            })
     }
 }

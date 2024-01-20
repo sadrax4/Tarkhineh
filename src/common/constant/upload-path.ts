@@ -1,0 +1,1 @@
+export const UploadPath = "/public/upload/image"

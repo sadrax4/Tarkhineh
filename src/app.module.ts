@@ -7,6 +7,7 @@ import { ProfileModule } from './profile/profile.module';
 import { FoodModule } from './food/food.module';
 import { CategoryModule } from './category/category.module';
 import { CommentModule } from './comment/comment.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CommentModule } from './comment/comment.module';
     UserModule,
     AuthModule,
     ProfileModule,
+    StorageModule,
     FoodModule,
     CategoryModule,
     CommentModule

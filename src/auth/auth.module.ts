@@ -9,6 +9,7 @@ import { User, UserSchema } from 'src/user/db/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy, RefreshStrategy } from './strategy';
 import { PassportModule } from '@nestjs/passport';
+import { StorageService } from 'src/storage/storage.service';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { PassportModule } from '@nestjs/passport';
     UserRepository,
     UserService,
     JwtStrategy,
-    RefreshStrategy
+    RefreshStrategy,
+    StorageService
   ]
 })
 

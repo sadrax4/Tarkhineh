@@ -10,6 +10,7 @@ import { User, UserSchema } from 'src/user/db/user.schema';
 import { FoodService } from 'src/food/food.service';
 import { FoodRepository } from 'src/food/db/food.repository';
 import { Food, FoodSchema } from 'src/food/db/food.schema';
+import { StorageService } from 'src/storage/storage.service';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { Food, FoodSchema } from 'src/food/db/food.schema';
     UserService,
     UserRepository,
     FoodService,
-    FoodRepository
+    FoodRepository,
+    StorageService
   ]
 })
 export class CommentModule { }
