@@ -5,7 +5,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
 import { FoodModule } from './food/food.module';
-import { CategoryModule } from './category/category.module';
 import { CommentModule } from './comment/comment.module';
 import { StorageModule } from './storage/storage.module';
 
@@ -20,7 +19,6 @@ import { StorageModule } from './storage/storage.module';
     ProfileModule,
     StorageModule,
     FoodModule,
-    CategoryModule,
     CommentModule
   ],
   controllers: [],

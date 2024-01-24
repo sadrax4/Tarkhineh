@@ -23,18 +23,20 @@ export class Food extends AbstractDocument {
     @Prop({ default: 1 })
     quantity: number;
 
-    @Prop({ type: [mongoose.Types.ObjectId] })
-    mainCategory: [mongoose.Types.ObjectId]
+    @Prop()
+    category: string[];
 
-    @Prop({ type: [mongoose.Types.ObjectId] })
-    subCategory: [mongoose.Types.ObjectId]
+    @Prop()
+    subCategory: string[];
 
     @Prop()
     images: string[];
 
-    @Prop({type:[mongoose.Types.ObjectId]})
+    @Prop({ type: [mongoose.Types.ObjectId] })
     comments: [mongoose.Types.ObjectId]
 
+    @Prop()
+    imagesUrl: string[]
 }
 
 export const FoodSchema = SchemaFactory.createForClass(Food);

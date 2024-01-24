@@ -156,7 +156,7 @@ export class ProfileService {
         file: Express.Multer.File,
         response: Response
     ): Promise<Response> {
-        const storageQuery = this.storageService.upload(
+        const storageQuery = this.storageService.uploadSingleFile(
             file.filename,
             file.buffer,
             USER_FOLDER

@@ -37,7 +37,7 @@ export class AuthService {
             const text = `ترخینه
             کد تایید : ${otpCode}
             `;
-            //SmsPanel(phone, otpCode, text);
+            SmsPanel(phone, otpCode, text);
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -91,7 +91,7 @@ export class AuthService {
                 sameSite: 'lax',
                 httpOnly: false,
                 secure: false,
-                //domain: "tarkhineh.liara.run",
+                domain: "tarkhine.liara.run",
                 maxAge: (1 * 3600 * 1000),
             }
         );
@@ -102,7 +102,7 @@ export class AuthService {
                 sameSite: 'lax',
                 httpOnly: false,
                 secure: false,
-                //domain: "tarkhineh.liara.run"
+                domain: "tarkhine.liara.run",
                 maxAge: (3 * 3600 * 24 * 1000),
             }
         );
@@ -130,8 +130,9 @@ export class AuthService {
             hashRT
         );
         if (!isTokensEqual) {
-            return response.redirect(
-                "https://tarkhine.liara.run/v1/auth/get-otp"
+            throw new HttpException(
+                "توکن نا معتبر ",
+                HttpStatus.UNAUTHORIZED
             );
         }
         const isValidToken = await this.jwtService.verify(
@@ -141,8 +142,9 @@ export class AuthService {
             }
         )
         if (!isValidToken) {
-            return response.redirect(
-                "https://tarkhine.liara.run/v1/auth/get-otp"
+            throw new HttpException(
+                "توکن نا معتبر ",
+                HttpStatus.UNAUTHORIZED
             );
         }
         const tokens: Token = await this.getTokens(

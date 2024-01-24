@@ -54,7 +54,7 @@ export class AuthController {
     })
     async checkOtp(
         @Body() checkOtpDto: CheckOtpDto,
-        @Res({ passthrough: true }) response: Response,
+        @Res() response: Response,
     ): Promise<Response> {
         return this.authService.checkOtp(
             checkOtpDto.phone,

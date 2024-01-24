@@ -24,7 +24,7 @@ export const foodSchema = {
             quantity: {
                 type: 'number'
             },
-            mainCategory: {
+            category: {
                 type: 'array',
                 items: {
                     type: 'string'

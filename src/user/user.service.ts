@@ -10,9 +10,7 @@ import { UpdateAddressDto } from 'src/profile/dto';
 import { ObjectId } from 'mongodb';
 import { UpdateUserDto } from '../profile/dto/update-user-dto';
 import { DeleteUserDto } from '../profile/dto/delete-user-dto';
-import * as fs from 'fs';
-import { USER_FOLDER, UploadPath } from 'src/common/constant';
-import * as path from 'path';
+import { USER_FOLDER } from 'src/common/constant';
 import { StorageService } from '../storage/storage.service';
 
 @Injectable()

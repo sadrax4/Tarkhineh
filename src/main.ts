@@ -3,33 +3,37 @@ import { AppModule } from './app.module';
 import { SwaggerInit } from './swagger/swagger.config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
-import { BadRequestException, ValidationPipe, VersioningType } from '@nestjs/common';
+import { VersioningType } from '@nestjs/common';
+import helmet from 'helmet';
+import { AllowOrigins, HOST_PORT, PORT } from './common/constant';
+import { ErrorValidation } from './common/pipe';
 
 async function bootstrap() {
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
   app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe({
-    exceptionFactory: (errors) => {
-      const result = errors.map((error) => (
-        error.constraints[Object.keys(error.constraints)[0]]
-      ))
-      return new BadRequestException(result[0]);
-    }
-  }));
+
+  app.use(helmet());
+
+  app.setGlobalPrefix('v1');
+
+  app.enableVersioning({
+    type: VersioningType.URI
+  });
+
+  app.useGlobalPipes(
+    ErrorValidation()
+  );
+
   app.enableCors({
     credentials: true,
-    origin:
-      [
-        'https://tarkhine.liara.run',
-        'https://tarkhineh.liara.run',
-        'http://localhost:3000'
-      ],
-    //preflightContinue: true,
+    origin: AllowOrigins
   });
-  app.setGlobalPrefix('v1');
-  app.enableVersioning({ type: VersioningType.URI });
+
   SwaggerInit(app);
-  const port = 3000;
-  await app.listen(port, "0.0.0.0");
+
+  await app.listen(PORT, HOST_PORT);
+
 }
 bootstrap();

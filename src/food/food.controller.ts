@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { CreateFoodDto } from './dto';
 import { Response } from 'express';
 import { FoodService } from './food.service';
-import { ApiBody, ApiConsumes, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { foodSchema } from './config';
-import { UploadFile, UploadMultiFiles } from 'src/common/interceptors';
+import { UploadMultiFiles } from 'src/common/interceptors';
 import { MulterFile } from 'src/common/types';
 
 @Controller('food')
@@ -28,28 +28,53 @@ export class FoodController {
         @Body() createFoodDto: CreateFoodDto,
         @Res() response: Response
     ): Promise<Response> {
-        createFoodDto.images = images.map(image => image.filename)
+        createFoodDto.images = images.map(
+            image => image.filename
+        )
         return this.foodService.createFood(
             createFoodDto,
+            images,
             response
         )
     }
 
-
     @ApiTags('food')
-    @ApiConsumes(MIMETYPE.MULTIPART)
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
+    @ApiQuery({ name: "main", required: false })
+    @ApiQuery({ name: "sub", required: false })
+    @Get('/:main/:sub')
+    async getFoodsByCategory(
+        @Res() response: Response,
+        @Query('main') mainCategory: string = null,
+        @Query('sub') subCategory: string = null
+    ): Promise<Response> {
+        return this.foodService.getFoodsByCategory(
+            mainCategory,
+            subCategory,
+            response
+        )
+    }
+
+    @ApiTags('food')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+
     @Get('list')
     async getFoods(
-        @Res() response: Response
+        @Res() response: Response,
+
     ): Promise<Response> {
         return this.foodService.getFoods(
             response
         )
     }
+
+
 
     @ApiTags('food')
     @ApiResponse({

@@ -5,10 +5,8 @@ import { CommentRepository } from './db/comment.repository';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
 import { Response } from 'express';
 import mongoose, { Types } from 'mongoose';
-import { ObjectId } from 'mongodb';
 import { FoodService } from 'src/food/food.service';
 import { deleteInvalidValue } from 'src/common/utils';
-
 
 @Injectable()
 export class CommentService {

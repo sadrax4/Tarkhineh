@@ -3,27 +3,47 @@ import { FoodRepository } from './db/food.repository';
 import { CreateFoodDto } from './dto';
 import { Response } from 'express';
 import { deleteInvalidValue } from 'src/common/utils';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { DEFAULT_CATEGORY, FOOD_FOLDER, INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
 import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { StorageService } from 'src/storage/storage.service';
+import { Food } from './db/food.schema';
 
 @Injectable()
 export class FoodService {
     constructor(
-        private readonly foodRepository: FoodRepository
+        private readonly foodRepository: FoodRepository,
+        private storageService: StorageService
     ) { }
 
     async createFood(
         createFoodDto: CreateFoodDto,
+        images: Express.Multer.File[],
         response: Response
     ): Promise<Response> {
         deleteInvalidValue(createFoodDto);
+        createFoodDto.imagesUrl = images.map(
+            image => {
+                return this.storageService.getFileLink(
+                    image.filename,
+                    FOOD_FOLDER
+                )
+            })
+        const foodData = {
+            _id: new Types.ObjectId(),
+            ...createFoodDto,
+        }
+
         try {
-            const foodData = {
-                _id: new Types.ObjectId(),
-                ...createFoodDto
-            }
-            await this.foodRepository.create(foodData);
+            await Promise.all([
+                this.storageService.uploadMultiFile(
+                    images,
+                    FOOD_FOLDER
+                ),
+                this.foodRepository.create(
+                    foodData
+                )
+            ])
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
@@ -38,6 +58,47 @@ export class FoodService {
             })
     }
 
+    async getFoodsByCategory(
+        mainCategory: string = null,
+        subCategory: string = null,
+        response: Response
+    ): Promise<Response> {
+        let foods: Food[];
+        try {
+            if (!mainCategory && !subCategory) {
+                foods = await this.foodRepository.find({
+                    category: DEFAULT_CATEGORY
+                });
+            } else if (mainCategory && !subCategory) {
+                foods = await this.foodRepository.find({
+                    category: mainCategory
+                });
+            }
+            else if (mainCategory && subCategory) {
+                foods = await this.foodRepository.find({
+                    category: mainCategory,
+                    subCategory
+                });
+            }
+            const categories = {
+                category: mainCategory ? mainCategory : DEFAULT_CATEGORY,
+                subCategory: subCategory ? subCategory : null
+            }
+            deleteInvalidValue(categories)
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    data: foods,
+                    ...categories,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
     async getFoods(
         response: Response
     ): Promise<Response> {

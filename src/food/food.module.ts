@@ -4,6 +4,7 @@ import { FoodController } from './food.controller';
 import { FoodRepository } from './db/food.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Food, FoodSchema } from './db/food.schema';
+import { StorageService } from 'src/storage/storage.service';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { Food, FoodSchema } from './db/food.schema';
   ],
   providers: [
     FoodService,
-    FoodRepository
+    FoodRepository,
+    StorageService
   ],
   controllers: [FoodController]
 })

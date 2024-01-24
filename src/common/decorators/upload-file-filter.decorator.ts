@@ -5,7 +5,7 @@ import { MulterFile } from "../types";
 
 export function CheckRequiredUploadedFile(
     fileType: string | RegExp,
-    size: number 
+    size: number
 ) {
     return UploadedFiles(
         new ParseFilePipe({

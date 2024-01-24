@@ -1,1 +1,1 @@
-export const UploadPath = "/public/upload/image"
+export const UploadPath: string = "/public/upload/image"

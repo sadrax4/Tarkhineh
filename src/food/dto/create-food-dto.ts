@@ -21,11 +21,14 @@ export class CreateFoodDto {
     quantity?: number;
 
     @ApiProperty({ required: false })
-    mainCategory?: string[];
+    category?: string[];
 
     @ApiProperty({ required: false })
     subCategory?: string[];
 
     @ApiProperty({ format: 'binary', isArray: true, required: false })
     images?: string[];
+
+    @ApiProperty({ required: false })
+    imagesUrl?: string[];
 }

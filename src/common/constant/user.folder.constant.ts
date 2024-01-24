@@ -1,1 +1,1 @@
-export const USER_FOLDER = "user";
+export const USER_FOLDER: string = "user";
