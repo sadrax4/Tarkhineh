@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateCommentDto } from './dto';
+import { CreateCommentDto, ReplyCommentDto } from './dto';
 import { UserService } from 'src/user/user.service';
 import { CommentRepository } from './db/comment.repository';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
@@ -60,6 +60,36 @@ export class CommentService {
         }
 
     }
+
+    async replyComment(
+        id: string,
+        replyCommentDto: ReplyCommentDto,
+        response: Response
+    ): Promise<Response> {
+        try {
+            await this.commentRepository.findOneAndUpdate(
+                { _id: new Types.ObjectId(id) },
+                {
+                    $set: {
+                        reply: replyCommentDto.text,
+                        show: true
+                    }
+                }
+            )
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    message: "پاسخ به کامنت با موفقیت ثبت شد ",
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                INTERNAL_SERVER_ERROR_MESSAGE,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
     async IsShowComment(
         commentId: string,
         show: boolean,

@@ -91,7 +91,6 @@ export class AuthService {
                 sameSite: 'lax',
                 httpOnly: false,
                 secure: false,
-                domain: "tarkhine.liara.run",
                 maxAge: (1 * 3600 * 1000),
             }
         );
@@ -102,7 +101,6 @@ export class AuthService {
                 sameSite: 'lax',
                 httpOnly: false,
                 secure: false,
-                domain: "tarkhine.liara.run",
                 maxAge: (3 * 3600 * 24 * 1000),
             }
         );

@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
-import { CreateCommentDto, IsShowCommentDto } from './dto';
+import { CreateCommentDto, IsShowCommentDto, ReplyCommentDto } from './dto';
 import { JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
 import { CommentService } from './comment.service';
@@ -52,6 +52,27 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
+    @ApiBody({ type: ReplyCommentDto })
+    @ApiConsumes(MIMETYPE.JSON)
+    @ApiFoundResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Post('reply/:id')
+    async replyComment(
+        @Body() replyCommentDto: ReplyCommentDto,
+        @Query("id") id: string,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.commentService.replyComment(
+            id,
+            replyCommentDto,
+            response
+        )
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('comment')
     @ApiBody({
         type: IsShowCommentDto
     })
@@ -90,7 +111,7 @@ export class CommentController {
             response
         )
     }
-    
+
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')

@@ -26,11 +26,8 @@ export class Comment extends AbstractDocument {
     @Prop({ default: false })
     show: boolean
 
-    @Prop({
-        type: mongoose.Types.ObjectId
-    })
-    answer: mongoose.Types.ObjectId;
-
+    @Prop()
+    reply: string;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
