@@ -156,6 +156,10 @@ export class ProfileService {
         file: Express.Multer.File,
         response: Response
     ): Promise<Response> {
+        const imageUrl = this.storageService.getFileLink(
+            file.filename,
+            USER_FOLDER
+        )
         const storageQuery = this.storageService.uploadSingleFile(
             file.filename,
             file.buffer,
@@ -163,7 +167,8 @@ export class ProfileService {
         )
         const userQuery = this.userService.updateImage(
             phone,
-            file.filename
+            file.filename,
+            imageUrl
         )
         await Promise.all([
             storageQuery,
@@ -203,6 +208,53 @@ export class ProfileService {
             .status(HttpStatus.OK)
             .json({
                 message: "بروفایل کاربر با موفقیت به حذف شد",
+                statusCode: HttpStatus.OK
+            })
+    }
+
+    async addFavoriteFood(
+        phone: string,
+        foodId: string,
+        response: Response
+    ): Promise<Response> {
+        await this.userService.addFavoriteFood(phone, foodId);
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "غذا به لیست مورد پسند اضافه شد",
+                statusCode: HttpStatus.OK
+            })
+    }
+
+    async removeFavoriteFood(
+        phone: string,
+        foodId: string,
+        response: Response
+    ): Promise<Response> {
+        await this.userService.removeFavoriteFood(
+            phone,
+            foodId
+        );
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "غذا از لیست مورد پسند حذف شد",
+                statusCode: HttpStatus.OK
+            })
+    }
+
+    async getFavoriteFood(
+        phone: string,
+        response: Response
+    ): Promise<Response> {
+        const favoriteFood = await this.userService.getFavoriteFood(
+            phone
+        );
+        console.log(favoriteFood)
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                data: favoriteFood,
                 statusCode: HttpStatus.OK
             })
     }

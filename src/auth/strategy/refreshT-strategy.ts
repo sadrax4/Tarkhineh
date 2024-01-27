@@ -6,7 +6,6 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { UserService } from "src/user/user.service";
 import { JwtPayload } from "../types";
 import { AuthService } from "../auth.service";
-import { User } from "src/user/db/user.schema";
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {

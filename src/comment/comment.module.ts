@@ -1,16 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Comment, CommentSchema } from './db/comment.schema';
 import { CommentRepository } from './db/comment.repository';
-import { UserService } from 'src/user/user.service';
-import { UserRepository } from 'src/user/db/user.repository';
 import { User, UserSchema } from 'src/user/db/user.schema';
-import { FoodService } from 'src/food/food.service';
-import { FoodRepository } from 'src/food/db/food.repository';
 import { Food, FoodSchema } from 'src/food/db/food.schema';
-import { StorageService } from 'src/storage/storage.service';
+import { FoodModule } from 'src/food/food.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -27,17 +24,17 @@ import { StorageService } from 'src/storage/storage.service';
         name: Food.name,
         schema: FoodSchema
       }
-    ])
+    ]),
+    UserModule,
+    forwardRef(() => FoodModule),
   ],
-  controllers: [CommentController],
+  controllers: [
+    CommentController
+  ],
   providers: [
     CommentService,
-    CommentRepository,
-    UserService,
-    UserRepository,
-    FoodService,
-    FoodRepository,
-    StorageService
-  ]
+    CommentRepository
+  ],
+  exports: [CommentService]
 })
 export class CommentModule { }

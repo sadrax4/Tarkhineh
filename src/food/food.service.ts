@@ -1,19 +1,24 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { FoodRepository } from './db/food.repository';
-import { CreateFoodDto } from './dto';
+import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
-import { deleteInvalidValue } from 'src/common/utils';
-import { DEFAULT_CATEGORY, FOOD_FOLDER, INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { deleteInvalidValue, pagination } from 'src/common/utils';
+import { FOOD_FOLDER, INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
 import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { StorageService } from 'src/storage/storage.service';
 import { Food } from './db/food.schema';
+import { CommentService } from 'src/comment/comment.service';
+import { FoodDetailProjection } from 'src/common/projection';
 
 @Injectable()
 export class FoodService {
     constructor(
         private readonly foodRepository: FoodRepository,
-        private storageService: StorageService
+        private readonly storageService: StorageService,
+
+        @Inject(forwardRef(() => CommentService))
+        private readonly commentService: CommentService
     ) { }
 
     async createFood(
@@ -22,6 +27,9 @@ export class FoodService {
         response: Response
     ): Promise<Response> {
         deleteInvalidValue(createFoodDto);
+        createFoodDto.images = images.map(
+            image => image.filename
+        )
         createFoodDto.imagesUrl = images.map(
             image => {
                 return this.storageService.getFileLink(
@@ -33,7 +41,6 @@ export class FoodService {
             _id: new Types.ObjectId(),
             ...createFoodDto,
         }
-
         try {
             await Promise.all([
                 this.storageService.uploadMultiFile(
@@ -58,38 +65,183 @@ export class FoodService {
             })
     }
 
+    async updateFood(
+        foodId: string,
+        updateFoodDto: UpdateFoodDto,
+        images: Express.Multer.File[],
+        response: Response
+    ): Promise<Response> {
+        deleteInvalidValue(updateFoodDto);
+        updateFoodDto.images = images.map(
+            image => image.filename
+        )
+        updateFoodDto.imagesUrl = images.map(
+            image => {
+                return this.storageService.getFileLink(
+                    image.filename,
+                    FOOD_FOLDER
+                )
+            })
+        try {
+            await Promise.all([
+                this.storageService.uploadMultiFile(
+                    images,
+                    FOOD_FOLDER
+                ),
+                this.foodRepository.findOneAndUpdate(
+                    {
+                        _id: new Types.ObjectId(foodId)
+                    },
+                    {
+                        $set: updateFoodDto
+                    }
+                )
+            ])
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+        return response
+            .status(HttpStatus.CREATED)
+            .json({
+                message: "غذا با موفقیت به روز رسانی  شد",
+                statusCode: HttpStatus.CREATED
+            })
+    }
+
+
+
     async getFoodsByCategory(
         mainCategory: string = null,
         subCategory: string = null,
+        page: number,
+        limit: number,
         response: Response
     ): Promise<Response> {
         let foods: Food[];
         try {
             if (!mainCategory && !subCategory) {
-                foods = await this.foodRepository.find({
-                    category: DEFAULT_CATEGORY
-                });
+                foods = await this.foodRepository.aggregate([
+                    {
+                        $group: {
+                            _id: "$subCategory",
+                            data: {
+                                $push: '$$ROOT'
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            subCategory: '$_id',
+                            _id: 0,
+                            data: 1,
+                        }
+                    },
+                    {
+                        $unwind: '$subCategory'
+                    },
+                    {
+                        $project: {
+                            data: {
+                                comments: 0,
+                                description: 0,
+                                category: 0,
+                                subCategory: 0,
+                                images: 0,
+                            }
+                        }
+                    }
+                ]);
             } else if (mainCategory && !subCategory) {
-                foods = await this.foodRepository.find({
-                    category: mainCategory
-                });
+                foods = await this.foodRepository.aggregate([
+                    {
+                        $match: {
+                            "category": mainCategory
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$subCategory",
+                            data: {
+                                $push: '$$ROOT'
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            subCategory: '$_id',
+                            _id: 0,
+                            data: 1
+                        }
+                    },
+                    {
+                        $unwind: '$subCategory'
+                    },
+                    {
+                        $project: {
+                            data: {
+                                comments: 0,
+                                description: 0,
+                                category: 0,
+                                subCategory: 0,
+                                images: 0
+                            }
+                        }
+                    }
+                ])
             }
             else if (mainCategory && subCategory) {
-                foods = await this.foodRepository.find({
-                    category: mainCategory,
-                    subCategory
-                });
+                foods = await this.foodRepository.aggregate([
+                    {
+                        $match: {
+                            "category": mainCategory,
+                            "subCategory": subCategory
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$subCategory",
+                            data: {
+                                $push: '$$ROOT'
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            subCategory: '$_id',
+                            _id: 0,
+                            data: 1
+                        }
+                    },
+                    {
+                        $unwind: '$subCategory'
+                    },
+                    {
+                        $project: {
+                            data: {
+                                comments: 0,
+                                description: 0,
+                                category: 0,
+                                subCategory: 0,
+                                images: 0
+                            }
+                        }
+                    }
+                ])
             }
-            const categories = {
-                category: mainCategory ? mainCategory : DEFAULT_CATEGORY,
-                subCategory: subCategory ? subCategory : null
-            }
-            deleteInvalidValue(categories)
+            const maxPage = Math.ceil(foods.length / limit)
+            foods = pagination(
+                foods,
+                limit,
+                page
+            )
             return response
                 .status(HttpStatus.OK)
                 .json({
-                    data: foods,
-                    ...categories,
+                    foods,
+                    maxPage,
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
@@ -99,7 +251,7 @@ export class FoodService {
             )
         }
     }
-    
+
     async getFoods(
         response: Response
     ): Promise<Response> {
@@ -124,9 +276,49 @@ export class FoodService {
         response: Response
     ): Promise<Response> {
         try {
-            const food = await this.foodRepository.findOne({
-                _id: new ObjectId(foodId)
+
+            const foods = await this.foodRepository.aggregate([
+                {
+                    $match: {
+                        _id: new ObjectId(foodId),
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'comments',
+                        foreignField: "_id",
+                        localField: "comments",
+                        as: 'comments',
+                    }
+                },
+                {
+                    $unwind: "$comments"
+                },
+                {
+                    $lookup: {
+                        from: 'user',
+                        let: { foreignId: { $toObjectId: '$comments.author' } },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $eq: ['$_id', '$$foreignId'],
+                                    }
+                                }
+                            }
+                        ],
+                        as: 'comments.author',
+                    }
+                },
+                {
+                    $project: FoodDetailProjection
+                }
+            ])
+            let comments = foods.map(fd => {
+                return fd.comments;
             })
+            let food = foods[0];
+            food.comments = comments;
             if (!food) {
                 return response
                     .status(HttpStatus.OK)
@@ -182,13 +374,30 @@ export class FoodService {
     async updateFoodComment(
         foodId: string,
         commentId: ObjectId,
+        commentRate: number
     ): Promise<void> {
         try {
+            let calculateRate: number;
+            const { rate, rateCount } = await this.foodRepository.findOne({
+                _id: new Types.ObjectId(foodId)
+            });
+            if (rate == 1 && rateCount == 0) {
+                calculateRate = commentRate
+            }
+            else {
+                calculateRate = (((rate * rateCount) + commentRate) / (rateCount + 1));
+            }
             await this.foodRepository.findOneAndUpdate(
                 { _id: new ObjectId(foodId) },
                 {
                     $push: {
-                        comments: commentId
+                        comments: commentId,
+                    },
+                    $set: {
+                        rate: calculateRate
+                    },
+                    $inc: {
+                        rateCount: 1
                     }
                 }
             )

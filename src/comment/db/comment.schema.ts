@@ -7,13 +7,13 @@ export class Comment extends AbstractDocument {
 
     @Prop({
         required: true,
-        type: mongoose.Types.ObjectId
+        type:  [mongoose.Types.ObjectId]
     })
-    author: mongoose.Types.ObjectId;
+    author:  [mongoose.Types.ObjectId];
 
     @Prop({
         required: true,
-        type: mongoose.Types.ObjectId
+        type:  mongoose.Types.ObjectId
     })
     foodId: mongoose.Types.ObjectId;
 
@@ -28,6 +28,9 @@ export class Comment extends AbstractDocument {
 
     @Prop()
     reply: string;
+
+    @Prop({ min: 1, max: 5 })
+    rate: number
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

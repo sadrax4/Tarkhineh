@@ -9,21 +9,19 @@ import { User, UserSchema } from 'src/user/db/user.schema';
 import { AddressSwaggerMiddleware } from './middleware/address-swagger-middleware';
 import { StorageService } from 'src/storage/storage.service';
 import { StorageModule } from 'src/storage/storage.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    StorageModule
+    StorageModule,
+    UserModule
   ],
   controllers: [
     ProfileController
   ],
   providers: [
-    ProfileService,
-    UserService,
-    JwtService,
-    UserRepository,
-    StorageService
+    ProfileService
   ]
 })
 export class ProfileModule implements NestModule {

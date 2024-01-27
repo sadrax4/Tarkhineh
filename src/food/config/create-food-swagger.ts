@@ -17,6 +17,9 @@ export const foodSchema = {
             price: {
                 type: 'number'
             },
+            rate: {
+                type: 'number'
+            },
             discount: {
                 type: 'number',
                 default: 0

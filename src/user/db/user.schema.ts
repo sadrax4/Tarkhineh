@@ -14,13 +14,6 @@ class OTP {
 }
 
 @Schema({ _id: false })
-class FavoriteFood {
-
-    @Prop({ type: [mongoose.Types.ObjectId], required: true })
-    foodID: [mongoose.Types.ObjectId];
-}
-
-@Schema({ _id: false })
 class AnotherReceiver {
 
     @Prop({ required: true })
@@ -89,8 +82,8 @@ export class User extends AbstractDocument {
     @Prop({ type: [Address] })
     address: Address[];
 
-    @Prop({ type: FavoriteFood })
-    favoriteFood: FavoriteFood;
+    @Prop({ type: [mongoose.Types.ObjectId] })
+    favoriteFood: [mongoose.Types.ObjectId];
 
     @Prop()
     hashRT: string;
@@ -106,6 +99,7 @@ export class User extends AbstractDocument {
 
     @Prop()
     imageUrl: string
+
 
 }
 export const UserSchema = SchemaFactory.createForClass(User)

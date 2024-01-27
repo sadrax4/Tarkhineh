@@ -12,6 +12,7 @@ import { UpdateUserDto } from '../profile/dto/update-user-dto';
 import { DeleteUserDto } from '../profile/dto/delete-user-dto';
 import { USER_FOLDER } from 'src/common/constant';
 import { StorageService } from '../storage/storage.service';
+import { favoriteFoodProjection } from 'src/common/projection';
 
 @Injectable()
 export class UserService {
@@ -46,7 +47,9 @@ export class UserService {
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
-                { $set: updateUserDto }
+                {
+                    $set: updateUserDto
+                }
             )
         } catch (error) {
             throw new HttpException(
@@ -238,7 +241,11 @@ export class UserService {
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
-                { $set: { hashRT: refreshToken } }
+                {
+                    $set: {
+                        hashRT: refreshToken
+                    }
+                }
             )
         } catch (error) {
             throw new HttpException(
@@ -325,7 +332,11 @@ export class UserService {
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
-                { $set: { hashRT: null } }
+                {
+                    $set: {
+                        hashRT: null
+                    }
+                }
             )
         } catch (error) {
             throw new HttpException(
@@ -371,14 +382,16 @@ export class UserService {
 
     async updateImage(
         phone: string,
-        image: string
+        image: string,
+        imageUrl: string
     ): Promise<void> {
         try {
             await this.userRepository.findOneAndUpdate(
                 { phone },
                 {
                     $set: {
-                        image
+                        image,
+                        imageUrl
                     }
                 }
             )
@@ -402,6 +415,67 @@ export class UserService {
                     }
                 }
             )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async addFavoriteFood(
+        phone: string,
+        foodId: string
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                { phone },
+                {
+                    $push: {
+                        favoriteFood: new Types.ObjectId(foodId)
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async removeFavoriteFood(
+        phone: string,
+        foodId: string
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                { phone },
+                {
+                    $pull: {
+                        favoriteFood: new Types.ObjectId(foodId)
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async getFavoriteFood(
+        phone: string
+    ) {
+        try {
+            return await this.userRepository.aggregate([
+                // {
+                //     // $lookup: {
+                //     //     from: "foods"
+                //     // }
+                // }
+            ])
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

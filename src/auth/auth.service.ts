@@ -26,7 +26,7 @@ export class AuthService {
         const otpCode: number = generateOtpCode();
         const date = new Date();
         const expireIn = date.setSeconds(
-            date.getSeconds() + 111120
+            date.getSeconds() + 120
         );
         try {
             await this.userService.saveOtp(
@@ -88,9 +88,9 @@ export class AuthService {
             'access-token',
             tokens.accessToken,
             {
-                sameSite: 'lax',
+                sameSite: 'none',
                 httpOnly: false,
-                secure: false,
+                secure: true,
                 maxAge: (1 * 3600 * 1000),
             }
         );
@@ -98,9 +98,9 @@ export class AuthService {
             "refresh-token",
             tokens.refreshToken,
             {
-                sameSite: 'lax',
+                sameSite: 'none',
                 httpOnly: false,
-                secure: false,
+                secure: true,
                 maxAge: (3 * 3600 * 24 * 1000),
             }
         );
@@ -161,9 +161,9 @@ export class AuthService {
             'access-token',
             tokens.accessToken,
             {
-                sameSite: 'lax',
+                sameSite: 'none',
                 httpOnly: false,
-                secure: false,
+                secure: true,
                 //domain: "tarkhineh.liara.run",
                 maxAge: (1 * 3600 * 1000)
             }
@@ -172,9 +172,9 @@ export class AuthService {
             "refresh-token",
             tokens.refreshToken,
             {
-                sameSite: 'lax',
+                sameSite: 'none',
                 httpOnly: false,
-                secure: false,
+                secure: true,
                 //domain: "tarkhineh.liara.run"
                 maxAge: (3 * 3600 * 24 * 1000)
             }

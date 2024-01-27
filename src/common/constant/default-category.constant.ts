@@ -1,1 +1,0 @@
-export const DEFAULT_CATEGORY: string = "غذای اصلی";

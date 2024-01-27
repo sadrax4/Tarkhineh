@@ -7,7 +7,7 @@ import { GetCurrentUser } from 'src/common/decorators';
 import { ProfileService } from './profile.service';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import {  UploadFileAws } from 'src/common/interceptors';
+import { UploadFileAws } from 'src/common/interceptors';
 
 
 @Controller('profile')
@@ -187,7 +187,6 @@ export class ProfileController {
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ) {
-        console.log(file);
         return await this.profileService.updateImage(
             phone,
             file,
@@ -212,4 +211,59 @@ export class ProfileController {
         )
     }
 
+    @UseGuards(JwtGuard)
+    @ApiTags('profile-user')
+    @ApiConsumes(MIMETYPE.JSON)
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Patch('favorite-food/:foodId')
+    async addFavoriteFood(
+        @GetCurrentUser('phone') phone: string,
+        @Res() response: Response,
+        @Param("foodId") foodId: string
+    ): Promise<Response> {
+        return this.profileService.addFavoriteFood(
+            phone,
+            foodId,
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('profile-user')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Delete('favorite-food/:foodId')
+    async removeFavoriteFood(
+        @GetCurrentUser('phone') phone: string,
+        @Res() response: Response,
+        @Param("foodId") foodId: string
+    ): Promise<Response> {
+        return this.profileService.removeFavoriteFood(
+            phone,
+            foodId,
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('profile-user')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Get('favorite-food')
+    async getFavoriteFood(
+        @GetCurrentUser('phone') phone: string,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.profileService.getFavoriteFood(
+            phone,
+            response
+        );
+    }
 }

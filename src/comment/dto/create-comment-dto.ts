@@ -13,4 +13,7 @@ export class CreateCommentDto {
 
     author?: string;
 
+    @ApiProperty()
+    rate: number;
+
 }

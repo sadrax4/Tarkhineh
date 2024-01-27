@@ -1,21 +1,24 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
-import { CreateFoodDto } from './dto';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
 import { FoodService } from './food.service';
 import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { foodSchema } from './config';
-import { UploadMultiFiles } from 'src/common/interceptors';
+import { UploadMultiFilesAws } from 'src/common/interceptors';
 import { MulterFile } from 'src/common/types';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('food')
 export class FoodController {
+
     constructor(
-        private foodService: FoodService
+        private foodService: FoodService,
+        private configService: ConfigService
     ) { }
 
     @ApiBody(foodSchema)
-    @UseInterceptors(UploadMultiFiles('images'))
+    @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('food')
     @ApiConsumes(MIMETYPE.MULTIPART)
     @ApiResponse({
@@ -28,9 +31,6 @@ export class FoodController {
         @Body() createFoodDto: CreateFoodDto,
         @Res() response: Response
     ): Promise<Response> {
-        createFoodDto.images = images.map(
-            image => image.filename
-        )
         return this.foodService.createFood(
             createFoodDto,
             images,
@@ -45,15 +45,21 @@ export class FoodController {
     })
     @ApiQuery({ name: "main", required: false })
     @ApiQuery({ name: "sub", required: false })
-    @Get('/:main/:sub')
+    @ApiQuery({ name: "page", required: false })
+    @ApiQuery({ name: "limit", required: false })
+    @Get()
     async getFoodsByCategory(
         @Res() response: Response,
-        @Query('main') mainCategory: string = null,
-        @Query('sub') subCategory: string = null
+        @Query('main') mainCategory: string,
+        @Query('sub') subCategory: string,
+        @Query('page') page: number,
+        @Query('limit') limit: number,
     ): Promise<Response> {
         return this.foodService.getFoodsByCategory(
-            mainCategory,
-            subCategory,
+            mainCategory ? mainCategory : null,
+            subCategory ? subCategory : null,
+            page ? page : this.configService.get<number>("PAGE"),
+            limit ? limit : this.configService.get<number>("LIMIT"),
             response
         )
     }
@@ -63,7 +69,6 @@ export class FoodController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-
     @Get('list')
     async getFoods(
         @Res() response: Response,
@@ -73,8 +78,6 @@ export class FoodController {
             response
         )
     }
-
-
 
     @ApiTags('food')
     @ApiResponse({
@@ -112,6 +115,29 @@ export class FoodController {
     ): Promise<Response> {
         return this.foodService.deleteFoodById(
             foodId,
+            response
+        )
+    }
+
+    @ApiBody(foodSchema)
+    @UseInterceptors(UploadMultiFilesAws('images'))
+    @ApiTags('food')
+    @ApiConsumes(MIMETYPE.MULTIPART)
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Patch("/:foodId")
+    async updateFood(
+        @UploadedFiles() images: Array<MulterFile>,
+        @Body() updateFoodDto: UpdateFoodDto,
+        @Res() response: Response,
+        @Param("foodId") foodId: string
+    ): Promise<Response> {
+        return this.foodService.updateFood(
+            foodId,
+            updateFoodDto,
+            images,
             response
         )
     }

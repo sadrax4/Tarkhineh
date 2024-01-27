@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Inject, forwardRef } from '@nestjs/common';
 import { CreateCommentDto, ReplyCommentDto } from './dto';
 import { UserService } from 'src/user/user.service';
 import { CommentRepository } from './db/comment.repository';
@@ -7,12 +7,15 @@ import { Response } from 'express';
 import mongoose, { Types } from 'mongoose';
 import { FoodService } from 'src/food/food.service';
 import { deleteInvalidValue } from 'src/common/utils';
+import { Comment } from './db/comment.schema';
 
 @Injectable()
 export class CommentService {
 
     constructor(
         private userService: UserService,
+
+        @Inject(forwardRef(() => FoodService))
         private foodService: FoodService,
         private commentRepository: CommentRepository
     ) { }
@@ -37,9 +40,11 @@ export class CommentService {
                 userId.toString(),
                 commentData._id
             )
+            console.log(typeof createCommentDto.rate)
             const updateFoodCommentQuery = this.foodService.updateFoodComment(
                 createCommentDto.foodId.toString(),
-                commentData._id
+                commentData._id,
+                createCommentDto.rate
             )
             await Promise.all([
                 createCommentQuery,
@@ -54,7 +59,7 @@ export class CommentService {
                 })
         } catch (error) {
             throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE,
+                INTERNAL_SERVER_ERROR_MESSAGE + error,
                 HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
@@ -122,7 +127,7 @@ export class CommentService {
         response: Response
     ) {
         try {
-            const comments = await this.commentRepository.find({})
+            const comments: Comment[] = await this.commentRepository.find({});
             return response
                 .status(HttpStatus.OK)
                 .json({

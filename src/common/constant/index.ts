@@ -6,4 +6,3 @@ export * from './user.folder.constant';
 export * from './allow-origins.constant';
 export * from "./app-config.constant";
 export * from './food.folder.constant';
-export * from './default-category.constant'
