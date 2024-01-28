@@ -5,6 +5,7 @@ import { Response } from 'express';
 import { deleteInvalidValue } from 'src/common/utils';
 import { StorageService } from 'src/storage/storage.service';
 import { USER_FOLDER } from 'src/common/constant';
+import { User } from 'src/user/db/user.schema';
 
 @Injectable()
 export class ProfileService {
@@ -247,10 +248,9 @@ export class ProfileService {
         phone: string,
         response: Response
     ): Promise<Response> {
-        const favoriteFood = await this.userService.getFavoriteFood(
+        const favoriteFood: User[] = await this.userService.getFavoriteFood(
             phone
         );
-        console.log(favoriteFood)
         return response
             .status(HttpStatus.OK)
             .json({
