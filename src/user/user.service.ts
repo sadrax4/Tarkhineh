@@ -467,14 +467,25 @@ export class UserService {
 
     async getFavoriteFood(
         phone: string
-    ) {
+    ): Promise<User[]> {
         try {
             return await this.userRepository.aggregate([
-                // {
-                //     // $lookup: {
-                //     //     from: "foods"
-                //     // }
-                // }
+                {
+                    $match: {
+                        phone
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "foods",
+                        localField: "favoriteFood",
+                        foreignField: "_id",
+                        as: "favoriteFood"
+                    }
+                },
+                {
+                    $project: favoriteFoodProjection
+                }
             ])
         } catch (error) {
             throw new HttpException(

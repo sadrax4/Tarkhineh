@@ -111,8 +111,6 @@ export class FoodService {
             })
     }
 
-
-
     async getFoodsByCategory(
         mainCategory: string = null,
         subCategory: string = null,
