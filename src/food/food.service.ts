@@ -287,10 +287,11 @@ export class FoodService {
 
     async getFoodById(
         foodId: string,
+        phone: string,
         response: Response
     ): Promise<Response> {
         try {
-            const foods = await this.foodRepository.aggregate([
+            const foodQuery: any = this.foodRepository.aggregate([
                 {
                     $match: {
                         _id: new Types.ObjectId(foodId),
@@ -327,11 +328,21 @@ export class FoodService {
                     $project: FoodDetailProjection
                 }
             ])
+            const favoriteFoodQuery = this.userService.getFavoriteFoodId(
+                phone
+            )
+            const [foods, favoritFood] = await Promise.all([
+                foodQuery,
+                favoriteFoodQuery
+            ])
             let comments = foods.map(fd => {
                 return fd?.comments;
             })
             let food = foods[0];
             comments ? food.comments = comments : null;
+            if (favoritFood.includes(new Types.ObjectId(food._id))) {
+                food.isFavorite = true;
+            }
             if (!food) {
                 return response
                     .status(HttpStatus.OK)
@@ -437,7 +448,6 @@ export class FoodService {
                     }
                 }
             )
-
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

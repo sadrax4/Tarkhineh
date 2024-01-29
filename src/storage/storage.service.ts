@@ -44,7 +44,6 @@ export class StorageService {
         folder: string
     ): Promise<void> {
         try {
-            console.log(files)
             const storageQueries = files.map(
                 file => {
                     return this.s3Client.send(

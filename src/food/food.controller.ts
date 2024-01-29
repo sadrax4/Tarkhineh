@@ -98,11 +98,13 @@ export class FoodController {
     })
     @Get(':id')
     async getFoodById(
+        @GetCurrentUser('phone') phone: string,
         @Param("id") foodId: string,
         @Res() response: Response
     ): Promise<Response> {
         return this.foodService.getFoodById(
             foodId,
+            phone,
             response
         )
     }

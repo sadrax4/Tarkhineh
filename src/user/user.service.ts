@@ -12,7 +12,7 @@ import { UpdateUserDto } from '../profile/dto/update-user-dto';
 import { DeleteUserDto } from '../profile/dto/delete-user-dto';
 import { USER_FOLDER } from 'src/common/constant';
 import { StorageService } from '../storage/storage.service';
-import { favoriteFoodProjection } from 'src/common/projection';
+import { favoriteFoodProjection, getCommentProjection } from 'src/common/projection';
 
 @Injectable()
 export class UserService {
@@ -283,22 +283,6 @@ export class UserService {
         userId: string
     ): Promise<object> {
         try {
-            const commentProjection = {
-                phone: 0,
-                _id: 0,
-                address: 0,
-                birthday: 0,
-                createdAt: 0,
-                email: 0,
-                family: 0,
-                favoriteFood: 0,
-                hashRT: 0,
-                image: 0,
-                name: 0,
-                otp: 0,
-                updatedAt: 0,
-                username: 0
-            }
             const [comments] = await this.userRepository.aggregate([
                 {
                     $match: {
@@ -314,7 +298,7 @@ export class UserService {
                     },
                 },
                 {
-                    $project: commentProjection
+                    $project: getCommentProjection
                 }
             ])
             return comments;

@@ -4,6 +4,7 @@ export const FoodDetailProjection = {
     "comments.author.address": 0,
     "comments.author.phone": 0,
     "comments.author.comments": 0,
+    "comments.author.createdAt": 0,
     "comments.author.hashRT": 0,
     "comments.author.email": 0,
     "comments.author.username": 0,
