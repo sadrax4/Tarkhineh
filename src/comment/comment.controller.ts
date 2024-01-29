@@ -73,6 +73,27 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
+    @ApiBody({ type: ReplyCommentDto })
+    @ApiConsumes(MIMETYPE.JSON)
+    @ApiFoundResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Patch('reply/:id')
+    async editReplyComment(
+        @Body() replyCommentDto: ReplyCommentDto,
+        @Query("id") id: string,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.commentService.editReplyComment(
+            id,
+            replyCommentDto,
+            response
+        )
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('comment')
     @ApiBody({
         type: IsShowCommentDto
     })

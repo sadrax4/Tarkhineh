@@ -7,9 +7,9 @@ export class Comment extends AbstractDocument {
 
     @Prop({
         required: true,
-        type:  [mongoose.Types.ObjectId]
+        type:  mongoose.Types.ObjectId
     })
-    author:  [mongoose.Types.ObjectId];
+    author:  mongoose.Types.ObjectId;
 
     @Prop({
         required: true,

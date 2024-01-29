@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { FoodRepository } from './db/food.repository';
 import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
@@ -10,13 +10,14 @@ import { StorageService } from 'src/storage/storage.service';
 import { Food } from './db/food.schema';
 import { CommentService } from 'src/comment/comment.service';
 import { FoodDetailProjection } from 'src/common/projection';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class FoodService {
     constructor(
         private readonly foodRepository: FoodRepository,
         private readonly storageService: StorageService,
-
+        private readonly userService: UserService,
         @Inject(forwardRef(() => CommentService))
         private readonly commentService: CommentService
     ) { }
@@ -112,13 +113,14 @@ export class FoodService {
     }
 
     async getFoodsByCategory(
+        phone: string,
         mainCategory: string = null,
         subCategory: string = null,
         page: number,
         limit: number,
         response: Response
     ): Promise<Response> {
-        let foods: Food[];
+        let foods: any[];
         try {
             if (!mainCategory && !subCategory) {
                 foods = await this.foodRepository.aggregate([
@@ -234,6 +236,20 @@ export class FoodService {
                 foods,
                 limit,
                 page
+            );
+            const favoriteFood = await this.userService.getFavoriteFoodId(
+                phone
+            );
+            foods.map(
+                food => {
+                    food.data.map(
+                        fd => {
+                            if (favoriteFood.includes(new Types.ObjectId(fd._id))) {
+                                fd.isFavorite = true;
+                            }
+                        }
+                    )
+                }
             )
             return response
                 .status(HttpStatus.OK)
@@ -274,11 +290,10 @@ export class FoodService {
         response: Response
     ): Promise<Response> {
         try {
-
             const foods = await this.foodRepository.aggregate([
                 {
                     $match: {
-                        _id: new ObjectId(foodId),
+                        _id: new Types.ObjectId(foodId),
                     }
                 },
                 {
@@ -313,10 +328,10 @@ export class FoodService {
                 }
             ])
             let comments = foods.map(fd => {
-                return fd.comments;
+                return fd?.comments;
             })
             let food = foods[0];
-            food.comments = comments;
+            comments ? food.comments = comments : null;
             if (!food) {
                 return response
                     .status(HttpStatus.OK)

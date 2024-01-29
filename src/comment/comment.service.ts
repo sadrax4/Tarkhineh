@@ -40,7 +40,6 @@ export class CommentService {
                 userId.toString(),
                 commentData._id
             )
-            console.log(typeof createCommentDto.rate)
             const updateFoodCommentQuery = this.foodService.updateFoodComment(
                 createCommentDto.foodId.toString(),
                 commentData._id,
@@ -85,6 +84,35 @@ export class CommentService {
                 .status(HttpStatus.OK)
                 .json({
                     message: "پاسخ به کامنت با موفقیت ثبت شد ",
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                INTERNAL_SERVER_ERROR_MESSAGE,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async editReplyComment(
+        id: string,
+        replyCommentDto: ReplyCommentDto,
+        response: Response
+    ): Promise<Response> {
+        try {
+            await this.commentRepository.findOneAndUpdate(
+                { _id: new Types.ObjectId(id) },
+                {
+                    $set: {
+                        reply: replyCommentDto.text,
+                        show: true
+                    }
+                }
+            )
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    message: "پاسخ به کامنت با موفقیت به روز رسانی  شد ",
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {

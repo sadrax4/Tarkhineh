@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
 import { FoodService } from './food.service';
@@ -8,15 +8,18 @@ import { foodSchema } from './config';
 import { UploadMultiFilesAws } from 'src/common/interceptors';
 import { MulterFile } from 'src/common/types';
 import { ConfigService } from '@nestjs/config';
+import { GetCurrentUser } from 'src/common/decorators';
+import { JwtGuard } from 'src/auth/guards';
 
 @Controller('food')
 export class FoodController {
 
     constructor(
         private foodService: FoodService,
-        private configService: ConfigService
+        private configService: ConfigService,
     ) { }
 
+    @UseGuards(JwtGuard)
     @ApiBody(foodSchema)
     @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('food')
@@ -38,6 +41,7 @@ export class FoodController {
         )
     }
 
+    @UseGuards(JwtGuard)
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -49,6 +53,7 @@ export class FoodController {
     @ApiQuery({ name: "limit", required: false })
     @Get()
     async getFoodsByCategory(
+        @GetCurrentUser('phone') phone: string,
         @Res() response: Response,
         @Query('main') mainCategory: string,
         @Query('sub') subCategory: string,
@@ -56,6 +61,7 @@ export class FoodController {
         @Query('limit') limit: number,
     ): Promise<Response> {
         return this.foodService.getFoodsByCategory(
+            phone,
             mainCategory ? mainCategory : null,
             subCategory ? subCategory : null,
             page ? page : this.configService.get<number>("PAGE"),
@@ -64,6 +70,7 @@ export class FoodController {
         )
     }
 
+    @UseGuards(JwtGuard)
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -79,6 +86,7 @@ export class FoodController {
         )
     }
 
+    @UseGuards(JwtGuard)
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -99,6 +107,7 @@ export class FoodController {
         )
     }
 
+    @UseGuards(JwtGuard)
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -118,7 +127,8 @@ export class FoodController {
             response
         )
     }
-
+    
+    @UseGuards(JwtGuard)
     @ApiBody(foodSchema)
     @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('food')

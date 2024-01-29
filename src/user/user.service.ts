@@ -494,6 +494,23 @@ export class UserService {
             )
         }
     }
+
+    async getFavoriteFoodId(
+        phone: string
+    ): Promise<ObjectId[]> {
+        try {
+            const { favoriteFood } = await this.userRepository.findOne(
+                { phone },
+                favoriteFoodProjection
+            )
+            return favoriteFood
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
 
 
