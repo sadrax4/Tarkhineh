@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { FoodRepository } from './db/food.repository';
 import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
@@ -7,9 +7,8 @@ import { FOOD_FOLDER, INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant'
 import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { StorageService } from 'src/storage/storage.service';
-import { Food } from './db/food.schema';
 import { CommentService } from 'src/comment/comment.service';
-import { FoodDetailProjection } from 'src/common/projection';
+import { FoodDetailProjection, getCommentsByFoodIdProjection } from 'src/common/projection';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -456,22 +455,10 @@ export class FoodService {
         }
     }
 
-    async getComments(
+    async getCommentsByFoodId(
         foodId: string
     ): Promise<object> {
         try {
-            const commentProjection = {
-                title: 0,
-                _id: 0,
-                ingredients: 0,
-                description: 0,
-                price: 0,
-                discount: 0,
-                quantity: 0,
-                mainCategory: 0,
-                subCategory: 0,
-                images: 0
-            }
             const [comments] = await this.foodRepository.aggregate([
                 {
                     $match: {
@@ -487,10 +474,50 @@ export class FoodService {
                     },
                 },
                 {
-                    $project: commentProjection
+                    $project: getCommentsByFoodIdProjection
                 }
             ])
             return comments;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async searchFood(
+        searchQuery: string,
+        response: Response
+    ) {
+        try {
+            const regexPattern = `[a-zA-Z]*${searchQuery}[a-zA-Z]*`;
+            const foods = await this.foodRepository.find({
+                $or: [
+                    {
+                        $text: {
+                            $search: searchQuery
+                        }
+                    },
+                    {
+                        title: {
+                            $regex: regexPattern
+                        }
+                    },
+                    {
+                        description: {
+                            $regex: regexPattern
+                        }
+                    },
+                ]
+
+            })
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    data: foods,
+                    statusCode: HttpStatus.OK
+                })
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

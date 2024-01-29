@@ -5,13 +5,13 @@ import mongoose from "mongoose";
 @Schema({ collection: 'foods', versionKey: false })
 export class Food extends AbstractDocument {
 
-    @Prop()
+    @Prop({ index: true, text: true })
     title: string;
 
     @Prop([String])
     ingredients: string[];
 
-    @Prop()
+    @Prop({ index: true, text: true })
     description: string;
 
     @Prop()

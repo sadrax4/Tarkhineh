@@ -19,6 +19,26 @@ export class FoodController {
         private configService: ConfigService,
     ) { }
 
+
+    @UseGuards(JwtGuard)
+    @ApiTags('food')
+    @ApiConsumes(MIMETYPE.JSON)
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Get("/:search")
+    async searchFood(
+        @Param('search') searchQuery: string,
+        @Res() response: Response,
+    ): Promise<Response> {
+        console.log(searchQuery)
+        return this.foodService.searchFood(
+            searchQuery,
+            response
+        )
+    }
+    
     @UseGuards(JwtGuard)
     @ApiBody(foodSchema)
     @UseInterceptors(UploadMultiFilesAws('images'))
@@ -129,7 +149,7 @@ export class FoodController {
             response
         )
     }
-    
+
     @UseGuards(JwtGuard)
     @ApiBody(foodSchema)
     @UseInterceptors(UploadMultiFilesAws('images'))
@@ -153,4 +173,6 @@ export class FoodController {
             response
         )
     }
+
+   
 }

@@ -208,7 +208,7 @@ export class CommentService {
         foodId: string,
         response: Response
     ) {
-        const comments = await this.foodService.getComments(foodId);
+        const comments = await this.foodService.getCommentsByFoodId(foodId);
         return response
             .status(HttpStatus.OK)
             .json({
