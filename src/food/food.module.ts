@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, forwardRef } from '@nestjs/common';
 import { FoodService } from './food.service';
 import { FoodController } from './food.controller';
 import { FoodRepository } from './db/food.repository';
@@ -37,4 +37,8 @@ import { Comment, CommentSchema } from 'src/comment/db/comment.schema';
   controllers: [FoodController],
   exports: [FoodService]
 })
-export class FoodModule { }
+export class FoodModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+      
+  }
+ }

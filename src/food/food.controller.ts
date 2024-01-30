@@ -8,8 +8,8 @@ import { foodSchema } from './config';
 import { UploadMultiFilesAws } from 'src/common/interceptors';
 import { MulterFile } from 'src/common/types';
 import { ConfigService } from '@nestjs/config';
-import { GetCurrentUser } from 'src/common/decorators';
-import { JwtGuard } from 'src/auth/guards';
+import { GetCurrentUser, StringToArray } from 'src/common/decorators';
+import { JwtGuard, PublicGuard } from 'src/auth/guards';
 
 @Controller('food')
 export class FoodController {
@@ -20,7 +20,6 @@ export class FoodController {
     ) { }
 
 
-    @UseGuards(JwtGuard)
     @ApiTags('food')
     @ApiConsumes(MIMETYPE.JSON)
     @ApiResponse({
@@ -32,13 +31,12 @@ export class FoodController {
         @Param('search') searchQuery: string,
         @Res() response: Response,
     ): Promise<Response> {
-        console.log(searchQuery)
         return this.foodService.searchFood(
             searchQuery,
             response
         )
     }
-    
+
     @UseGuards(JwtGuard)
     @ApiBody(foodSchema)
     @UseInterceptors(UploadMultiFilesAws('images'))
@@ -50,6 +48,7 @@ export class FoodController {
     })
     @Post()
     async createFood(
+        @StringToArray("ingredients") _: null,
         @UploadedFiles() images: Array<MulterFile>,
         @Body() createFoodDto: CreateFoodDto,
         @Res() response: Response
@@ -61,7 +60,7 @@ export class FoodController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -106,7 +105,7 @@ export class FoodController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -161,6 +160,7 @@ export class FoodController {
     })
     @Patch("/:foodId")
     async updateFood(
+        @StringToArray('ingredients') _: null,
         @UploadedFiles() images: Array<MulterFile>,
         @Body() updateFoodDto: UpdateFoodDto,
         @Res() response: Response,
@@ -173,6 +173,4 @@ export class FoodController {
             response
         )
     }
-
-   
 }

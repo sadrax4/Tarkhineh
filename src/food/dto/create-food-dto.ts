@@ -5,7 +5,7 @@ export class CreateFoodDto {
     @ApiProperty({ required: false })
     title?: string;
 
-    @ApiProperty({ required: false })
+    @ApiProperty({ required: false, isArray: true, type: [String] })
     ingredients?: string[];
 
     @ApiProperty({ required: false })

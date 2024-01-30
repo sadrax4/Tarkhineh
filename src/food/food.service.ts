@@ -104,10 +104,10 @@ export class FoodService {
             )
         }
         return response
-            .status(HttpStatus.CREATED)
+            .status(HttpStatus.OK)
             .json({
                 message: "غذا با موفقیت به روز رسانی  شد",
-                statusCode: HttpStatus.CREATED
+                statusCode: HttpStatus.OK
             })
     }
 
@@ -150,6 +150,11 @@ export class FoodService {
                                 subCategory: 0,
                                 images: 0,
                             }
+                        }
+                    },
+                    {
+                        $sort: {
+                            "subCategory": 1
                         }
                     }
                 ]);
@@ -239,17 +244,19 @@ export class FoodService {
             const favoriteFood = await this.userService.getFavoriteFoodId(
                 phone
             );
-            foods.map(
-                food => {
-                    food.data.map(
-                        fd => {
-                            if (favoriteFood.includes(new Types.ObjectId(fd._id))) {
-                                fd.isFavorite = true;
+            if (favoriteFood) {
+                foods.map(
+                    food => {
+                        food.data.map(
+                            fd => {
+                                if (favoriteFood.includes(new Types.ObjectId(fd._id))) {
+                                    fd.isFavorite = true;
+                                }
                             }
-                        }
-                    )
-                }
-            )
+                        )
+                    }
+                )
+            }
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -431,6 +438,7 @@ export class FoodService {
             )
         }
     }
+
     async deleteComment(
         commentId: string
     ): Promise<void> {
@@ -490,8 +498,8 @@ export class FoodService {
         searchQuery: string,
         response: Response
     ) {
+        const regexPattern = `[a-zA-Z]*${searchQuery}[a-zA-Z]*`;
         try {
-            const regexPattern = `[a-zA-Z]*${searchQuery}[a-zA-Z]*`;
             const foods = await this.foodRepository.find({
                 $or: [
                     {
@@ -508,9 +516,8 @@ export class FoodService {
                         description: {
                             $regex: regexPattern
                         }
-                    },
+                    }
                 ]
-
             })
             return response
                 .status(HttpStatus.OK)

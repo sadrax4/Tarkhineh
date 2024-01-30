@@ -480,14 +480,14 @@ export class UserService {
     }
 
     async getFavoriteFoodId(
-        phone: string
+        phone: string = null
     ): Promise<ObjectId[]> {
         try {
-            const { favoriteFood } = await this.userRepository.findOne(
+            const  user  = await this.userRepository.findOne(
                 { phone },
                 favoriteFoodProjection
             )
-            return favoriteFood
+            return user?.favoriteFood
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

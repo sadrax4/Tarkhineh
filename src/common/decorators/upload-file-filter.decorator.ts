@@ -1,7 +1,5 @@
 import { FileTypeValidator, HttpException, HttpStatus, MaxFileSizeValidator, ParseFilePipe, UploadedFile, UploadedFiles } from "@nestjs/common";
-import { UploadFile } from "../interceptors";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { MulterFile } from "../types";
+
 
 export function CheckRequiredUploadedFile(
     fileType: string | RegExp,

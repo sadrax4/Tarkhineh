@@ -8,7 +8,7 @@ export class Food extends AbstractDocument {
     @Prop({ index: true, text: true })
     title: string;
 
-    @Prop([String])
+    @Prop()
     ingredients: string[];
 
     @Prop({ index: true, text: true })

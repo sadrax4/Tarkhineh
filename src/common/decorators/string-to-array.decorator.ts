@@ -1,10 +1,9 @@
 import { ExecutionContext, createParamDecorator } from "@nestjs/common";
 
-export const GetCurrentUser = createParamDecorator(
+export const StringToArray = createParamDecorator(
     (data: any, context: ExecutionContext) => {
         const request = context.switchToHttp().getRequest();
-        if (request?.user !== undefined && request?.user !== null) {
-            return request?.user[data];
-        }
+        request.body[data] = request.body[data].split(",");
+        return null;
     }
 )
