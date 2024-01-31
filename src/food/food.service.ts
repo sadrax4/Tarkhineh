@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nest
 import { FoodRepository } from './db/food.repository';
 import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
-import { deleteInvalidValue, pagination } from 'src/common/utils';
+import { calculatePrice, deleteInvalidValue, pagination } from 'src/common/utils';
 import { FOOD_FOLDER, INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
 import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
@@ -72,16 +72,18 @@ export class FoodService {
         response: Response
     ): Promise<Response> {
         deleteInvalidValue(updateFoodDto);
-        updateFoodDto.images = images.map(
-            image => image.filename
-        )
-        updateFoodDto.imagesUrl = images.map(
-            image => {
-                return this.storageService.getFileLink(
-                    image.filename,
-                    FOOD_FOLDER
-                )
-            })
+        if (images) {
+            updateFoodDto.images = images.map(
+                image => image.filename
+            )
+            updateFoodDto.imagesUrl = images.map(
+                image => {
+                    return this.storageService.getFileLink(
+                        image.filename,
+                        FOOD_FOLDER
+                    )
+                })
+        }
         try {
             await Promise.all([
                 this.storageService.uploadMultiFile(
@@ -113,8 +115,9 @@ export class FoodService {
 
     async getFoodsByCategory(
         phone: string,
-        mainCategory: string = null,
-        subCategory: string = null,
+        query: string,
+        mainCategory: string,
+        subCategory: string,
         page: number,
         limit: number,
         response: Response
@@ -122,120 +125,279 @@ export class FoodService {
         let foods: any[];
         try {
             if (!mainCategory && !subCategory) {
-                foods = await this.foodRepository.aggregate([
-                    {
-                        $group: {
-                            _id: "$subCategory",
-                            data: {
-                                $push: '$$ROOT'
+                if (query) {
+                    foods = await this.foodRepository.aggregate([
+                        {
+                            $match: {
+                                title: {
+                                    $regex: `[a-zA-Z]*${query}[a-zA-Z]*`
+                                }
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$subCategory",
+                                data: {
+                                    $push: '$$ROOT'
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                subCategory: '$_id',
+                                _id: 0,
+                                data: 1,
+                            }
+                        },
+                        {
+                            $unwind: '$subCategory'
+                        },
+                        {
+                            $project: {
+                                data: {
+                                    comments: 0,
+                                    description: 0,
+                                    category: 0,
+                                    subCategory: 0,
+                                    images: 0,
+                                }
+                            }
+                        },
+                        {
+                            $sort: {
+                                "subCategory": 1
                             }
                         }
-                    },
-                    {
-                        $project: {
-                            subCategory: '$_id',
-                            _id: 0,
-                            data: 1,
-                        }
-                    },
-                    {
-                        $unwind: '$subCategory'
-                    },
-                    {
-                        $project: {
-                            data: {
-                                comments: 0,
-                                description: 0,
-                                category: 0,
-                                subCategory: 0,
-                                images: 0,
+                    ]);
+                } else {
+                    foods = await this.foodRepository.aggregate([
+                        {
+                            $group: {
+                                _id: "$subCategory",
+                                data: {
+                                    $push: '$$ROOT'
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                subCategory: '$_id',
+                                _id: 0,
+                                data: 1,
+                            }
+                        },
+                        {
+                            $unwind: '$subCategory'
+                        },
+                        {
+                            $project: {
+                                data: {
+                                    comments: 0,
+                                    description: 0,
+                                    category: 0,
+                                    subCategory: 0,
+                                    images: 0,
+                                }
+                            }
+                        },
+                        {
+                            $sort: {
+                                "subCategory": 1
                             }
                         }
-                    },
-                    {
-                        $sort: {
-                            "subCategory": 1
-                        }
-                    }
-                ]);
+                    ]);
+                }
             } else if (mainCategory && !subCategory) {
-                foods = await this.foodRepository.aggregate([
-                    {
-                        $match: {
-                            "category": mainCategory
-                        }
-                    },
-                    {
-                        $group: {
-                            _id: "$subCategory",
-                            data: {
-                                $push: '$$ROOT'
+                if (query) {
+                    foods = await this.foodRepository.aggregate([
+                        {
+                            $match: {
+                                title: {
+                                    $regex: `[a-zA-Z]*${query}[a-zA-Z]*`
+                                }
+                            }
+                        },
+                        {
+                            $match: {
+                                "category": mainCategory
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$subCategory",
+                                data: {
+                                    $push: '$$ROOT'
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                subCategory: '$_id',
+                                _id: 0,
+                                data: 1
+                            }
+                        },
+                        {
+                            $unwind: '$subCategory'
+                        },
+                        {
+                            $project: {
+                                data: {
+                                    comments: 0,
+                                    description: 0,
+                                    category: 0,
+                                    subCategory: 0,
+                                    images: 0
+                                }
+                            }
+                        },
+                        {
+                            $sort: {
+                                "subCategory": 1
                             }
                         }
-                    },
-                    {
-                        $project: {
-                            subCategory: '$_id',
-                            _id: 0,
-                            data: 1
-                        }
-                    },
-                    {
-                        $unwind: '$subCategory'
-                    },
-                    {
-                        $project: {
-                            data: {
-                                comments: 0,
-                                description: 0,
-                                category: 0,
-                                subCategory: 0,
-                                images: 0
+                    ])
+                } else {
+                    foods = await this.foodRepository.aggregate([
+                        {
+                            $match: {
+                                "category": mainCategory
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$subCategory",
+                                data: {
+                                    $push: '$$ROOT'
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                subCategory: '$_id',
+                                _id: 0,
+                                data: 1
+                            }
+                        },
+                        {
+                            $unwind: '$subCategory'
+                        },
+                        {
+                            $project: {
+                                data: {
+                                    comments: 0,
+                                    description: 0,
+                                    category: 0,
+                                    subCategory: 0,
+                                    images: 0
+                                }
+                            }
+                        },
+                        {
+                            $sort: {
+                                "subCategory": 1
                             }
                         }
-                    }
-                ])
+                    ])
+                }
             }
             else if (mainCategory && subCategory) {
-                foods = await this.foodRepository.aggregate([
-                    {
-                        $match: {
-                            "category": mainCategory,
-                            "subCategory": subCategory
-                        }
-                    },
-                    {
-                        $group: {
-                            _id: "$subCategory",
-                            data: {
-                                $push: '$$ROOT'
+                if (query) {
+                    foods = await this.foodRepository.aggregate([
+                        {
+                            $match: {
+                                title: {
+                                    $regex: `[a-zA-Z]*${query}[a-zA-Z]*`
+                                }
+                            }
+                        },
+                        {
+                            $match: {
+                                "category": mainCategory,
+                                "subCategory": subCategory
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$subCategory",
+                                data: {
+                                    $push: '$$ROOT'
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                subCategory: '$_id',
+                                _id: 0,
+                                data: 1
+                            }
+                        },
+                        {
+                            $unwind: '$subCategory'
+                        },
+                        {
+                            $project: {
+                                data: {
+                                    comments: 0,
+                                    description: 0,
+                                    category: 0,
+                                    subCategory: 0,
+                                    images: 0
+                                }
+                            }
+                        },
+                        {
+                            $sort: {
+                                "subCategory": 1
                             }
                         }
-                    },
-                    {
-                        $project: {
-                            subCategory: '$_id',
-                            _id: 0,
-                            data: 1
-                        }
-                    },
-                    {
-                        $unwind: '$subCategory'
-                    },
-                    {
-                        $project: {
-                            data: {
-                                comments: 0,
-                                description: 0,
-                                category: 0,
-                                subCategory: 0,
-                                images: 0
+                    ])
+                } else {
+                    foods = await this.foodRepository.aggregate([
+                        {
+                            $match: {
+                                "category": mainCategory,
+                                "subCategory": subCategory
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: "$subCategory",
+                                data: {
+                                    $push: '$$ROOT'
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                subCategory: '$_id',
+                                _id: 0,
+                                data: 1
+                            }
+                        },
+                        {
+                            $unwind: '$subCategory'
+                        },
+                        {
+                            $project: {
+                                data: {
+                                    comments: 0,
+                                    description: 0,
+                                    category: 0,
+                                    subCategory: 0,
+                                    images: 0
+                                }
+                            }
+                        },
+                        {
+                            $sort: {
+                                "subCategory": 1
                             }
                         }
-                    }
-                ])
+                    ])
+                }
             }
-            const maxPage = Math.ceil(foods.length / limit)
+            const maxPage = Math.ceil(foods?.length / limit)
             foods = pagination(
                 foods,
                 limit,
@@ -244,19 +406,29 @@ export class FoodService {
             const favoriteFood = await this.userService.getFavoriteFoodId(
                 phone
             );
-            if (favoriteFood) {
-                foods.map(
-                    food => {
-                        food.data.map(
-                            fd => {
+            foods.map(
+                food => {
+                    food.data.map(
+                        fd => {
+                            if (fd.discount > 0) {
+                                fd.newPrice = calculatePrice(
+                                    fd.price,
+                                    fd.discount
+                                )
+                            }
+                            if (favoriteFood) {
                                 if (favoriteFood.includes(new Types.ObjectId(fd._id))) {
                                     fd.isFavorite = true;
+                                } else {
+                                    fd.isFavorite = false;
                                 }
+                            } else {
+                                fd.isFavorite = false;
                             }
-                        )
-                    }
-                )
-            }
+                        }
+                    )
+                }
+            )
             return response
                 .status(HttpStatus.OK)
                 .json({

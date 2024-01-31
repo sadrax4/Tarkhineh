@@ -70,6 +70,7 @@ export class FoodController {
     @ApiQuery({ name: "sub", required: false })
     @ApiQuery({ name: "page", required: false })
     @ApiQuery({ name: "limit", required: false })
+    @ApiQuery({ name: "q", required: false })
     @Get()
     async getFoodsByCategory(
         @GetCurrentUser('phone') phone: string,
@@ -78,9 +79,11 @@ export class FoodController {
         @Query('sub') subCategory: string,
         @Query('page') page: number,
         @Query('limit') limit: number,
+        @Query('q') query: string
     ): Promise<Response> {
         return this.foodService.getFoodsByCategory(
             phone,
+            query ? query : null,
             mainCategory ? mainCategory : null,
             subCategory ? subCategory : null,
             page ? page : this.configService.get<number>("PAGE"),
@@ -97,8 +100,7 @@ export class FoodController {
     })
     @Get('list')
     async getFoods(
-        @Res() response: Response,
-
+        @Res() response: Response
     ): Promise<Response> {
         return this.foodService.getFoods(
             response

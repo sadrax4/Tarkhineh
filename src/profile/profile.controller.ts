@@ -218,7 +218,7 @@ export class ProfileController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Patch('favorite-food/:foodId')
+    @Post('favorite-food/:foodId')
     async addFavoriteFood(
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response,
