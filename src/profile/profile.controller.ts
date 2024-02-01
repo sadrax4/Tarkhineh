@@ -251,6 +251,11 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiQuery({ name: "main", required: false })
+    @ApiQuery({ name: "sub", required: false })
+    @ApiQuery({ name: "page", required: false })
+    @ApiQuery({ name: "limit", required: false })
+    @ApiQuery({ name: "q", required: false })
     @ApiTags('profile-user')
     @ApiResponse({
         type: OkResponseMessage,
@@ -259,11 +264,21 @@ export class ProfileController {
     @Get('favorite-food')
     async getFavoriteFood(
         @GetCurrentUser('phone') phone: string,
+        @Query('main') mainCategory: string = null,
+        @Query('page') page: number = null,
+        @Query('limit') limit: number = null,
+        @Query('q') query: string = null,
         @Res() response: Response
     ): Promise<Response> {
         return this.profileService.getFavoriteFood(
             phone,
+            mainCategory,
+            page ? page : this.configService.get<number>("PAGE"),
+            limit ? limit : this.configService.get<number>("LIMIT"),
+            query,
             response
         );
     }
 }
+
+

@@ -5,13 +5,14 @@ import { Response } from 'express';
 import { deleteInvalidValue } from 'src/common/utils';
 import { StorageService } from 'src/storage/storage.service';
 import { USER_FOLDER } from 'src/common/constant';
-import { User } from 'src/user/db/user.schema';
+import { FoodService } from '../food/food.service';
 
 @Injectable()
 export class ProfileService {
     constructor(
         private userService: UserService,
-        private storageService: StorageService
+        private storageService: StorageService,
+        private foodService: FoodService
     ) { }
 
     async updateUser(
@@ -246,15 +247,28 @@ export class ProfileService {
 
     async getFavoriteFood(
         phone: string,
+        mainCategory: string,
+        page: number,
+        limit: number,
+        query: string,
         response: Response
     ): Promise<Response> {
-        const favoriteFood: User[] = await this.userService.getFavoriteFood(
+        const favoriteFoodId = await this.userService.getFavoriteFoodId(
             phone
         );
+        const favoriteFood = await this.foodService.getFavoriteFood(
+            favoriteFoodId,
+            mainCategory,
+            page,
+            limit,
+            query
+        )
+
+        console.log(favoriteFood)
         return response
             .status(HttpStatus.OK)
             .json({
-                data: favoriteFood,
+                favoriteFood,
                 statusCode: HttpStatus.OK
             })
     }

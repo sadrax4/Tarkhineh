@@ -10,12 +10,20 @@ import { AddressSwaggerMiddleware } from './middleware/address-swagger-middlewar
 import { StorageService } from 'src/storage/storage.service';
 import { StorageModule } from 'src/storage/storage.module';
 import { UserModule } from 'src/user/user.module';
+import { FoodModule } from 'src/food/food.module';
+import { Food, FoodSchema } from 'src/food/db/food.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      {
+        name: User.name,
+        schema: UserSchema
+      }
+    ]),
     StorageModule,
-    UserModule
+    UserModule,
+    FoodModule
   ],
   controllers: [
     ProfileController

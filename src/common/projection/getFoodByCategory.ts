@@ -8,13 +8,13 @@ export const getFoodByCategoryProjection = {
     }
 }
 export const groupAggregate = {
-    _id: "$subCategory",
+    _id: "$category",
     data: {
         $push: '$$ROOT'
     }
 }
 export const projectAggregate = {
-    subCategory: '$_id',
+    category: '$_id',
     _id: 0,
     data: 1,
 }

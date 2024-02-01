@@ -470,4 +470,78 @@ export class FoodService {
             )
         }
     }
+
+    async getFavoriteFood(
+        favoriteFoodId: ObjectId[],
+        mainCategory: string,
+        page: number,
+        limit: number,
+        query: string
+    ) {
+        let matchStage = [];
+        if (query) {
+            matchStage.push({
+                $match: {
+                    title: {
+                        $regex: `[a-zA-Z]*${query}[a-zA-Z]*`
+                    }
+                }
+            })
+        }
+        if (mainCategory) {
+            matchStage.push({
+                $match: {
+                    "category": mainCategory
+                }
+            })
+        }
+        const pipeLine = [
+            {
+                $match: {
+                    _id: {
+                        $in: favoriteFoodId
+                    }
+                }
+            },
+            ...matchStage,
+            {
+                $group: groupAggregate
+            },
+            {
+                $project: projectAggregate
+            },
+            {
+                $unwind: '$category'
+            },
+            {
+                $project: getFoodByCategoryProjection
+            },
+            {
+                $sort: {
+                    "category": 1
+                }
+            }
+        ]
+        try {
+            let foods = await this.foodRepository.aggregate(
+                pipeLine
+            );
+            console.log(foods);
+            const maxPage = Math.ceil(
+                foods?.length / limit
+            )
+            foods = pagination(
+                foods,
+                limit,
+                page
+            );
+            console.log(foods);
+            return foods;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
