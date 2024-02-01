@@ -218,11 +218,11 @@ export class ProfileController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Post('favorite-food/:foodId')
+    @Post('favorite-food')
     async addFavoriteFood(
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response,
-        @Param("foodId") foodId: string
+        @Query("foodId") foodId: string
     ): Promise<Response> {
         return this.profileService.addFavoriteFood(
             phone,
@@ -237,11 +237,11 @@ export class ProfileController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Delete('favorite-food/:foodId')
+    @Delete('favorite-food')
     async removeFavoriteFood(
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response,
-        @Param("foodId") foodId: string
+        @Query("foodId") foodId: string
     ): Promise<Response> {
         return this.profileService.removeFavoriteFood(
             phone,

@@ -182,22 +182,19 @@ export class FoodService {
             const favoriteFood = await this.userService.getFavoriteFoodId(
                 phone
             );
-            foods.map(
+            foods.forEach(
                 food => {
-                    food.data.map(
+                    food.data.forEach(
                         fd => {
                             if (fd.discount > 0) {
-                                fd.newPrice = calculatePrice(
-                                    fd.price,
-                                    fd.discount
-                                )
+                                fd.newPrice = calculatePrice(fd.price, fd.discount);
                             }
                             fd.isFavorite = favoriteFood ?
-                                favoriteFood.includes(new Types.ObjectId(fd._id)) : false
+                                favoriteFood.includes(new Types.ObjectId(fd._id)) : false;
                         }
-                    )
+                    );
                 }
-            )
+            );
             return response
                 .status(HttpStatus.OK)
                 .json({
