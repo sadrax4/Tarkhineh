@@ -8,7 +8,7 @@ import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { StorageService } from 'src/storage/storage.service';
 import { CommentService } from 'src/comment/comment.service';
-import { FoodDetailProjection, getCommentsByFoodIdProjection, getFoodByCategoryProjection, groupAggregate, projectAggregate } from 'src/common/projection';
+import { FoodDetailProjection, getCommentsByFoodIdProjection, getFoodByCategoryProjection, groupAggregate, groupAggregateFavoriteFood, projectAggregate, projectAggregateFavoriteFood } from 'src/common/projection';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -505,10 +505,10 @@ export class FoodService {
             },
             ...matchStage,
             {
-                $group: groupAggregate
+                $group: groupAggregateFavoriteFood
             },
             {
-                $project: projectAggregate
+                $project: projectAggregateFavoriteFood
             },
             {
                 $unwind: '$category'

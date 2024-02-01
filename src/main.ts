@@ -7,6 +7,7 @@ import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
 import { AllowOrigins, HOST_PORT, PORT } from './common/constant';
 import { ErrorValidation } from './common/pipe';
+import * as compression from 'compression'
 
 async function bootstrap() {
 
@@ -32,6 +33,11 @@ async function bootstrap() {
   });
 
   SwaggerInit(app);
+
+  app.use(compression({
+    filter: () => { return true },
+    threshold: 0
+  }));
 
   await app.listen(PORT, HOST_PORT);
 
