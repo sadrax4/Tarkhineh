@@ -192,7 +192,7 @@ export class FoodService {
                             fd.isFavorite = favoriteFood ?
                                 favoriteFood.includes(new Types.ObjectId(fd._id)) : false;
                         }
-                    );
+                    )
                 }
             );
             return response
@@ -526,16 +526,18 @@ export class FoodService {
             let foods = await this.foodRepository.aggregate(
                 pipeLine
             );
-            console.log(foods);
-            const maxPage = Math.ceil(
-                foods?.length / limit
-            )
-            foods = pagination(
-                foods,
-                limit,
-                page
+            foods.forEach(
+                food => {
+                    food.data.forEach(
+                        fd => {
+                            if (fd.discount > 0) {
+                                fd.newPrice = calculatePrice(fd.price, fd.discount);
+                            }
+                            fd.isFavorite = true
+                        }
+                    )
+                }
             );
-            console.log(foods);
             return foods;
         } catch (error) {
             throw new HttpException(

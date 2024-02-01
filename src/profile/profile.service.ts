@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateUserDto } from './dto';
 import { Response } from 'express';
-import { deleteInvalidValue } from 'src/common/utils';
+import { deleteInvalidValue, pagination } from 'src/common/utils';
 import { StorageService } from 'src/storage/storage.service';
 import { USER_FOLDER } from 'src/common/constant';
 import { FoodService } from '../food/food.service';
@@ -256,19 +256,26 @@ export class ProfileService {
         const favoriteFoodId = await this.userService.getFavoriteFoodId(
             phone
         );
-        const favoriteFood = await this.foodService.getFavoriteFood(
+        let favoriteFood = await this.foodService.getFavoriteFood(
             favoriteFoodId,
             mainCategory,
             page,
             limit,
             query
         )
-
-        console.log(favoriteFood)
+        const maxPage = Math.ceil(
+            favoriteFood?.length / limit
+        )
+        favoriteFood = pagination(
+            favoriteFood,
+            limit,
+            page
+        );
         return response
             .status(HttpStatus.OK)
             .json({
                 favoriteFood,
+                maxPage,
                 statusCode: HttpStatus.OK
             })
     }
