@@ -26,7 +26,7 @@ export class FoodController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Get("/:search")
+    @Get(":search")
     async searchFood(
         @Param('search') searchQuery: string,
         @Res() response: Response,
@@ -117,7 +117,7 @@ export class FoodController {
         type: UnAuthorizeResponseMessage,
         status: HttpStatus.UNAUTHORIZED
     })
-    @Get(':id')
+    @Get("id/:id")
     async getFoodById(
         @GetCurrentUser('phone') phone: string,
         @Param("id") foodId: string,

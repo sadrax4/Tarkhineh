@@ -8,7 +8,7 @@ import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { StorageService } from 'src/storage/storage.service';
 import { CommentService } from 'src/comment/comment.service';
-import { FoodDetailProjection, getCommentsByFoodIdProjection } from 'src/common/projection';
+import { FoodDetailProjection, getCommentsByFoodIdProjection, getFoodByCategoryProjection, groupAggregate, projectAggregate } from 'src/common/projection';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -111,6 +111,7 @@ export class FoodService {
                 message: "غذا با موفقیت به روز رسانی  شد",
                 statusCode: HttpStatus.OK
             })
+
     }
 
     async getFoodsByCategory(
@@ -122,282 +123,57 @@ export class FoodService {
         limit: number,
         response: Response
     ): Promise<Response> {
-        let foods: any[];
+        let matchStage = [];
+        if (query) {
+            matchStage.push({
+                $match: {
+                    title: {
+                        $regex: `[a-zA-Z]*${query}[a-zA-Z]*`
+                    }
+                }
+            })
+        }
+        if (mainCategory) {
+            matchStage.push({
+                $match: {
+                    "category": mainCategory
+                }
+            })
+        }
+        if (subCategory) {
+            matchStage.push({
+                $match: {
+                    "subCategory": subCategory
+                }
+            })
+        }
+        const pipeLine = [
+            ...matchStage,
+            {
+                $group: groupAggregate
+            },
+            {
+                $project: projectAggregate
+            },
+            {
+                $unwind: '$subCategory'
+            },
+            {
+                $project: getFoodByCategoryProjection
+            },
+            {
+                $sort: {
+                    "subCategory": 1
+                }
+            }
+        ]
         try {
-            if (!mainCategory && !subCategory) {
-                if (query) {
-                    foods = await this.foodRepository.aggregate([
-                        {
-                            $match: {
-                                title: {
-                                    $regex: `[a-zA-Z]*${query}[a-zA-Z]*`
-                                }
-                            }
-                        },
-                        {
-                            $group: {
-                                _id: "$subCategory",
-                                data: {
-                                    $push: '$$ROOT'
-                                }
-                            }
-                        },
-                        {
-                            $project: {
-                                subCategory: '$_id',
-                                _id: 0,
-                                data: 1,
-                            }
-                        },
-                        {
-                            $unwind: '$subCategory'
-                        },
-                        {
-                            $project: {
-                                data: {
-                                    comments: 0,
-                                    description: 0,
-                                    category: 0,
-                                    subCategory: 0,
-                                    images: 0,
-                                }
-                            }
-                        },
-                        {
-                            $sort: {
-                                "subCategory": 1
-                            }
-                        }
-                    ]);
-                } else {
-                    foods = await this.foodRepository.aggregate([
-                        {
-                            $group: {
-                                _id: "$subCategory",
-                                data: {
-                                    $push: '$$ROOT'
-                                }
-                            }
-                        },
-                        {
-                            $project: {
-                                subCategory: '$_id',
-                                _id: 0,
-                                data: 1,
-                            }
-                        },
-                        {
-                            $unwind: '$subCategory'
-                        },
-                        {
-                            $project: {
-                                data: {
-                                    comments: 0,
-                                    description: 0,
-                                    category: 0,
-                                    subCategory: 0,
-                                    images: 0,
-                                }
-                            }
-                        },
-                        {
-                            $sort: {
-                                "subCategory": 1
-                            }
-                        }
-                    ]);
-                }
-            } else if (mainCategory && !subCategory) {
-                if (query) {
-                    foods = await this.foodRepository.aggregate([
-                        {
-                            $match: {
-                                title: {
-                                    $regex: `[a-zA-Z]*${query}[a-zA-Z]*`
-                                }
-                            }
-                        },
-                        {
-                            $match: {
-                                "category": mainCategory
-                            }
-                        },
-                        {
-                            $group: {
-                                _id: "$subCategory",
-                                data: {
-                                    $push: '$$ROOT'
-                                }
-                            }
-                        },
-                        {
-                            $project: {
-                                subCategory: '$_id',
-                                _id: 0,
-                                data: 1
-                            }
-                        },
-                        {
-                            $unwind: '$subCategory'
-                        },
-                        {
-                            $project: {
-                                data: {
-                                    comments: 0,
-                                    description: 0,
-                                    category: 0,
-                                    subCategory: 0,
-                                    images: 0
-                                }
-                            }
-                        },
-                        {
-                            $sort: {
-                                "subCategory": 1
-                            }
-                        }
-                    ])
-                } else {
-                    foods = await this.foodRepository.aggregate([
-                        {
-                            $match: {
-                                "category": mainCategory
-                            }
-                        },
-                        {
-                            $group: {
-                                _id: "$subCategory",
-                                data: {
-                                    $push: '$$ROOT'
-                                }
-                            }
-                        },
-                        {
-                            $project: {
-                                subCategory: '$_id',
-                                _id: 0,
-                                data: 1
-                            }
-                        },
-                        {
-                            $unwind: '$subCategory'
-                        },
-                        {
-                            $project: {
-                                data: {
-                                    comments: 0,
-                                    description: 0,
-                                    category: 0,
-                                    subCategory: 0,
-                                    images: 0
-                                }
-                            }
-                        },
-                        {
-                            $sort: {
-                                "subCategory": 1
-                            }
-                        }
-                    ])
-                }
-            }
-            else if (mainCategory && subCategory) {
-                if (query) {
-                    foods = await this.foodRepository.aggregate([
-                        {
-                            $match: {
-                                title: {
-                                    $regex: `[a-zA-Z]*${query}[a-zA-Z]*`
-                                }
-                            }
-                        },
-                        {
-                            $match: {
-                                "category": mainCategory,
-                                "subCategory": subCategory
-                            }
-                        },
-                        {
-                            $group: {
-                                _id: "$subCategory",
-                                data: {
-                                    $push: '$$ROOT'
-                                }
-                            }
-                        },
-                        {
-                            $project: {
-                                subCategory: '$_id',
-                                _id: 0,
-                                data: 1
-                            }
-                        },
-                        {
-                            $unwind: '$subCategory'
-                        },
-                        {
-                            $project: {
-                                data: {
-                                    comments: 0,
-                                    description: 0,
-                                    category: 0,
-                                    subCategory: 0,
-                                    images: 0
-                                }
-                            }
-                        },
-                        {
-                            $sort: {
-                                "subCategory": 1
-                            }
-                        }
-                    ])
-                } else {
-                    foods = await this.foodRepository.aggregate([
-                        {
-                            $match: {
-                                "category": mainCategory,
-                                "subCategory": subCategory
-                            }
-                        },
-                        {
-                            $group: {
-                                _id: "$subCategory",
-                                data: {
-                                    $push: '$$ROOT'
-                                }
-                            }
-                        },
-                        {
-                            $project: {
-                                subCategory: '$_id',
-                                _id: 0,
-                                data: 1
-                            }
-                        },
-                        {
-                            $unwind: '$subCategory'
-                        },
-                        {
-                            $project: {
-                                data: {
-                                    comments: 0,
-                                    description: 0,
-                                    category: 0,
-                                    subCategory: 0,
-                                    images: 0
-                                }
-                            }
-                        },
-                        {
-                            $sort: {
-                                "subCategory": 1
-                            }
-                        }
-                    ])
-                }
-            }
-            const maxPage = Math.ceil(foods?.length / limit)
+            let foods = await this.foodRepository.aggregate(
+                pipeLine
+            );
+            const maxPage = Math.ceil(
+                foods?.length / limit
+            )
             foods = pagination(
                 foods,
                 limit,
@@ -416,15 +192,8 @@ export class FoodService {
                                     fd.discount
                                 )
                             }
-                            if (favoriteFood) {
-                                if (favoriteFood.includes(new Types.ObjectId(fd._id))) {
-                                    fd.isFavorite = true;
-                                } else {
-                                    fd.isFavorite = false;
-                                }
-                            } else {
-                                fd.isFavorite = false;
-                            }
+                            fd.isFavorite = favoriteFood ?
+                                favoriteFood.includes(new Types.ObjectId(fd._id)) : false
                         }
                     )
                 }
@@ -480,7 +249,7 @@ export class FoodService {
                         from: 'comments',
                         foreignField: "_id",
                         localField: "comments",
-                        as: 'comments',
+                        as: 'comments'
                     }
                 },
                 {
@@ -494,12 +263,12 @@ export class FoodService {
                             {
                                 $match: {
                                     $expr: {
-                                        $eq: ['$_id', '$$foreignId'],
+                                        $eq: ['$_id', '$$foreignId']
                                     }
                                 }
                             }
                         ],
-                        as: 'comments.author',
+                        as: 'comments.author'
                     }
                 },
                 {
@@ -509,7 +278,10 @@ export class FoodService {
             const favoriteFoodQuery = this.userService.getFavoriteFoodId(
                 phone
             )
-            const [foods, favoritFood] = await Promise.all([
+            const [
+                foods,
+                favoritFood
+            ] = await Promise.all([
                 foodQuery,
                 favoriteFoodQuery
             ])
@@ -518,16 +290,13 @@ export class FoodService {
             })
             let food = foods[0];
             comments ? food.comments = comments : null;
-            if (favoritFood.includes(new Types.ObjectId(food._id))) {
-                food.isFavorite = true;
-            }
-            if (!food) {
-                return response
-                    .status(HttpStatus.OK)
-                    .json({
-                        message: "غذایی یافت نشد",
-                        statusCode: HttpStatus.NOT_FOUND
-                    })
+            food.isFavorite = favoritFood.includes(new Types.ObjectId(food._id)) ?
+                true : false
+            if (food.discount > 0) {
+                food.newPrice = calculatePrice(
+                    food.price,
+                    food.discount
+                )
             }
             return response
                 .status(HttpStatus.OK)

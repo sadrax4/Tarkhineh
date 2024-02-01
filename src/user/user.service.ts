@@ -483,11 +483,11 @@ export class UserService {
         phone: string = null
     ): Promise<ObjectId[]> {
         try {
-            const  user  = await this.userRepository.findOne(
+            const user = await this.userRepository.findOne(
                 { phone },
                 favoriteFoodProjection
             )
-            return user?.favoriteFood
+            return user ? user.favoriteFood : []
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
