@@ -481,6 +481,52 @@ export class UserService {
             )
         }
     }
+
+    async findByRegex(
+        query: string
+    ): Promise<User[]> {
+        try {
+            const regexPattern = `[a-zA-Z]*${query}[a-zA-Z]*`;
+            const user = await this.userRepository.find(
+                {
+                    $or: [
+                        {
+                            phone: {
+                                $regex: regexPattern
+                            }
+                        },
+                        {
+                            username: {
+                                $regex: regexPattern
+                            }
+                        },
+                        {
+                            name: {
+                                $regex: regexPattern
+                            }
+                        },
+                        {
+                            family: {
+                                $regex: regexPattern
+                            }
+                        },
+                        {
+                            email: {
+                                $regex: regexPattern
+                            }
+                        }
+                    ]
+                },
+                getUsersProjecton
+            );
+            return user
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
 
 
