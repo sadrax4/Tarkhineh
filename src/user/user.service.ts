@@ -12,7 +12,7 @@ import { UpdateUserDto } from '../profile/dto/update-user-dto';
 import { DeleteUserDto } from '../profile/dto/delete-user-dto';
 import { USER_FOLDER } from 'src/common/constant';
 import { StorageService } from '../storage/storage.service';
-import { favoriteFoodProjection, getCommentProjection } from 'src/common/projection';
+import { favoriteFoodProjection, getCommentProjection, getUsersProjecton } from 'src/common/projection';
 
 @Injectable()
 export class UserService {
@@ -450,8 +450,6 @@ export class UserService {
         }
     }
 
-
-
     async getFavoriteFoodId(
         phone: string = null
     ): Promise<ObjectId[]> {
@@ -461,6 +459,21 @@ export class UserService {
                 favoriteFoodProjection
             )
             return user ? user.favoriteFood : []
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async getUsers(): Promise<User[]> {
+        try {
+            const users = await this.userRepository.find(
+                {},
+                getUsersProjecton
+            );
+            return users
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

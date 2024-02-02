@@ -520,8 +520,6 @@ export class FoodService {
                     fd.isFavorite = true
                 }
             )
-
-
             return foods;
         } catch (error) {
             throw new HttpException(

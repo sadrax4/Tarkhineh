@@ -39,12 +39,12 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     }
     async find(
         entityFilterQuery: FilterQuery<TDocument>,
-        projection?: Record<string, Document>,
+        projection?: ProjectionType<TDocument | null>,
         options?: QueryOptions<TDocument> | null
     ): Promise<TDocument[] | null> {
         return this.entityModel.find(
             entityFilterQuery,
-            { _id: 0, __v: 0, ...projection },
+            projection,
             options
         ).exec();
     }
