@@ -30,3 +30,10 @@ export const projectAggregateFavoriteFood = {
     _id: 0,
     data: 1,
 }
+export const getFavoriteFoodProjection = {
+    comments: 0,
+    description: 0,
+    category: 0,
+    subCategory: 0,
+    images: 0,
+}

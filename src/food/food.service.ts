@@ -8,7 +8,7 @@ import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { StorageService } from 'src/storage/storage.service';
 import { CommentService } from 'src/comment/comment.service';
-import { FoodDetailProjection, getCommentsByFoodIdProjection, getFoodByCategoryProjection, groupAggregate, groupAggregateFavoriteFood, projectAggregate, projectAggregateFavoriteFood } from 'src/common/projection';
+import { FoodDetailProjection, getCommentsByFoodIdProjection, getFavoriteFoodProjection, getFoodByCategoryProjection, groupAggregate, groupAggregateFavoriteFood, projectAggregate, projectAggregateFavoriteFood } from 'src/common/projection';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -505,21 +505,7 @@ export class FoodService {
             },
             ...matchStage,
             {
-                $group: groupAggregateFavoriteFood
-            },
-            {
-                $project: projectAggregateFavoriteFood
-            },
-            {
-                $unwind: '$category'
-            },
-            {
-                $project: getFoodByCategoryProjection
-            },
-            {
-                $sort: {
-                    "category": 1
-                }
+                $project: getFavoriteFoodProjection
             }
         ]
         try {
@@ -527,17 +513,15 @@ export class FoodService {
                 pipeLine
             );
             foods.forEach(
-                food => {
-                    food.data.forEach(
-                        fd => {
-                            if (fd.discount > 0) {
-                                fd.newPrice = calculatePrice(fd.price, fd.discount);
-                            }
-                            fd.isFavorite = true
-                        }
-                    )
+                fd => {
+                    if (fd.discount > 0) {
+                        fd.newPrice = calculatePrice(fd.price, fd.discount);
+                    }
+                    fd.isFavorite = true
                 }
-            );
+            )
+
+
             return foods;
         } catch (error) {
             throw new HttpException(
