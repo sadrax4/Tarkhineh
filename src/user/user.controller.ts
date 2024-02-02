@@ -3,8 +3,8 @@ import { UserService } from './user.service';
 import { JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
 import { Request, Response } from 'express';
-import {  ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import {  UnAuthorizeResponseMessage } from 'src/common/constant';
+import { ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { UnAuthorizeResponseMessage } from 'src/common/constant';
 
 
 @Controller('user')
@@ -55,5 +55,4 @@ export class UserController {
                 statusCode: HttpStatus.OK
             })
     }
-
 }

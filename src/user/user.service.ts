@@ -395,7 +395,8 @@ export class UserService {
                 { phone },
                 {
                     $set: {
-                        image: null
+                        image: null,
+                        imageUrl: null
                     }
                 }
             )

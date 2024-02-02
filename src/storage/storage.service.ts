@@ -8,7 +8,7 @@ export class StorageService {
     constructor(
         private readonly configService: ConfigService
     ) { }
-    
+
     private s3Client = new S3Client({
         region: "default",
         endpoint: this.configService.get<string>('LIARA_ENDPOINT'),

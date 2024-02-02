@@ -5,7 +5,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
 import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
-import { AllowOrigins, HOST_PORT, PORT } from './common/constant';
+import { AllowOrigins, HOST_PORT, PORT, compressionConfig } from './common/constant';
 import { ErrorValidation } from './common/pipe';
 import * as compression from 'compression'
 
@@ -34,10 +34,7 @@ async function bootstrap() {
 
   SwaggerInit(app);
 
-  app.use(compression({
-    filter: () => { return true },
-    threshold: 0
-  }));
+  app.use(compression(compressionConfig));
 
   await app.listen(PORT, HOST_PORT);
 

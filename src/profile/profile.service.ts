@@ -188,7 +188,12 @@ export class ProfileService {
         phone: string,
         response: Response
     ): Promise<Response> {
-        const { image } = await this.userService.findUser(phone);
+        const {
+            imageUrl,
+            image
+        } = await this.userService.findUser(
+            phone
+        );
         if (!image) {
             throw new HttpException(
                 "کاربر فاقد عکس میباشد",
