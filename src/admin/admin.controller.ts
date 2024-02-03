@@ -75,11 +75,29 @@ export class AdminController {
         status: HttpStatus.OK
     })
     @Post("user/blacklist")
-    async blackListPhone(
+    async addPhoneToBlacklist(
         @Body() blackListDto: BlackListDto,
         @Res() response: Response
     ): Promise<Response> {
-        return this.adminService.blackListPhone(
+        return this.adminService.addPhoneToBlacklist(
+            blackListDto,
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('admin-user')
+    @ApiBody({ type: BlackListDto })
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Delete("user/blacklist")
+    async removePhoneFromBlacklist(
+        @Body() blackListDto: BlackListDto,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.adminService.removePhoneFromBlacklist(
             blackListDto,
             response
         );

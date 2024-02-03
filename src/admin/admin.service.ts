@@ -58,10 +58,10 @@ export class AdminService {
             })
     }
 
-    async blackListPhone(
+    async addPhoneToBlacklist(
         blackListDto: BlackListDto,
         response: Response
-    ) {
+    ): Promise<Response> {
         try {
             await this.blackListRepository.findOneAndUpdate(
                 {},
@@ -75,6 +75,33 @@ export class AdminService {
                 .status(HttpStatus.OK)
                 .json({
                     message: "شماره به لیست سیاه اضافه شد",
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async removePhoneFromBlacklist(
+        blackListDto: BlackListDto,
+        response: Response
+    ) {
+        try {
+            await this.blackListRepository.findOneAndUpdate(
+                {},
+                {
+                    $pull: {
+                        phones: blackListDto.phone
+                    }
+                }
+            )
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    message: "شماره از لیست سیاه حذف  شد",
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
