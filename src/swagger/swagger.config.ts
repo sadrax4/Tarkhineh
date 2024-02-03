@@ -10,7 +10,9 @@ export function SwaggerInit(
         .setDescription(SwaggerDocument.DESCRIPTION)
         .setVersion(SwaggerDocument.VERSION)
         .setContact("sadra soleimani", "09162844007", "sadranodejs@gmail.com")
-        .addTag(SwaggerDocument.TAG)
+        .addTag(SwaggerDocument.TAG1)
+        .addTag(SwaggerDocument.TAG2)
+        .addTag(SwaggerDocument.TAG3)
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup(SwaggerDocument.PATH, app, document);

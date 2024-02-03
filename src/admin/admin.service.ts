@@ -1,14 +1,19 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
-import {  FindUserDto } from './dto';
+import { BlackListDto, FindUserDto } from './dto';
 import { getUsersProjecton } from 'src/common/projection';
 import { DeleteUserDto } from 'src/profile/dto';
+import { BlackListRepository } from './db/blackLIst.repository';
+import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { ObjectId } from 'mongodb';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AdminService {
     constructor(
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private blackListRepository: BlackListRepository
     ) { }
 
     async getUsers(
@@ -51,5 +56,32 @@ export class AdminService {
                 message: "کاربر با موفقیت حذف شد",
                 statusCode: HttpStatus.OK
             })
+    }
+
+    async blackListPhone(
+        blackListDto: BlackListDto,
+        response: Response
+    ) {
+        try {
+            await this.blackListRepository.findOneAndUpdate(
+                {},
+                {
+                    $push: {
+                        phones: blackListDto.phone
+                    }
+                }
+            )
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    message: "شماره به لیست سیاه اضافه شد",
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
     }
 }

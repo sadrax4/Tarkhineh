@@ -7,7 +7,7 @@ import { UploadMultiFilesAws } from 'src/common/interceptors';
 import { MulterFile } from 'src/common/types';
 import { AdminService } from './admin.service';
 import { Response } from 'express';
-import {  FindUserDto } from './dto';
+import { BlackListDto, FindUserDto } from './dto';
 import { DeleteUserDto } from 'src/profile/dto';
 
 @Controller('admin')
@@ -17,7 +17,7 @@ export class AdminController {
     ) { }
 
     @UseGuards(JwtGuard)
-    @ApiTags('admin')
+    @ApiTags('admin-user')
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -32,7 +32,7 @@ export class AdminController {
     }
 
     @UseGuards(JwtGuard)
-    @ApiTags('admin')
+    @ApiTags('admin-user')
     @ApiBody({ type: FindUserDto })
     @ApiResponse({
         type: OkResponseMessage,
@@ -50,7 +50,7 @@ export class AdminController {
     }
 
     @UseGuards(JwtGuard)
-    @ApiTags('admin')
+    @ApiTags('admin-user')
     @ApiBody({ type: DeleteUserDto })
     @ApiResponse({
         type: OkResponseMessage,
@@ -63,6 +63,24 @@ export class AdminController {
     ): Promise<Response> {
         return this.adminService.deleteUser(
             deleteUserDto,
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('admin-user')
+    @ApiBody({ type: BlackListDto })
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Post("user/blacklist")
+    async blackListPhone(
+        @Body() blackListDto: BlackListDto,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.adminService.blackListPhone(
+            blackListDto,
             response
         );
     }

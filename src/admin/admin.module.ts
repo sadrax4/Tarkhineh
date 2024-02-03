@@ -5,15 +5,25 @@ import { CommentModule } from 'src/comment/comment.module';
 import { UserModule } from 'src/user/user.module';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { BlackList, BlackListSchema } from './db/blackList.schema';
+import {  BlackListRepository } from './db/blackLIst.repository';
 
 @Module({
   imports: [
     UserModule,
     FoodModule,
     StorageModule,
-    CommentModule
+    CommentModule,
+    MongooseModule.forFeature([{
+      name: BlackList.name,
+      schema: BlackListSchema
+    }])
   ],
   controllers: [AdminController],
-  providers: [AdminService]
+  providers: [
+    AdminService,
+    BlackListRepository
+  ]
 })
 export class AdminModule { }

@@ -4,3 +4,8 @@ export class FindUserDto {
     @ApiProperty()
     query: string
 }
+
+export class BlackListDto {
+    @ApiProperty()
+    phone: string;
+}

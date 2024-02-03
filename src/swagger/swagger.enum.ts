@@ -3,5 +3,7 @@ export enum SwaggerDocument {
     DESCRIPTION = " Takhineh swagger Api Documentation",
     VERSION = "v1",
     PATH = "/v1/api-docs",
-    TAG = "admin"
+    TAG1 = "admin-food",
+    TAG2 = "admin-user",
+    TAG3 = "admin"
 }
