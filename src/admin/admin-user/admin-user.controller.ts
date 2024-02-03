@@ -1,19 +1,16 @@
-import { Body, Controller, Delete, Get, HttpStatus, Post, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards';
-import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
-import { StringToArray } from 'src/common/decorators';
-import { UploadMultiFilesAws } from 'src/common/interceptors';
-import { MulterFile } from 'src/common/types';
-import { AdminService } from './admin.service';
-import { Response } from 'express';
+import { OkResponseMessage } from 'src/common/constant';
 import { BlackListDto, FindUserDto } from './dto';
 import { DeleteUserDto } from 'src/profile/dto';
+import { AdminUserService } from './admin-user.service';
+import { Response } from 'express';
 
 @Controller('admin')
-export class AdminController {
+export class AdminUserController {
     constructor(
-        private adminService: AdminService
+        private adminService: AdminUserService
     ) { }
 
     @UseGuards(JwtGuard)

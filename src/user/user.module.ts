@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './db/user.schema';
 import { StorageService } from 'src/storage/storage.service';
 import { StorageModule } from 'src/storage/storage.module';
-import { AdminModule } from 'src/admin/admin.module';
+import { AdminUserModule } from 'src/admin/admin-user/admin-user.module';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { AdminModule } from 'src/admin/admin.module';
       schema: UserSchema
     }]),
     StorageModule,
-    forwardRef(() => AdminModule)
+    forwardRef(() => AdminUserModule)
   ],
   providers: [
     UserService,

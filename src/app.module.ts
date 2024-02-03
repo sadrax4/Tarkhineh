@@ -7,7 +7,10 @@ import { ProfileModule } from './profile/profile.module';
 import { FoodModule } from './food/food.module';
 import { CommentModule } from './comment/comment.module';
 import { StorageModule } from './storage/storage.module';
-import { AdminModule } from './admin/admin.module';
+import { AdminFoodController } from './admin/admin-food/admin-food.controller';
+import { AdminFoodService } from './admin/admin-food/admin-food.service';
+import { AdminFoodModule } from './admin/admin-food/admin-food.module';
+import { AdminUserModule } from './admin/admin-user/admin-user.module';
 
 @Module({
   imports: [
@@ -21,10 +24,11 @@ import { AdminModule } from './admin/admin.module';
     StorageModule,
     FoodModule,
     CommentModule,
-    AdminModule
+    AdminFoodModule,
+    AdminUserModule
   ],
-  controllers: [],
-  providers: [],
-  exports:[]
+  controllers: [AdminFoodController],
+  providers: [AdminFoodService],
+  exports: []
 })
 export class AppModule { }

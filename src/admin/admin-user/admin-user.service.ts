@@ -1,17 +1,13 @@
 import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
-import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
-import { BlackListDto, FindUserDto } from './dto';
-import { getUsersProjecton } from 'src/common/projection';
-import { DeleteUserDto } from 'src/profile/dto';
 import { BlackListRepository } from './db/blackLIst.repository';
+import { Response } from 'express';
+import { BlackListDto, FindUserDto } from './dto';
+import { DeleteUserDto } from 'src/profile/dto';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
-import { ObjectId } from 'mongodb';
-import { Types } from 'mongoose';
-import { BlackList } from './db/blackList.schema';
 
 @Injectable()
-export class AdminService {
+export class AdminUserService {
     constructor(
         @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,

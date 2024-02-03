@@ -13,21 +13,21 @@ import { DeleteUserDto } from '../profile/dto/delete-user-dto';
 import { USER_FOLDER } from 'src/common/constant';
 import { StorageService } from '../storage/storage.service';
 import { favoriteFoodProjection, getCommentProjection, getUsersProjecton } from 'src/common/projection';
-import { AdminService } from '../admin/admin.service';
+import { AdminUserService } from 'src/admin/admin-user/admin-user.service';
 
 @Injectable()
 export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly storageService: StorageService,
-        @Inject(forwardRef(() => AdminService))
-        private readonly adminService: AdminService
+        @Inject(forwardRef(() => AdminUserService))
+        private readonly adminUserService: AdminUserService
     ) { }
 
     async createUser(
         createUser: CreateUserDto,
     ): Promise<void> {
-        const blackListPhones = await this.adminService.getAllBlacklist();
+        const blackListPhones = await this.adminUserService.getAllBlacklist();
         if (blackListPhones.includes(createUser.phone)) {
             throw new HttpException(
                 "متاسفانه این شماره امکان ثبت نام ندارد",
