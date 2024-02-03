@@ -1,4 +1,4 @@
-import { ForwardReference, Module, forwardRef } from '@nestjs/common';
+import {  Module, forwardRef } from '@nestjs/common';
 import { AdminUserService } from './admin-user.service';
 import { AdminUserController } from './admin-user.controller';
 import { BlackListRepository } from './db/blackLIst.repository';

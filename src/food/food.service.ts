@@ -229,6 +229,17 @@ export class FoodService {
         }
     }
 
+    async getAllFoods() {
+        try {
+            return await this.foodRepository.find({});
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
     async getFoodById(
         foodId: string,
         phone: string,
