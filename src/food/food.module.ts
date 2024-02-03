@@ -13,7 +13,7 @@ import { Comment, CommentSchema } from 'src/comment/db/comment.schema';
 @Module({
   imports: [
     StorageModule,
-    UserModule,
+    forwardRef(() => UserModule),
     forwardRef(() => CommentModule),
     MongooseModule.forFeature([
       {

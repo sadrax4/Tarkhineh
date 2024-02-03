@@ -25,7 +25,7 @@ import { UserModule } from 'src/user/user.module';
         schema: FoodSchema
       }
     ]),
-    UserModule,
+    forwardRef(() => UserModule),
     forwardRef(() => FoodModule),
   ],
   controllers: [

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
 import { BlackListDto, FindUserDto } from './dto';
@@ -8,10 +8,12 @@ import { BlackListRepository } from './db/blackLIst.repository';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
 import { ObjectId } from 'mongodb';
 import { Types } from 'mongoose';
+import { BlackList } from './db/blackList.schema';
 
 @Injectable()
 export class AdminService {
     constructor(
+        @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
         private blackListRepository: BlackListRepository
     ) { }
@@ -104,6 +106,36 @@ export class AdminService {
                     message: "شماره از لیست سیاه حذف  شد",
                     statusCode: HttpStatus.OK
                 })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async getBlacklistPhones(
+        response: Response
+    ): Promise<Response> {
+        try {
+            const phones = await this.getAllBlacklist()
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    phones,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+    async getAllBlacklist(): Promise<string[]> {
+        try {
+            const { phones } = await this.blackListRepository.findOne({})
+            return phones
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

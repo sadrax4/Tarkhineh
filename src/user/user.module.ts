@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { UserRepository } from './db/user.repository';
@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './db/user.schema';
 import { StorageService } from 'src/storage/storage.service';
 import { StorageModule } from 'src/storage/storage.module';
+import { AdminModule } from 'src/admin/admin.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { StorageModule } from 'src/storage/storage.module';
       name: User.name,
       schema: UserSchema
     }]),
-    StorageModule
+    StorageModule,
+    forwardRef(() => AdminModule)
   ],
   providers: [
     UserService,

@@ -102,4 +102,19 @@ export class AdminController {
             response
         );
     }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('admin-user')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Get("user/blacklist")
+    async getBlacklistPhones(
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.adminService.getBlacklistPhones(
+            response
+        );
+    }
 }

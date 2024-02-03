@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UserRepository } from '../user/db/user.repository';
 import mongoose, { Types } from 'mongoose';
@@ -13,17 +13,27 @@ import { DeleteUserDto } from '../profile/dto/delete-user-dto';
 import { USER_FOLDER } from 'src/common/constant';
 import { StorageService } from '../storage/storage.service';
 import { favoriteFoodProjection, getCommentProjection, getUsersProjecton } from 'src/common/projection';
+import { AdminService } from '../admin/admin.service';
 
 @Injectable()
 export class UserService {
     constructor(
         private readonly userRepository: UserRepository,
-        private readonly storageService: StorageService
+        private readonly storageService: StorageService,
+        @Inject(forwardRef(() => AdminService))
+        private readonly adminService: AdminService
     ) { }
 
     async createUser(
         createUser: CreateUserDto,
     ): Promise<void> {
+        const blackListPhones = await this.adminService.getAllBlacklist();
+        if (blackListPhones.includes(createUser.phone)) {
+            throw new HttpException(
+                "متاسفانه این شماره امکان ثبت نام ندارد",
+                HttpStatus.BAD_REQUEST
+            )
+        }
         deleteInvalidValue(createUser);
         const userData = {
             _id: new Types.ObjectId(),

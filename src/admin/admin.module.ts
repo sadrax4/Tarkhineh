@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { FoodModule } from 'src/food/food.module';
 import { StorageModule } from 'src/storage/storage.module';
 import { CommentModule } from 'src/comment/comment.module';
@@ -7,11 +7,11 @@ import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BlackList, BlackListSchema } from './db/blackList.schema';
-import {  BlackListRepository } from './db/blackLIst.repository';
+import { BlackListRepository } from './db/blackLIst.repository';
 
 @Module({
   imports: [
-    UserModule,
+    forwardRef(() => UserModule),
     FoodModule,
     StorageModule,
     CommentModule,
@@ -24,6 +24,9 @@ import {  BlackListRepository } from './db/blackLIst.repository';
   providers: [
     AdminService,
     BlackListRepository
+  ],
+  exports: [
+    AdminService
   ]
 })
 export class AdminModule { }
