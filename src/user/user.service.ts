@@ -483,7 +483,7 @@ export class UserService {
     }
 
     async findByRegex(
-        query: string
+        query: string,
     ): Promise<User[]> {
         try {
             const regexPattern = `[a-zA-Z]*${query}[a-zA-Z]*`;
