@@ -89,4 +89,21 @@ export class AdminCommentController {
             response
         )
     }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('admin-comment')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Get("comments/:id")
+    async findCommentById(
+        @Res() response: Response,
+        @Param("id") commentId: string
+    ): Promise<Response> {
+        return this.commentService.getCommentById(
+            commentId,
+            response
+        )
+    }
 }

@@ -200,7 +200,6 @@ export class CommentService {
                 INTERNAL_SERVER_ERROR_MESSAGE,
                 HttpStatus.INTERNAL_SERVER_ERROR
             )
-
         }
     }
 
@@ -228,5 +227,27 @@ export class CommentService {
                 data: comments,
                 statusCode: HttpStatus.OK
             })
+    }
+
+    async getCommentById(
+        commentId: string,
+        response: Response
+    ) {
+        try {
+            const comments = await this.commentRepository.findOne({
+                _id: new Types.ObjectId(commentId)
+            });
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    data: comments,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                INTERNAL_SERVER_ERROR_MESSAGE,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
     }
 }
