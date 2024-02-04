@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AdminFoodService } from './admin-food.service';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
 import { JwtGuard } from 'src/auth/guards';
@@ -33,25 +33,69 @@ export class AdminFoodController {
         );
     }
 
-    // @UseGuards(JwtGuard)
-    // @ApiBody(foodSchema)
-    // @UseInterceptors(UploadMultiFilesAws('images'))
-    // @ApiTags('admin-food')
-    // @ApiConsumes(MIMETYPE.MULTIPART)
-    // @ApiResponse({
-    //     type: OkResponseMessage,
-    //     status: HttpStatus.CREATED
-    // })
-    // @Post("foods")
-    // async createFood(
-    //     @StringToArray("ingredients") _: null,
-    //     @UploadedFiles() images: Array<MulterFile>,
-    //     @Body() createFoodDto: CreateFoodDto,
-    //     @Res() response: Response
-    // ): Promise<Response> {
-    //     return this.foodService.createFood(
-    //         CreateFoodDto
-    //         response
-    //     );
-    // }
+    @UseGuards(JwtGuard)
+    @ApiBody(foodSchema)
+    @UseInterceptors(UploadMultiFilesAws('images'))
+    @ApiTags('admin-food')
+    @ApiConsumes(MIMETYPE.MULTIPART)
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.CREATED
+    })
+    @Post("foods")
+    async createFood(
+        @StringToArray("ingredients") _: null,
+        @UploadedFiles() images: Array<MulterFile>,
+        @Body() createFoodDto: CreateFoodDto,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.foodService.createFood(
+            createFoodDto,
+            images,
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiBody(foodSchema)
+    @UseInterceptors(UploadMultiFilesAws('images'))
+    @ApiTags('admin-food')
+    @ApiConsumes(MIMETYPE.MULTIPART)
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.CREATED
+    })
+    @Patch("foods")
+    async updateFood(
+        @StringToArray("ingredients") _: null,
+        @UploadedFiles() images: Array<MulterFile>,
+        @Body() createFoodDto: CreateFoodDto,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.foodService.createFood(
+            createFoodDto,
+            images,
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('admin-food')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.CREATED
+    })
+    @Delete("foods")
+    async deleteFood(
+        @StringToArray("ingredients") _: null,
+        @UploadedFiles() images: Array<MulterFile>,
+        @Body() createFoodDto: CreateFoodDto,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.foodService.createFood(
+            createFoodDto,
+            images,
+            response
+        );
+    }
 }
