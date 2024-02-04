@@ -6,13 +6,7 @@ import { MongooseModule } from "@nestjs/mongoose";
     imports: [
         MongooseModule.forRootAsync({
             useFactory: (configService: ConfigService) => ({
-                uri: configService.get<string>("MONGODB_URI") ,
-                connectionFactory: (connection) => {
-                    connection.onOpen(() => {
-                      connection.db.admin().command({ setParameter: 1, httpProxy: 'http://31.43.179.184:80' });
-                    });
-                    return connection;
-                  },
+                uri: configService.get<string>("DATABASE_URL") 
             }),
             inject: [ConfigService]
         })

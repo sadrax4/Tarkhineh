@@ -8,12 +8,14 @@ import helmet from 'helmet';
 import { AllowOrigins, HOST_PORT, PORT, compressionConfig } from './common/constant';
 import { ErrorValidation } from './common/pipe';
 import * as compression from 'compression'
+import * as proxy from "express-http-proxy"
 
 async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(cookieParser());
+
 
   app.use(helmet());
 
