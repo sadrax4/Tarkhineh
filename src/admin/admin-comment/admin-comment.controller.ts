@@ -65,5 +65,5 @@ export class AdminCommentController {
             isShowCommentDto.show,
             response
         )
-    };
+    }
 }
