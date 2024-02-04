@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AdminFoodService } from './admin-food.service';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
 import { JwtGuard } from 'src/auth/guards';
@@ -85,16 +85,13 @@ export class AdminFoodController {
         type: OkResponseMessage,
         status: HttpStatus.CREATED
     })
-    @Delete("foods")
+    @Delete("foods/:id")
     async deleteFood(
-        @StringToArray("ingredients") _: null,
-        @UploadedFiles() images: Array<MulterFile>,
-        @Body() createFoodDto: CreateFoodDto,
+        @Param("id") foodId: string,
         @Res() response: Response
     ): Promise<Response> {
-        return this.foodService.createFood(
-            createFoodDto,
-            images,
+        return this.foodService.deleteFoodById(
+            foodId,
             response
         );
     }
