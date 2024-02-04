@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AdminFoodService } from './admin-food.service';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
 import { JwtGuard } from 'src/auth/guards';
@@ -6,7 +6,7 @@ import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { StringToArray } from 'src/common/decorators';
 import { MulterFile } from 'src/common/types';
-import { CreateFoodDto } from 'src/food/dto';
+import { CreateFoodDto, UpdateFoodDto } from 'src/food/dto';
 import { FoodService } from 'src/food/food.service';
 import { foodSchema } from 'src/food/config';
 import { UploadMultiFilesAws } from 'src/common/interceptors';
@@ -65,15 +65,17 @@ export class AdminFoodController {
         type: OkResponseMessage,
         status: HttpStatus.CREATED
     })
-    @Patch("foods")
+    @Patch("foods/:id")
     async updateFood(
         @StringToArray("ingredients") _: null,
         @UploadedFiles() images: Array<MulterFile>,
-        @Body() createFoodDto: CreateFoodDto,
+        @Body() updateFoodDto: UpdateFoodDto,
+        @Param("id") foodId: string,
         @Res() response: Response
     ): Promise<Response> {
-        return this.foodService.createFood(
-            createFoodDto,
+        return this.foodService.updateFood(
+            foodId,
+            updateFoodDto,
             images,
             response
         );
