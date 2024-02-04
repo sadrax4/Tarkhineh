@@ -5,6 +5,8 @@ import { Response } from 'express';
 import { BlackListDto, FindUserDto } from './dto';
 import { DeleteUserDto } from 'src/profile/dto';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { User } from 'src/user/db/user.schema';
+import { getUsersProjecton } from 'src/common/projection';
 
 @Injectable()
 export class AdminUserService {
@@ -128,10 +130,34 @@ export class AdminUserService {
             )
         }
     }
+
     async getAllBlacklist(): Promise<string[]> {
         try {
             const { phones } = await this.blackListRepository.findOne({})
             return phones
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async findUserById(
+        userId: string,
+        response: Response
+    ): Promise<Response> {
+        try {
+            const user = await this.userService.findUserById(
+                userId,
+                getUsersProjecton
+            )
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    user,
+                    statusCode: HttpStatus.OK
+                })
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

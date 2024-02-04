@@ -374,6 +374,26 @@ export class UserService {
         return user;
     }
 
+    async findUserById(
+        userId: string,
+        projection: {} = undefined
+    ): Promise<User> {
+        const user = await this.userRepository.findOne(
+            {
+                _id: new Types.ObjectId(userId)
+            },
+            projection
+        );
+        if (user?.image) {
+            const imageUrl = this.storageService.getFileLink(
+                user.image,
+                USER_FOLDER
+            )
+            user.imageUrl = imageUrl;
+        }
+        return user;
+    }
+
     async updateImage(
         phone: string,
         image: string,

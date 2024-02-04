@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards';
 import { OkResponseMessage } from 'src/common/constant';
@@ -42,6 +42,23 @@ export class AdminUserController {
     ): Promise<Response> {
         return this.adminService.findUser(
             findUserDto,
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('admin-user')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Post("find-user/:id")
+    async findUserById(
+        @Query("id") userId: string,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.adminService.findUserById(
+            userId,
             response
         );
     }
