@@ -40,6 +40,6 @@ export class AdminCommentController {
         return this.commentService.deleteComment(
             commentId,
             response
-        );
+        )
     }
 }
