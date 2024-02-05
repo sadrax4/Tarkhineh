@@ -30,12 +30,27 @@ export class AdminUserController {
 
     @UseGuards(JwtGuard)
     @ApiTags('admin-user')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Get("user/blacklist")
+    async getBlacklistPhones(
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.adminService.getBlacklistPhones(
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('admin-user')
     @ApiBody({ type: FindUserDto })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Post("find-user")
+    @Get("find-user")
     async findUser(
         @Body() findUserDto: FindUserDto,
         @Res() response: Response
@@ -52,7 +67,7 @@ export class AdminUserController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Post("find-user/:id")
+    @Get("find-user/:id")
     async findUserById(
         @Query("id") userId: string,
         @Res() response: Response
@@ -62,6 +77,25 @@ export class AdminUserController {
             response
         );
     }
+
+    @UseGuards(JwtGuard)
+    @ApiTags('admin-user')
+    @ApiBody({ type: BlackListDto })
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Post("user/blacklist")
+    async addPhoneToBlacklist(
+        @Body() blackListDto: BlackListDto,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.adminService.addPhoneToBlacklist(
+            blackListDto,
+            response
+        );
+    }
+
 
     @UseGuards(JwtGuard)
     @ApiTags('admin-user')
@@ -88,24 +122,6 @@ export class AdminUserController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Post("user/blacklist")
-    async addPhoneToBlacklist(
-        @Body() blackListDto: BlackListDto,
-        @Res() response: Response
-    ): Promise<Response> {
-        return this.adminService.addPhoneToBlacklist(
-            blackListDto,
-            response
-        );
-    }
-
-    @UseGuards(JwtGuard)
-    @ApiTags('admin-user')
-    @ApiBody({ type: BlackListDto })
-    @ApiResponse({
-        type: OkResponseMessage,
-        status: HttpStatus.OK
-    })
     @Delete("user/blacklist")
     async removePhoneFromBlacklist(
         @Body() blackListDto: BlackListDto,
@@ -117,18 +133,5 @@ export class AdminUserController {
         );
     }
 
-    @UseGuards(JwtGuard)
-    @ApiTags('admin-user')
-    @ApiResponse({
-        type: OkResponseMessage,
-        status: HttpStatus.OK
-    })
-    @Get("user/blacklist")
-    async getBlacklistPhones(
-        @Res() response: Response
-    ): Promise<Response> {
-        return this.adminService.getBlacklistPhones(
-            response
-        );
-    }
+ 
 }

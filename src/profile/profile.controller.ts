@@ -252,7 +252,6 @@ export class ProfileController {
 
     @UseGuards(JwtGuard)
     @ApiQuery({ name: "main", required: false })
-    @ApiQuery({ name: "sub", required: false })
     @ApiQuery({ name: "page", required: false })
     @ApiQuery({ name: "limit", required: false })
     @ApiQuery({ name: "q", required: false })
