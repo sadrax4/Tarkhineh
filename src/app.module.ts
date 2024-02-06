@@ -12,6 +12,7 @@ import { AdminFoodService } from './admin/admin-food/admin-food.service';
 import { AdminFoodModule } from './admin/admin-food/admin-food.module';
 import { AdminUserModule } from './admin/admin-user/admin-user.module';
 import { AdminCommentModule } from './admin/admin-comment/admin-comment.module';
+import { AdminPermissionModule } from './admin/admin-permission/admin-permission.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { AdminCommentModule } from './admin/admin-comment/admin-comment.module';
     CommentModule,
     AdminFoodModule,
     AdminUserModule,
-    AdminCommentModule
+    AdminCommentModule,
+    AdminPermissionModule
   ],
   controllers: [AdminFoodController],
   providers: [AdminFoodService],

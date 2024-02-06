@@ -5,5 +5,5 @@ export enum SwaggerDocument {
     PATH = "/v1/api-docs",
     TAG1 = "admin-food",
     TAG2 = "admin-user",
-    TAG3 = "admin-comment"
+    TAG3 = "admin-comment",
 }
