@@ -1,2 +1,3 @@
 //export * from './food-filter'
-export * from './image-mimetype-enums'
+export * from './image-mimetype'
+export * from "./role"

@@ -5,6 +5,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../../user/user.service';
 import { JwtPayload } from "../types";
+import { Roles } from "src/common/enums";
 
 @Injectable()
 export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {
@@ -35,7 +36,7 @@ export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {
             username,
             role
         } = await this.userService.findUser(payload.phone);
-        if (role == 'user') {
+        if (role == Roles.user) {
             throw new HttpException("اجازه دسترسی ندارید", HttpStatus.UNAUTHORIZED);
         }
         return { phone, username };
