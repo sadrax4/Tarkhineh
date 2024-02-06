@@ -35,6 +35,7 @@ export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {
             username,
             role
         } = await this.userService.findUser(payload.phone);
+        console.log(role)
         if (role == 'user') {
             throw new HttpException("اجازه دسترسی ندارید", HttpStatus.UNAUTHORIZED);
         }

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtGuard } from 'src/auth/guards';
+import { AdminGuard } from 'src/auth/guards';
 import { OkResponseMessage } from 'src/common/constant';
 import { BlackListDto, FindUserDto } from './dto';
 import { DeleteUserDto } from 'src/profile/dto';
@@ -13,7 +13,7 @@ export class AdminUserController {
         private adminService: AdminUserService
     ) { }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-user')
     @ApiResponse({
         type: OkResponseMessage,
@@ -28,7 +28,7 @@ export class AdminUserController {
         );
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-user')
     @ApiResponse({
         type: OkResponseMessage,
@@ -43,7 +43,7 @@ export class AdminUserController {
         );
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-user')
     @ApiBody({ type: FindUserDto })
     @ApiResponse({
@@ -61,7 +61,7 @@ export class AdminUserController {
         );
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-user')
     @ApiResponse({
         type: OkResponseMessage,
@@ -78,7 +78,7 @@ export class AdminUserController {
         );
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-user')
     @ApiBody({ type: BlackListDto })
     @ApiResponse({
@@ -97,7 +97,7 @@ export class AdminUserController {
     }
 
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-user')
     @ApiBody({ type: DeleteUserDto })
     @ApiResponse({
@@ -115,7 +115,7 @@ export class AdminUserController {
         );
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-user')
     @ApiBody({ type: BlackListDto })
     @ApiResponse({
@@ -133,5 +133,5 @@ export class AdminUserController {
         );
     }
 
- 
+
 }
