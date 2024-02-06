@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiFoundResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { JwtGuard } from 'src/auth/guards';
+import { AdminGuard } from 'src/auth/guards';
 import { CommentService } from 'src/comment/comment.service';
 import { IsShowCommentDto, ReplyCommentDto } from 'src/comment/dto';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
@@ -12,7 +12,7 @@ export class AdminCommentController {
         private readonly commentService: CommentService
     ) { }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
     @ApiResponse({
         type: OkResponseMessage,
@@ -27,7 +27,7 @@ export class AdminCommentController {
         );
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
     @ApiResponse({
         type: OkResponseMessage,
@@ -44,7 +44,7 @@ export class AdminCommentController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
     @ApiBody({
         type: IsShowCommentDto
@@ -67,7 +67,7 @@ export class AdminCommentController {
         )
     };
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
     @ApiBody({
         type: ReplyCommentDto
@@ -90,7 +90,7 @@ export class AdminCommentController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
     @ApiResponse({
         type: OkResponseMessage,
