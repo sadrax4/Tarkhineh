@@ -7,6 +7,7 @@ import { User, UserSchema } from 'src/user/db/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy, PublicStrategy, RefreshStrategy } from './strategy';
+import { AdminStrategy } from './strategy/admin-strategy';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { JwtStrategy, PublicStrategy, RefreshStrategy } from './strategy';
     AuthService,
     RefreshStrategy,
     JwtStrategy,
-    PublicStrategy
+    PublicStrategy,
+    AdminStrategy
   ]
 })
 

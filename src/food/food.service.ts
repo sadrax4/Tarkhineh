@@ -517,6 +517,11 @@ export class FoodService {
             ...matchStage,
             {
                 $project: getFavoriteFoodProjection
+            },
+            {
+                $sort: {
+                    "title": 1
+                }
             }
         ]
         try {

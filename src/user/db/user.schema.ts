@@ -100,6 +100,8 @@ export class User extends AbstractDocument {
     @Prop()
     imageUrl: string
 
+    @Prop({ default: 'user' })
+    role: string;
 
 }
 export const UserSchema = SchemaFactory.createForClass(User)
