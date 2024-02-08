@@ -1,23 +1,54 @@
-import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
 import { OkResponseMessage } from 'src/common/constant';
+import { AdminPermissionService } from './admin-permission.service';
+import { GiveAccessDto } from './dto/giveAccess.dto';
+import { Response } from 'express';
 
-@Controller('admin')
+@Controller('admin/permission')
 export class AdminPermissionController {
+    constructor(
+        private adminPermissionService: AdminPermissionService
+    ) { }
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-permission')
+    @ApiBody({
+        type: GiveAccessDto
+    })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Get("users")
-    async getUsers(
-        @Res() response: Response
+    @Post("admin-access")
+    async giveAdminAccess(
+        @Res() response: Response,
+        @Body() giveAccessDto: GiveAccessDto
     ): Promise<Response> {
-        return this.adminService.getUsers(
+        return this.adminPermissionService.giveAdminAccess(
+            giveAccessDto,
             response
         );
     }
+
+    // @UseGuards(AdminGuard)
+    // @ApiTags('admin-permission')
+    // @ApiBody({
+    //     type: GiveAccessDto
+    // })
+    // @ApiResponse({
+    //     type: OkResponseMessage,
+    //     status: HttpStatus.OK
+    // })
+    // @Post("user-access")
+    // async giveUserAccess(
+    //     @Res() response: Response,
+    //     @Body() giveAccessDto: GiveAccessDto
+    // ): Promise<Response> {
+    //     return this.adminPermissionService.giveUserAccess(
+    //         giveAccessDto,
+    //         response
+    //     );
+    // }
 }

@@ -14,6 +14,7 @@ import { USER_FOLDER } from 'src/common/constant';
 import { StorageService } from '../storage/storage.service';
 import { favoriteFoodProjection, getCommentProjection, getUsersProjecton } from 'src/common/projection';
 import { AdminUserService } from 'src/admin/admin-user/admin-user.service';
+import { Roles } from 'src/common/enums';
 
 @Injectable()
 export class UserService {
@@ -548,8 +549,40 @@ export class UserService {
                     ]
                 },
                 getUsersProjecton
-            );
+            )
+            if (!user) {
+                throw new HttpException(
+                    ("کاربری با این شماره تلفن یافت نشد"),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                )
+            }
             return user
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async giveAdminAccess(
+        phone: string
+    ): Promise<void> {
+        try {
+            const updateResult = await this.userRepository.findOneAndUpdate(
+                { phone },
+                {
+                    $set: {
+                        role: Roles.admin
+                    }
+                }
+            )
+            if (!updateResult) {
+                throw new HttpException(
+                    ("کاربری با این شماره تلفن یافت نشد"),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                )
+            }
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
