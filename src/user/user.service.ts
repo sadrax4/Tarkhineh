@@ -590,6 +590,32 @@ export class UserService {
             )
         }
     }
+
+    async giveUserAccess(
+        phone: string
+    ): Promise<void> {
+        try {
+            const updateResult = await this.userRepository.findOneAndUpdate(
+                { phone },
+                {
+                    $set: {
+                        role: Roles.user
+                    }
+                }
+            )
+            if (!updateResult) {
+                throw new HttpException(
+                    ("کاربری با این شماره تلفن یافت نشد"),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                )
+            }
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
 
 

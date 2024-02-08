@@ -23,4 +23,19 @@ export class AdminPermissionService {
                 statusCode: HttpStatus.OK
             })
     }
+
+    async giveUserAccess(
+        giveAccessDto: GiveAccessDto,
+        response: Response
+    ): Promise<Response> {
+        await this.userService.giveUserAccess(
+            giveAccessDto.phone
+        )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "دسترسی عادی به کاربر داده شد",
+                statusCode: HttpStatus.OK
+            })
+    }
 }

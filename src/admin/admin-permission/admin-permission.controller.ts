@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
 import { OkResponseMessage } from 'src/common/constant';
@@ -32,23 +32,23 @@ export class AdminPermissionController {
         );
     }
 
-    // @UseGuards(AdminGuard)
-    // @ApiTags('admin-permission')
-    // @ApiBody({
-    //     type: GiveAccessDto
-    // })
-    // @ApiResponse({
-    //     type: OkResponseMessage,
-    //     status: HttpStatus.OK
-    // })
-    // @Post("user-access")
-    // async giveUserAccess(
-    //     @Res() response: Response,
-    //     @Body() giveAccessDto: GiveAccessDto
-    // ): Promise<Response> {
-    //     return this.adminPermissionService.giveUserAccess(
-    //         giveAccessDto,
-    //         response
-    //     );
-    // }
+    @UseGuards(AdminGuard)
+    @ApiTags('admin-permission')
+    @ApiBody({
+        type: GiveAccessDto
+    })
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Post("user-access")
+    async giveUserAccess(
+        @Res() response: Response,
+        @Body() giveAccessDto: GiveAccessDto
+    ): Promise<Response> {
+        return this.adminPermissionService.giveUserAccess(
+            giveAccessDto,
+            response
+        );
+    }
 }
