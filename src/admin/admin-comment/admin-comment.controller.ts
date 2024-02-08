@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiFoundResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiFoundResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AdminGuard } from 'src/auth/guards';
 import { CommentService } from 'src/comment/comment.service';
@@ -14,6 +14,7 @@ export class AdminCommentController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
+    @ApiOperation({ summary: "get all comments" })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -29,6 +30,7 @@ export class AdminCommentController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
+    @ApiOperation({ summary: "delete comment by comment-id" })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -46,6 +48,7 @@ export class AdminCommentController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
+    @ApiOperation({ summary: "show comment by comment-id" })
     @ApiBody({
         type: IsShowCommentDto
     })
@@ -69,6 +72,7 @@ export class AdminCommentController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
+    @ApiOperation({ summary: "reply to comment by comment-id" })
     @ApiBody({
         type: ReplyCommentDto
     })
@@ -92,6 +96,7 @@ export class AdminCommentController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-comment')
+    @ApiOperation({ summary: "find comment by comment-id" })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK

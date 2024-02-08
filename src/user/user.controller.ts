@@ -1,9 +1,9 @@
 import { Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { JwtGuard } from 'src/auth/guards';
+import { AdminGuard, JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
 import { Request, Response } from 'express';
-import { ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UnAuthorizeResponseMessage } from 'src/common/constant';
 
 
@@ -14,6 +14,7 @@ export class UserController {
     ) { }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "get all user information " })
     @ApiTags('user')
     @ApiUnauthorizedResponse({
         type: UnAuthorizeResponseMessage,
@@ -38,6 +39,8 @@ export class UserController {
             })
     }
 
+    @UseGuards(AdminGuard)
+    @ApiOperation({ summary: "get all users information " })
     @ApiTags('user')
     @ApiUnauthorizedResponse({
         type: UnAuthorizeResponseMessage,

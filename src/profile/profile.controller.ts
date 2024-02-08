@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateImageDto, UpdateUserDto, UpdateUserSwagger } from './dto';
-import { JwtGuard } from 'src/auth/guards';
+import { AdminGuard, JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
 import { ProfileService } from './profile.service';
 import { Response } from 'express';
@@ -18,6 +18,7 @@ export class ProfileController {
     ) { }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "update user profile " })
     @ApiBody({
         type: UpdateUserSwagger,
         required: true
@@ -41,7 +42,8 @@ export class ProfileController {
         );
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
+    @ApiOperation({ summary: "delete user " })
     @ApiBody({
         type: DeleteUserDto,
         required: true
@@ -64,6 +66,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "create user address " })
     @ApiBody({
         type: CreateAddressDto,
         required: true
@@ -88,6 +91,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "update user address by address-id " })
     @ApiBody({
         type: UpdateAddressDto,
         required: true
@@ -115,6 +119,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "delete user address by address-id " })
     @ApiTags('profile-address')
     @ApiResponse({
         type: OkResponseMessage,
@@ -136,6 +141,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "get all user addresses " })
     @ApiTags('profile-address')
     @ApiQuery({
         name: 'page', required: false
@@ -170,6 +176,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "update user image " })
     @ApiBody({
         type: UpdateImageDto,
         required: true
@@ -195,6 +202,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "delete user image " })
     @ApiTags('profile-user')
     @ApiResponse({
         type: OkResponseMessage,
@@ -212,6 +220,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "add food to favorite food  " })
     @ApiTags('profile-user')
     @ApiConsumes(MIMETYPE.JSON)
     @ApiResponse({
@@ -232,6 +241,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "delete food from favorite food " })
     @ApiTags('profile-user')
     @ApiResponse({
         type: OkResponseMessage,
@@ -251,6 +261,7 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "get all user favorite food " })
     @ApiQuery({ name: "main", required: false })
     @ApiQuery({ name: "page", required: false })
     @ApiQuery({ name: "limit", required: false })

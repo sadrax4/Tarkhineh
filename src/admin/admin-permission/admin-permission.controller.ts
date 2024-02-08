@@ -1,5 +1,5 @@
 import { Body, Controller, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
 import { OkResponseMessage } from 'src/common/constant';
 import { AdminPermissionService } from './admin-permission.service';
@@ -14,6 +14,7 @@ export class AdminPermissionController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-permission')
+    @ApiOperation({ summary: "give admin permission by phone" })
     @ApiBody({
         type: GiveAccessDto
     })
@@ -34,6 +35,7 @@ export class AdminPermissionController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-permission')
+    @ApiOperation({ summary: "give user permission by phone" })
     @ApiBody({
         type: GiveAccessDto
     })

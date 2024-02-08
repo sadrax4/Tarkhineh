@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiFoundResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiFoundResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
 import { CreateCommentDto, IsShowCommentDto, ReplyCommentDto } from './dto';
 import { JwtGuard } from 'src/auth/guards';
@@ -14,6 +14,7 @@ export class CommentController {
     ) { }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "create comment " })
     @ApiBody({ type: CreateCommentDto })
     @ApiTags('comment')
     @ApiConsumes(MIMETYPE.JSON)
@@ -35,6 +36,7 @@ export class CommentController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "get all comments " })
     @ApiTags('comment')
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
@@ -51,6 +53,7 @@ export class CommentController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "reply to comment by comment-id " })
     @ApiTags('comment')
     @ApiBody({ type: ReplyCommentDto })
     @ApiConsumes(MIMETYPE.JSON)
@@ -73,6 +76,7 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
+    @ApiOperation({ summary: "edit reply comment by comment-id " })
     @ApiBody({ type: ReplyCommentDto })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
@@ -94,6 +98,7 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
+    @ApiOperation({ summary: "show comment by comment-id " })
     @ApiBody({
         type: IsShowCommentDto
     })
@@ -117,6 +122,7 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
+    @ApiOperation({ summary: "delete comment by comment-id " })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
         type: OkResponseMessage,
@@ -136,6 +142,7 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
+    @ApiOperation({ summary: "get user comments by user-id " })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
         type: OkResponseMessage,
@@ -154,6 +161,7 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
+    @ApiOperation({ summary: "get food comments by food-id " })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
         type: OkResponseMessage,

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
 import { OkResponseMessage } from 'src/common/constant';
 import { BlackListDto, FindUserDto } from './dto';
@@ -15,6 +15,7 @@ export class AdminUserController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-user')
+    @ApiOperation({ summary: "get all users" })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -30,6 +31,7 @@ export class AdminUserController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-user')
+    @ApiOperation({ summary: "get user black list " })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -45,6 +47,7 @@ export class AdminUserController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-user')
+    @ApiOperation({ summary: "find user by query " })
     @ApiBody({ type: FindUserDto })
     @ApiResponse({
         type: OkResponseMessage,
@@ -63,6 +66,7 @@ export class AdminUserController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-user')
+    @ApiOperation({ summary: "find user by user-id " })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -80,6 +84,7 @@ export class AdminUserController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-user')
+    @ApiOperation({ summary: "create user blacklist by phone " })
     @ApiBody({ type: BlackListDto })
     @ApiResponse({
         type: OkResponseMessage,
@@ -99,6 +104,7 @@ export class AdminUserController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-user')
+    @ApiOperation({ summary: "delete user " })
     @ApiBody({ type: DeleteUserDto })
     @ApiResponse({
         type: OkResponseMessage,
@@ -117,6 +123,7 @@ export class AdminUserController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-user')
+    @ApiOperation({ summary: "delete user from black list " })
     @ApiBody({ type: BlackListDto })
     @ApiResponse({
         type: OkResponseMessage,
@@ -132,6 +139,4 @@ export class AdminUserController {
             response
         );
     }
-
-
 }

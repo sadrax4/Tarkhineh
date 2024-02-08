@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, R
 import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
 import { FoodService } from './food.service';
-import { ApiBody, ApiConsumes, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { foodSchema } from './config';
 import { UploadMultiFilesAws } from 'src/common/interceptors';
@@ -21,6 +21,7 @@ export class FoodController {
 
 
     @ApiTags('food')
+    @ApiOperation({ summary: "search food " })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiResponse({
         type: OkResponseMessage,
@@ -38,6 +39,7 @@ export class FoodController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "create food " })
     @ApiBody(foodSchema)
     @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('food')
@@ -61,6 +63,7 @@ export class FoodController {
     }
 
     @UseGuards(PublicGuard)
+    @ApiOperation({ summary: "group foods by category " })
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -93,6 +96,7 @@ export class FoodController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "get all foods " })
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -109,6 +113,7 @@ export class FoodController {
 
     @UseGuards(PublicGuard)
     @ApiTags('food')
+    @ApiOperation({ summary: "get food by food-id " })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -131,6 +136,7 @@ export class FoodController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "delete food by food-id " })
     @ApiTags('food')
     @ApiResponse({
         type: OkResponseMessage,
@@ -152,6 +158,7 @@ export class FoodController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "update food  by food-id " })
     @ApiBody(foodSchema)
     @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('food')

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, R
 import { AdminFoodService } from './admin-food.service';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
 import { AdminGuard } from 'src/auth/guards';
-import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { StringToArray } from 'src/common/decorators';
 import { MulterFile } from 'src/common/types';
@@ -20,6 +20,7 @@ export class AdminFoodController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-food')
+    @ApiOperation({ summary: "get all foods" })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -35,6 +36,7 @@ export class AdminFoodController {
 
     @UseGuards(AdminGuard)
     @ApiBody(foodSchema)
+    @ApiOperation({ summary: "create food" })
     @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('admin-food')
     @ApiConsumes(MIMETYPE.MULTIPART)
@@ -58,6 +60,7 @@ export class AdminFoodController {
 
     @UseGuards(AdminGuard)
     @ApiBody(foodSchema)
+    @ApiOperation({ summary: "update food by food-id" })
     @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('admin-food')
     @ApiConsumes(MIMETYPE.MULTIPART)
@@ -83,6 +86,7 @@ export class AdminFoodController {
 
     @UseGuards(AdminGuard)
     @ApiTags('admin-food')
+    @ApiOperation({ summary: "delete food by food-id" })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.CREATED

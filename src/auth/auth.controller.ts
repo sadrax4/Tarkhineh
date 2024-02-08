@@ -3,7 +3,7 @@ import { UserService } from '../user/user.service';
 import { CheckOtpDto, LoginUserDto } from './dto';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { ApiBody, ApiConsumes, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { MIMETYPE } from 'src/common/constant/mimeType.constant';
 import { OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { ResendCodeDto } from './dto/resend-code-dto';
@@ -21,6 +21,7 @@ export class AuthController {
 
     @Post('get-otp')
     @ApiTags('auth')
+    @ApiOperation({ summary: "get otp " })
     @ApiBody({ type: LoginUserDto, required: true })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiResponse({
@@ -42,6 +43,7 @@ export class AuthController {
 
     @Post('check-otp')
     @ApiTags('auth')
+    @ApiOperation({ summary: "check otp " })
     @ApiBody({ type: CheckOtpDto, required: true })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiResponse({
@@ -65,6 +67,7 @@ export class AuthController {
 
     @ApiTags('auth')
     @ApiConsumes(MIMETYPE.JSON)
+    @ApiOperation({ summary: "resend otp code " })
     @ApiResponse({ type: OkResponseMessage, status: HttpStatus.OK })
     @ApiUnauthorizedResponse({
         type: UnAuthorizeResponseMessage,
@@ -80,6 +83,7 @@ export class AuthController {
 
     @UseGuards(RefreshGuard)
     @ApiTags('auth')
+    @ApiOperation({ summary: "generate new refresh & access token " })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -103,6 +107,7 @@ export class AuthController {
 
     @UseGuards(JwtGuard)
     @ApiTags('auth')
+    @ApiOperation({ summary: "log out user " })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
