@@ -30,7 +30,15 @@ export class PublicStrategy extends PassportStrategy(Strategy, 'public') {
         if (!payload || payload == null) {
             return null;
         }
-        const { phone, username } = await this.userService.findUser(payload.phone)
-        return { phone, username };
+        const {
+            phone,
+            username
+        } = await this.userService.findUser(
+            payload.phone
+        )
+        return {
+            phone,
+            username
+        };
     }
 }

@@ -29,16 +29,27 @@ export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {
         payload: JwtPayload
     ): Promise<{ phone: string, username: string }> {
         if (!payload || payload == null) {
-            throw new HttpException("توکن نا معتبر ", HttpStatus.UNAUTHORIZED);
+            throw new HttpException(
+                "توکن نا معتبر ",
+                HttpStatus.UNAUTHORIZED
+            );
         }
         const {
             phone,
             username,
             role
-        } = await this.userService.findUser(payload.phone);
+        } = await this.userService.findUser(
+            payload.phone
+        );
         if (role == Roles.user) {
-            throw new HttpException("اجازه دسترسی ندارید", HttpStatus.UNAUTHORIZED);
+            throw new HttpException(
+                "اجازه دسترسی ندارید",
+                HttpStatus.UNAUTHORIZED
+            );
         }
-        return { phone, username };
+        return {
+            phone,
+            username
+        };
     }
 }

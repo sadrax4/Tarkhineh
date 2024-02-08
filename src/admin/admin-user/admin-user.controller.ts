@@ -10,7 +10,7 @@ import { Response } from 'express';
 @Controller('admin')
 export class AdminUserController {
     constructor(
-        private adminService: AdminUserService
+        private adminUserService: AdminUserService
     ) { }
 
     @UseGuards(AdminGuard)
@@ -23,7 +23,7 @@ export class AdminUserController {
     async getUsers(
         @Res() response: Response
     ): Promise<Response> {
-        return this.adminService.getUsers(
+        return this.adminUserService.getUsers(
             response
         );
     }
@@ -38,7 +38,7 @@ export class AdminUserController {
     async getBlacklistPhones(
         @Res() response: Response
     ): Promise<Response> {
-        return this.adminService.getBlacklistPhones(
+        return this.adminUserService.getBlacklistPhones(
             response
         );
     }
@@ -55,7 +55,7 @@ export class AdminUserController {
         @Body() findUserDto: FindUserDto,
         @Res() response: Response
     ): Promise<Response> {
-        return this.adminService.findUser(
+        return this.adminUserService.findUser(
             findUserDto,
             response
         );
@@ -72,7 +72,7 @@ export class AdminUserController {
         @Query("id") userId: string,
         @Res() response: Response
     ): Promise<Response> {
-        return this.adminService.findUserById(
+        return this.adminUserService.findUserById(
             userId,
             response
         );
@@ -90,7 +90,7 @@ export class AdminUserController {
         @Body() blackListDto: BlackListDto,
         @Res() response: Response
     ): Promise<Response> {
-        return this.adminService.addPhoneToBlacklist(
+        return this.adminUserService.addPhoneToBlacklist(
             blackListDto,
             response
         );
@@ -109,7 +109,7 @@ export class AdminUserController {
         @Body() deleteUserDto: DeleteUserDto,
         @Res() response: Response
     ): Promise<Response> {
-        return this.adminService.deleteUser(
+        return this.adminUserService.deleteUser(
             deleteUserDto,
             response
         );
@@ -127,7 +127,7 @@ export class AdminUserController {
         @Body() blackListDto: BlackListDto,
         @Res() response: Response
     ): Promise<Response> {
-        return this.adminService.removePhoneFromBlacklist(
+        return this.adminUserService.removePhoneFromBlacklist(
             blackListDto,
             response
         );

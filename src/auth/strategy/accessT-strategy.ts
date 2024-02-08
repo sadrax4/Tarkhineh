@@ -28,9 +28,20 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         payload: JwtPayload
     ): Promise<{ phone: string, username: string }> {
         if (!payload || payload == null) {
-            throw new HttpException("توکن نا معتبر ", HttpStatus.UNAUTHORIZED);
+            throw new HttpException(
+                "توکن نا معتبر ",
+                HttpStatus.UNAUTHORIZED
+            );
         }
-        const { phone, username } = await this.userService.findUser(payload.phone)
-        return { phone, username };
+        const {
+            phone,
+            username
+        } = await this.userService.findUser(
+            payload.phone
+        )
+        return {
+            phone,
+            username
+        };
     }
 }
