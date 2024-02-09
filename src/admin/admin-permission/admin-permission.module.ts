@@ -7,7 +7,11 @@ import { UserModule } from 'src/user/user.module';
   imports: [
     UserModule
   ],
-  providers: [AdminPermissionService],
-  controllers: [AdminPermissionController]
+  providers: [
+    AdminPermissionService
+  ],
+  controllers: [
+    AdminPermissionController
+  ]
 })
 export class AdminPermissionModule { }

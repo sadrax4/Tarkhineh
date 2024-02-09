@@ -31,8 +31,12 @@ import { AdminPermissionModule } from './admin/admin-permission/admin-permission
     AdminCommentModule,
     AdminPermissionModule
   ],
-  controllers: [AdminFoodController],
-  providers: [AdminFoodService],
+  controllers: [
+    AdminFoodController
+  ],
+  providers: [
+    AdminFoodService
+  ],
   exports: []
 })
 export class AppModule { }

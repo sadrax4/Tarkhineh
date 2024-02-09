@@ -30,7 +30,7 @@ export class AdminPermissionController {
         return this.adminPermissionService.giveAdminAccess(
             giveAccessDto,
             response
-        );
+        )
     }
 
     @UseGuards(AdminGuard)
@@ -51,6 +51,6 @@ export class AdminPermissionController {
         return this.adminPermissionService.giveUserAccess(
             giveAccessDto,
             response
-        );
+        )
     }
 }
