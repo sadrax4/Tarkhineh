@@ -13,6 +13,7 @@ import { AdminFoodModule } from './admin/admin-food/admin-food.module';
 import { AdminUserModule } from './admin/admin-user/admin-user.module';
 import { AdminCommentModule } from './admin/admin-comment/admin-comment.module';
 import { AdminPermissionModule } from './admin/admin-permission/admin-permission.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { AdminPermissionModule } from './admin/admin-permission/admin-permission
     AdminFoodModule,
     AdminUserModule,
     AdminCommentModule,
-    AdminPermissionModule
+    AdminPermissionModule,
+    PaymentModule
   ],
   controllers: [
     AdminFoodController
