@@ -15,6 +15,7 @@ import { AdminCommentModule } from './admin/admin-comment/admin-comment.module';
 import { AdminPermissionModule } from './admin/admin-permission/admin-permission.module';
 import { PaymentModule } from './payment/payment.module';
 import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { CartModule } from './cart/cart.module';
     AdminCommentModule,
     AdminPermissionModule,
     PaymentModule,
-    CartModule
+    CartModule,
+    OrderModule
   ],
   controllers: [
     AdminFoodController
