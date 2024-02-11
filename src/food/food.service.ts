@@ -293,9 +293,15 @@ export class FoodService {
                 foodQuery,
                 favoriteFoodQuery
             ])
-            let comments = foods.map(fd => {
-                return fd?.comments;
-            })
+            let comments = foods
+                .map(
+                    fd => {
+                        return fd?.comments?.show ? fd.comments : null
+                    })
+                .filter(
+                    comment => comment !== null
+                )
+            console.log(comments)
             let food = foods[0];
             comments ? food.comments = comments : null;
             food.isFavorite = favoritFood.includes(new Types.ObjectId(food._id)) ?
