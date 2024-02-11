@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, R
 import { ApiBody, ApiConsumes, ApiFoundResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
 import { CreateCommentDto, IsShowCommentDto, ReplyCommentDto } from './dto';
-import { JwtGuard } from 'src/auth/guards';
+import { AdminGuard, JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from 'src/common/decorators';
 import { CommentService } from './comment.service';
 import { Response } from 'express';
@@ -35,7 +35,7 @@ export class CommentController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiOperation({ summary: "get all comments " })
     @ApiTags('comment')
     @ApiConsumes(MIMETYPE.JSON)
@@ -52,7 +52,7 @@ export class CommentController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiOperation({ summary: "reply to comment by comment-id " })
     @ApiTags('comment')
     @ApiBody({ type: ReplyCommentDto })
@@ -74,7 +74,7 @@ export class CommentController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('comment')
     @ApiOperation({ summary: "edit reply comment by comment-id " })
     @ApiBody({ type: ReplyCommentDto })
@@ -96,7 +96,7 @@ export class CommentController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(AdminGuard)
     @ApiTags('comment')
     @ApiOperation({ summary: "show comment by comment-id " })
     @ApiBody({
@@ -172,7 +172,6 @@ export class CommentController {
         @Param("id") foodId: string,
         @Res() response: Response
     ) {
-        console.log();
         return this.commentService.getFoodComments(
             foodId,
             response
