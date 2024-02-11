@@ -172,6 +172,7 @@ export class CommentController {
         @Param("id") foodId: string,
         @Res() response: Response
     ) {
+        console.log();
         return this.commentService.getFoodComments(
             foodId,
             response
