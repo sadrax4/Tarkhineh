@@ -47,6 +47,16 @@ class Address extends AbstractDocument {
 
 }
 
+@Schema({ _id: false })
+class FoodDetail {
+
+    @Prop()
+    foodId: mongoose.Types.ObjectId
+
+    @Prop({ default: 1 })
+    quantity: number
+}
+
 @Schema({
     timestamps: true,
     versionKey: false,
@@ -102,6 +112,9 @@ export class User extends AbstractDocument {
 
     @Prop({ default: 'user' })
     role: string;
+
+    @Prop({ type: [FoodDetail] })
+    carts: FoodDetail[]
 
 }
 export const UserSchema = SchemaFactory.createForClass(User)

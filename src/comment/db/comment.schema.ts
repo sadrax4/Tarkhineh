@@ -2,32 +2,47 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { AbstractDocument } from "libs/database";
 import mongoose, { now } from "mongoose";
 
+@Schema({ _id: false })
+class Reply {
+    @Prop()
+    name: string
+
+    @Prop()
+    family: string
+
+    @Prop({ required: false, default: new Date() })
+    createdAt?: Date;
+
+    @Prop()
+    text: string
+}
+
 @Schema({ versionKey: false, collection: 'comments' })
 export class Comment extends AbstractDocument {
 
     @Prop({
         required: true,
-        type:  mongoose.Types.ObjectId
+        type: mongoose.Types.ObjectId
     })
-    author:  mongoose.Types.ObjectId;
+    author: mongoose.Types.ObjectId;
 
     @Prop({
         required: true,
-        type:  mongoose.Types.ObjectId
+        type: mongoose.Types.ObjectId
     })
     foodId: mongoose.Types.ObjectId;
 
     @Prop()
     text: string;
 
-    @Prop({ default: now() })
+    @Prop({ default: new Date() })
     createdAt: Date;
 
     @Prop({ default: false })
     show: boolean
 
-    @Prop()
-    reply: string;
+    @Prop({ type: Reply })
+    reply: Reply;
 
     @Prop({ min: 1, max: 5 })
     rate: number

@@ -75,7 +75,7 @@ export class CommentService {
                 { _id: new Types.ObjectId(id) },
                 {
                     $set: {
-                        reply: replyCommentDto.text,
+                        reply: replyCommentDto,
                         show: true
                     }
                 }
@@ -104,7 +104,7 @@ export class CommentService {
                 { _id: new Types.ObjectId(id) },
                 {
                     $set: {
-                        reply: replyCommentDto.text,
+                        reply: replyCommentDto,
                         show: true
                     }
                 }
