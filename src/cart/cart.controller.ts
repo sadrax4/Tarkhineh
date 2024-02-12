@@ -1,8 +1,11 @@
-import { Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { UnAuthorizeResponseMessage } from 'src/common/constant';
 import { PublicGuard } from 'src/auth/guards';
 import { ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { CreateCartDto } from './dto';
+import { GetCurrentUser } from 'src/common/decorators';
+import { Response } from 'express';
 
 @Controller('cart')
 export class CartController {
@@ -19,19 +22,14 @@ export class CartController {
     })
     @Post("add")
     async addToCart(
+        @Body() createCartDto: CreateCartDto,
         @Res() response: Response,
-        @Req() request: Request,
+        @GetCurrentUser("phone") phone: string = null
     ) {
-        const projection = {
-            hashRT: 0,
-            otp: 0
-        };
-        let user: any = await this.userService.findUser(phone, projection);
-        return response
-            .status(HttpStatus.OK)
-            .json({
-                data: user,
-                statusCode: HttpStatus.OK
-            })
+        return this.cartService.addToCart(
+            createCartDto,
+            phone,
+            response
+        )
     }
 }
