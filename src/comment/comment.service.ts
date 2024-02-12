@@ -66,16 +66,28 @@ export class CommentService {
     }
 
     async replyComment(
+        phone: string,
         id: string,
         replyCommentDto: ReplyCommentDto,
         response: Response
     ): Promise<Response> {
         try {
+            const {
+                name,
+                family,
+                imageUrl
+            } = await this.userService.findUser(phone);
+            const replyData = {
+                text: replyCommentDto.text,
+                name,
+                family,
+                imageUrl
+            }
             await this.commentRepository.findOneAndUpdate(
                 { _id: new Types.ObjectId(id) },
                 {
                     $set: {
-                        reply: replyCommentDto,
+                        reply: replyData,
                         show: true
                     }
                 }
@@ -95,16 +107,28 @@ export class CommentService {
     }
 
     async editReplyComment(
+        phone: string,
         id: string,
         replyCommentDto: ReplyCommentDto,
         response: Response
     ): Promise<Response> {
         try {
+            const {
+                name,
+                family,
+                imageUrl
+            } = await this.userService.findUser(phone);
+            const replyData = {
+                text: replyCommentDto.text,
+                name,
+                family,
+                imageUrl
+            }
             await this.commentRepository.findOneAndUpdate(
                 { _id: new Types.ObjectId(id) },
                 {
                     $set: {
-                        reply: replyCommentDto,
+                        reply: replyData,
                         show: true
                     }
                 }

@@ -15,6 +15,10 @@ class Reply {
 
     @Prop()
     text: string
+
+    @Prop()
+    imageUrl: string
+
 }
 
 @Schema({ versionKey: false, collection: 'comments' })

@@ -8,7 +8,14 @@ import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { StorageService } from 'src/storage/storage.service';
 import { CommentService } from 'src/comment/comment.service';
-import { FoodDetailProjection, getCommentsByFoodIdProjection, getFavoriteFoodProjection, getFoodByCategoryProjection, groupAggregate, groupAggregateFavoriteFood, projectAggregate, projectAggregateFavoriteFood } from 'src/common/projection';
+import {
+    FoodDetailProjection,
+    getCommentsByFoodIdProjection,
+    getFavoriteFoodProjection,
+    getFoodByCategoryProjection,
+    groupAggregate,
+    projectAggregate,
+} from 'src/common/projection';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -301,7 +308,6 @@ export class FoodService {
                 .filter(
                     comment => comment !== null
                 )
-            console.log(comments)
             let food = foods[0];
             comments ? food.comments = comments : null;
             food.isFavorite = favoritFood.includes(new Types.ObjectId(food._id)) ?

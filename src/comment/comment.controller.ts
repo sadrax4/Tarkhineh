@@ -63,11 +63,13 @@ export class CommentController {
     })
     @Post('reply/:id')
     async replyComment(
+        @GetCurrentUser("phone") phone: string,
         @Body() replyCommentDto: ReplyCommentDto,
         @Query("id") id: string,
         @Res() response: Response
     ): Promise<Response> {
         return this.commentService.replyComment(
+            phone,
             id,
             replyCommentDto,
             response
@@ -85,11 +87,13 @@ export class CommentController {
     })
     @Patch('reply/:id')
     async editReplyComment(
+        @GetCurrentUser("phone") phone: string,
         @Body() replyCommentDto: ReplyCommentDto,
         @Query("id") id: string,
         @Res() response: Response
     ): Promise<Response> {
         return this.commentService.editReplyComment(
+            phone,
             id,
             replyCommentDto,
             response
