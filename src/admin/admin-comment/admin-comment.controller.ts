@@ -5,6 +5,7 @@ import { AdminGuard } from 'src/auth/guards';
 import { CommentService } from 'src/comment/comment.service';
 import { IsShowCommentDto, ReplyCommentDto } from 'src/comment/dto';
 import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
+import { GetCurrentUser } from 'src/common/decorators';
 
 @Controller('admin')
 export class AdminCommentController {
@@ -83,11 +84,13 @@ export class AdminCommentController {
     })
     @Post('comment/reply/:id')
     async replyComment(
+        @GetCurrentUser("phone") phone: string,
         @Body() replyCommentDto: ReplyCommentDto,
         @Query("id") id: string,
         @Res() response: Response
     ): Promise<Response> {
         return this.commentService.replyComment(
+            phone,
             id,
             replyCommentDto,
             response
