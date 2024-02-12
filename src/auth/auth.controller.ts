@@ -13,7 +13,6 @@ import { GetCurrentUser } from 'src/common/decorators';
 
 @Controller('auth')
 export class AuthController {
-
     constructor(
         private userService: UserService,
         private authService: AuthService
@@ -38,7 +37,10 @@ export class AuthController {
         if (!haveAccount) {
             await this.userService.createUser(loginUserDto)
         }
-        return this.authService.getOtp(loginUserDto.phone, response);
+        return this.authService.getOtp(
+            loginUserDto.phone,
+            response
+        );
     }
 
     @Post('check-otp')

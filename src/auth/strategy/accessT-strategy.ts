@@ -16,11 +16,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             ignoreExpiration: false,
             secretOrKey: configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
             jwtFromRequest: ExtractJwt.fromExtractors([(request: Request) => {
+                console.log(request?.cookies["sadra"])
                 const data = request?.cookies['access-token'];
-                if (!data) {
-                    return null;
-                }
-                return data;
+                return data ? data : null;
             }])
         })
     }
