@@ -11,14 +11,14 @@ export class CartController {
     ) { }
 
     @UseGuards(PublicGuard)
-    @ApiOperation({ summary: "get all user information " })
+    @ApiOperation({ summary: "add food to cart" })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
         type: UnAuthorizeResponseMessage,
         status: HttpStatus.UNAUTHORIZED
     })
-    @Post()
-    async getUser(
+    @Post("add")
+    async addToCart(
         @Res() response: Response,
         @Req() request: Request,
     ) {

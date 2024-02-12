@@ -8,7 +8,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy, PublicStrategy, RefreshStrategy } from './strategy';
 import { AdminStrategy } from './strategy/admin-strategy';
-import { CartStrategy } from './strategy/cart-strategy';
 
 @Module({
   imports: [
@@ -23,8 +22,7 @@ import { CartStrategy } from './strategy/cart-strategy';
     RefreshStrategy,
     JwtStrategy,
     PublicStrategy,
-    AdminStrategy,
-    CartStrategy
+    AdminStrategy
   ]
 })
 
