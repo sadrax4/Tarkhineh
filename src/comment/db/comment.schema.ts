@@ -10,8 +10,8 @@ class Reply {
     @Prop()
     family: string
 
-    @Prop({ required: false, default: new Date() })
-    createdAt?: Date;
+    @Prop({ required: false, default: Date.now })
+    createdAt?: string;
 
     @Prop()
     text: string
@@ -39,8 +39,8 @@ export class Comment extends AbstractDocument {
     @Prop()
     text: string;
 
-    @Prop({ default: new Date() })
-    createdAt: Date;
+    @Prop({ default: Date.now })
+    createdAt: string;
 
     @Prop({ default: false })
     show: boolean
