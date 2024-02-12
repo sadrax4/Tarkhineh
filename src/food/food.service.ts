@@ -268,7 +268,10 @@ export class FoodService {
                     }
                 },
                 {
-                    $unwind: "$comments"
+                    "$unwind": {
+                        path: "$comments",
+                        preserveNullAndEmptyArrays: true
+                    }
                 },
                 {
                     $lookup: {
