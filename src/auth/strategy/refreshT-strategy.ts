@@ -22,7 +22,6 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
                 let data = request?.headers["refresh-token"] ?
                     request?.headers["refresh-token"] :
                     request?.cookies["refresh-token"]
-                console.log(data);
                 return data ? data : null;
             }])
         })
