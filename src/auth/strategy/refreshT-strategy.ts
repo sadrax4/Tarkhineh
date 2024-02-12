@@ -19,7 +19,6 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
             passReqToCallback: true,
             secretOrKey: configService.get<string>("JWT_REFRESH_TOKEN_SECRET"),
             jwtFromRequest: ExtractJwt.fromExtractors([(request: Request) => {
-                console.log(request?.cookies["sadra"])
                 let data = request?.cookies["refresh-token"];
                 return data ? data : null;
             }])
