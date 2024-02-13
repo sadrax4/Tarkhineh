@@ -21,6 +21,12 @@ class Reply {
 
 }
 
+@Schema({ _id: false })
+class Author {
+    @Prop()
+    author: Reply
+}
+
 @Schema({ versionKey: false, collection: 'comments' })
 export class Comment extends AbstractDocument {
 
@@ -45,10 +51,8 @@ export class Comment extends AbstractDocument {
     @Prop({ default: false })
     show: boolean
 
-    @Prop()
-    reply: {
-        author: Reply
-    }
+    @Prop({ type: Author })
+    reply: Author
 
     @Prop({ min: 1, max: 5 })
     rate: number
