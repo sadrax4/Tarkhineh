@@ -41,6 +41,9 @@ export class CartService {
         const foodPrice = await this.foodService.getPrice(
             createCartDto.foodId
         );
+        await this.foodService.checkFoodQuantity(
+            createCartDto.foodId
+        )
         await this.userService.addToCart(
             userPhone,
             createCartDto.foodId,

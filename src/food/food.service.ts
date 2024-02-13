@@ -581,4 +581,27 @@ export class FoodService {
             )
         }
     }
+
+    async checkFoodQuantity(
+        foodId: string,
+        count: number = 1
+    ): Promise<void> {
+        try {
+            const { quantity } = await this.foodRepository.findOne({
+                _id: new Types.ObjectId(foodId)
+            })
+            const remainingFood = quantity - count;
+            if (remainingFood < 0) {
+                throw new HttpException(
+                    "  متاسفانه موجودی غذا از تعداد درخواستی شما کمتر است",
+                    HttpStatus.UNPROCESSABLE_ENTITY
+                )
+            }
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
