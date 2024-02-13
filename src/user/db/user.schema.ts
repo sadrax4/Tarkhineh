@@ -60,8 +60,8 @@ class FoodDetail {
 @Schema({ _id: false })
 class CartDetail {
 
-    @Prop()
-    foodDetail: FoodDetail
+    @Prop({ type: [FoodDetail] })
+    foodDetail: FoodDetail[]
 
     @Prop({ default: 0 })
     totalPayment: number
