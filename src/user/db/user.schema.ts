@@ -57,6 +57,16 @@ class FoodDetail {
     quantity: number
 }
 
+@Schema({ _id: false })
+class CartDetail {
+
+    @Prop()
+    foodDetail: FoodDetail
+
+    @Prop({ default: 0 })
+    totalPayment: number
+}
+
 @Schema({
     timestamps: true,
     versionKey: false,
@@ -113,8 +123,8 @@ export class User extends AbstractDocument {
     @Prop({ default: 'user' })
     role: string;
 
-    @Prop({ type: [FoodDetail] })
-    carts: FoodDetail[]
+    @Prop({ type: CartDetail })
+    carts: CartDetail
 
 }
 export const UserSchema = SchemaFactory.createForClass(User)

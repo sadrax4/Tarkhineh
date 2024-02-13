@@ -609,6 +609,41 @@ export class UserService {
             )
         }
     }
+
+    async addToCart(
+        phone: string,
+        foodId: string,
+        foodPrice: number
+    ): Promise<void> {
+        try {
+            const foodDetail = {
+                foodId: new Types.ObjectId(foodId),
+                quantity: 1
+            }
+            const updateCart = await this.userRepository.findOneAndUpdate(
+                { phone },
+                {
+                    $set: {
+                        "carts.totalPayment": foodPrice
+                    },
+                    $push:{
+                        "carts.foodDetail": foodDetail
+                    }
+                }
+            )
+            if (!updateCart) {
+                throw new HttpException(
+                    ("کاربری با این شماره تلفن یافت نشد"),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                )
+            }
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
 
 

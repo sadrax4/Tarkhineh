@@ -559,4 +559,26 @@ export class FoodService {
             )
         }
     }
+
+    async getPrice(
+        foodId: string
+    ): Promise<number> {
+        try {
+            let foodPrice: number;
+            const food = await this.foodRepository.findOne({
+                _id: new Types.ObjectId(foodId)
+            })
+            if (food.discount > 0) {
+                foodPrice = calculatePrice(food.price, food.discount);
+            } else {
+                foodPrice = food.price;
+            }
+            return foodPrice;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }

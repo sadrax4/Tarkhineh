@@ -23,6 +23,9 @@ import { AdminStrategy } from './strategy/admin-strategy';
     JwtStrategy,
     PublicStrategy,
     AdminStrategy
+  ],
+  exports: [
+    AuthService
   ]
 })
 

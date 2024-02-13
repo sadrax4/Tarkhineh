@@ -309,4 +309,19 @@ export class AuthService {
         }
         return phone;
     }
+
+    async getAccessToken(
+        phone: string, userId: string
+    ) {
+        const jwtPayload: JwtPayload = {
+            sub: userId,
+            phone
+        }
+        const accessToken = await this.jwtService.signAsync(
+            jwtPayload, {
+            secret: this.configService.get<string>("JWT_ACCESS_TOKEN_SECRET"),
+            expiresIn: '1h'
+        })
+        return accessToken
+    }
 }
