@@ -45,8 +45,10 @@ export class Comment extends AbstractDocument {
     @Prop({ default: false })
     show: boolean
 
-    @Prop({ type: Reply })
-    reply: Reply;
+    @Prop()
+    reply: {
+        author: Reply
+    }
 
     @Prop({ min: 1, max: 5 })
     rate: number
