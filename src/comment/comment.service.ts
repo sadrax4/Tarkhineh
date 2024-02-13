@@ -79,11 +79,11 @@ export class CommentService {
             } = await this.userService.findUser(phone);
             const replyData = {
                 author: [{
-                    text: replyCommentDto.text,
                     name,
                     family,
                     imageUrl
-                }]
+                }],
+                text: replyCommentDto.text,
             }
             await this.commentRepository.findOneAndUpdate(
                 { _id: new Types.ObjectId(id) },
@@ -122,11 +122,11 @@ export class CommentService {
             } = await this.userService.findUser(phone);
             const replyData = {
                 author: [{
-                    text: replyCommentDto.text,
                     name,
                     family,
                     imageUrl
-                }]
+                }],
+                text: replyCommentDto.text
             }
             await this.commentRepository.findOneAndUpdate(
                 { _id: new Types.ObjectId(id) },

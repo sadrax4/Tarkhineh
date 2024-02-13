@@ -11,9 +11,6 @@ class Reply {
     family: string
 
     @Prop()
-    text: string
-
-    @Prop()
     imageUrl: string
 
 }
@@ -26,6 +23,9 @@ class Author {
 
     @Prop({ required: false, default: Date.now })
     createdAt?: number;
+
+    @Prop()
+    text: string
 }
 
 @Schema({ versionKey: false, collection: 'comments' })
