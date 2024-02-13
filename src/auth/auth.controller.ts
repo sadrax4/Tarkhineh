@@ -7,7 +7,7 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags, ApiUnauthoriz
 import { MIMETYPE } from 'src/common/constant/mimeType.constant';
 import { OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
 import { ResendCodeDto } from './dto/resend-code-dto';
-import { JwtGuard, RefreshGuard } from './guards';
+import { JwtGuard, PublicGuard, RefreshGuard } from './guards';
 import { GetCurrentUserCookies } from './decorator';
 import { GetCurrentUser } from 'src/common/decorators';
 
@@ -18,6 +18,7 @@ export class AuthController {
         private authService: AuthService
     ) { }
 
+    @UseGuards(PublicGuard)
     @Post('get-otp')
     @ApiTags('auth')
     @ApiOperation({ summary: "get otp " })
@@ -29,8 +30,15 @@ export class AuthController {
     })
     async getOtp(
         @Body() loginUserDto: LoginUserDto,
+        @GetCurrentUser("phone") phone: string,
         @Res() response: Response
     ): Promise<Response> {
+        if (!phone?.startsWith("09") && phone !== null) {
+            await this.userService.updateUserPhone(
+                phone,
+                loginUserDto.phone
+            )
+        }
         const haveAccount: boolean = await this.userService.haveAccount(
             loginUserDto.phone
         );

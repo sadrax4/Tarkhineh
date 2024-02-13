@@ -411,6 +411,27 @@ export class UserService {
         }
     }
 
+    async updateUserPhone(
+        lastPhone: string,
+        newPhone: string
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                { phone: lastPhone },
+                {
+                    $set: {
+                        phone: newPhone
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
     async deleteImage(
         phone: string,
     ): Promise<void> {
