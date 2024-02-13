@@ -37,7 +37,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             phone,
             username
         } = await this.userService.findUser(
-            payload.phone
+            payload.phone?
         )
         return {
             phone,

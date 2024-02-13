@@ -217,7 +217,7 @@ export class UserService {
     private generateUsername(
         phone: string
     ): string {
-        const phoneSlice: string = phone.slice(7, 11);
+        const phoneSlice: string = phone.slice(6, 11);
         const username: string = ('user' + phoneSlice);
         return username;
     }
@@ -365,13 +365,6 @@ export class UserService {
             { phone },
             projection
         );
-        if (user?.image) {
-            const imageUrl = this.storageService.getFileLink(
-                user.image,
-                USER_FOLDER
-            )
-            user.imageUrl = imageUrl;
-        }
         return user;
     }
 

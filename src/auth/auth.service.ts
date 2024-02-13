@@ -108,6 +108,7 @@ export class AuthService {
         return response
             .status(HttpStatus.OK)
             .json({
+                tokens,
                 message: successMessage,
                 statusCode: HttpStatus.OK
             })
