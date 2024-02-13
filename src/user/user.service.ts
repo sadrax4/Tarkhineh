@@ -702,6 +702,39 @@ export class UserService {
         }
     }
 
+    async removeFromCart(
+        phone: string,
+        foodId: string,
+        foodPrice: number
+    ): Promise<void> {
+        try {
+            const user = await this.userRepository.findOneAndUpdate(
+                {
+                    "carts.foodDetail": {
+                        $elemMatch: {
+                            foodId: new mongoose.Types.ObjectId(foodId)
+                        }
+                    }
+                },
+                {
+                    $pull: {
+                        "carts.foodDetail": {
+                            foodId: new mongoose.Types.ObjectId(foodId)
+                        }
+                    },
+                    $inc: {
+                        "carts.totalPayment": -foodPrice
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
 }
 
 

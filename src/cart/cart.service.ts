@@ -5,6 +5,7 @@ import { UserService } from 'src/user/user.service';
 import { generateFakePhone } from 'src/common/utils/generate-fake-phone';
 import { FoodService } from 'src/food/food.service';
 import { AuthService } from 'src/auth/auth.service';
+import { RemoveCartDto } from './dto/remove-cart.dto';
 
 @Injectable()
 export class CartService {
@@ -38,12 +39,14 @@ export class CartService {
         } else {
             userPhone = phone;
         }
-        const foodPrice = await this.foodService.getPrice(
-            createCartDto.foodId
-        );
-        await this.foodService.checkFoodQuantity(
-            createCartDto.foodId
-        )
+        const [foodPrice] = await Promise.all([
+            this.foodService.getPrice(
+                createCartDto.foodId
+            ),
+            this.foodService.checkFoodQuantity(
+                createCartDto.foodId
+            )
+        ])
         await this.userService.addToCart(
             userPhone,
             createCartDto.foodId,
@@ -53,6 +56,27 @@ export class CartService {
             .status(HttpStatus.OK)
             .json({
                 message: "غذا با موفقیت به سبد خرید اضافه شد",
+                statusCode: HttpStatus.OK
+            })
+    }
+
+    async removeFromCart(
+        removeCartDto: RemoveCartDto,
+        phone: string,
+        response: Response
+    ) {
+        const foodPrice = await this.foodService.getPrice(
+            removeCartDto.foodId
+        )
+        await this.userService.removeFromCart(
+            phone,
+            removeCartDto.foodId,
+            foodPrice
+        )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "غذا با موفقیت از سبد خرید حذف شد",
                 statusCode: HttpStatus.OK
             })
     }
