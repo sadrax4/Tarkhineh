@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
@@ -17,20 +17,14 @@ export class CartService {
         createCartDto: CreateCartDto,
         phone: string,
         response: Response
-    ) {
+    ): Promise<Response> {
         let userPhone: string;
         if (!phone) {
-            userPhone = generateFakePhone()
-            await this.userService.createUser({
-                phone: userPhone
-            });
-            const { _id } = await this.userService.findUser(
-                userPhone
-            );
-            const accessToken = await this.authService.getAccessToken(
-                userPhone,
-                _id.toString()
-            )
+            const {
+                fakePhone,
+                accessToken
+            } = await this.createUnknowUser();
+            userPhone = fakePhone;
             response.cookie(
                 'access-token',
                 accessToken,
@@ -48,9 +42,34 @@ export class CartService {
             createCartDto.foodId
         );
         await this.userService.addToCart(
-            createCartDto.foodId,
             userPhone,
+            createCartDto.foodId,
             foodPrice,
         );
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "غذا با موفقیت به سبد خرید اضافه شد",
+                statusCode: HttpStatus.OK
+            })
+    }
+
+    private async createUnknowUser(
+    ) {
+        const userPhone = generateFakePhone()
+        await this.userService.createUser({
+            phone: userPhone
+        });
+        const { _id } = await this.userService.findUser(
+            userPhone
+        );
+        const accessToken = await this.authService.getAccessToken(
+            userPhone,
+            _id.toString()
+        )
+        return {
+            fakePhone: userPhone,
+            accessToken
+        }
     }
 }

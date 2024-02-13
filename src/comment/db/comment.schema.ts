@@ -10,9 +10,6 @@ class Reply {
     @Prop()
     family: string
 
-    @Prop({ required: false, default: Date.now })
-    createdAt?: number;
-
     @Prop()
     text: string
 
@@ -23,8 +20,12 @@ class Reply {
 
 @Schema({ _id: false })
 class Author {
+
     @Prop()
-    author: Reply
+    author: Reply[]
+
+    @Prop({ required: false, default: Date.now })
+    createdAt?: number;
 }
 
 @Schema({ versionKey: false, collection: 'comments' })

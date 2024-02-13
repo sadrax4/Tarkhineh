@@ -623,10 +623,10 @@ export class UserService {
             const updateCart = await this.userRepository.findOneAndUpdate(
                 { phone },
                 {
-                    $set: {
+                    $inc: {
                         "carts.totalPayment": foodPrice
                     },
-                    $push:{
+                    $push: {
                         "carts.foodDetail": foodDetail
                     }
                 }
