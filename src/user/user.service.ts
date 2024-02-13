@@ -637,25 +637,41 @@ export class UserService {
         foodPrice: number
     ): Promise<void> {
         try {
-            const foodDetail = {
-                foodId: new Types.ObjectId(foodId),
-                quantity: 1
-            }
-            const updateCart = await this.userRepository.findOneAndUpdate(
-                { phone },
-                {
-                    $inc: {
-                        "carts.totalPayment": foodPrice
-                    },
-                    $push: {
-                        "carts.foodDetail": foodDetail
-                    }
-                }
+            const checkFoodExistsInCarts = await this.checkFoodExistsInCarts(
+                phone,
+                foodId
             )
-            if (!updateCart) {
-                throw new HttpException(
-                    ("کاربری با این شماره تلفن یافت نشد"),
-                    HttpStatus.INTERNAL_SERVER_ERROR
+            if (checkFoodExistsInCarts) {
+                await this.userRepository.findOneAndUpdate(
+                    {
+                        "carts.foodDetail": {
+                            $elemMatch: {
+                                foodId: new Types.ObjectId(foodId)
+                            }
+                        }
+                    },
+                    {
+                        $inc: {
+                            'carts.foodDetail.$.quantity': 1,
+                            "carts.totalPayment": foodPrice
+                        }
+                    }
+                )
+            } else {
+                const foodDetail = {
+                    foodId: new Types.ObjectId(foodId),
+                    quantity: 1
+                }
+                await this.userRepository.findOneAndUpdate(
+                    { phone },
+                    {
+                        $inc: {
+                            "carts.totalPayment": foodPrice
+                        },
+                        $push: {
+                            "carts.foodDetail": foodDetail
+                        }
+                    }
                 )
             }
         } catch (error) {
@@ -666,7 +682,7 @@ export class UserService {
         }
     }
 
-    async checkFoodInCarts(
+    async checkFoodExistsInCarts(
         phone: string,
         foodId: string,
     ): Promise<boolean> {
@@ -674,10 +690,10 @@ export class UserService {
             const { carts } = await this.userRepository.findOne({
                 phone
             })
-            const foodsId = carts.foodDetail.map(food => {
-                return food.foodId
+            const foodsId = carts?.foodDetail?.map(food => {
+                return food?.foodId?.toString()
             })
-            return foodsId.includes(new Types.ObjectId(foodId)) ? true : false;
+            return foodsId?.includes(foodId) ? true : false;
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
