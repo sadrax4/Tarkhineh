@@ -665,6 +665,26 @@ export class UserService {
             )
         }
     }
+
+    async checkFoodInCarts(
+        phone: string,
+        foodId: string,
+    ): Promise<boolean> {
+        try {
+            const { carts } = await this.userRepository.findOne({
+                phone
+            })
+            const foodsId = carts.foodDetail.map(food => {
+                return food.foodId
+            })
+            return foodsId.includes(new Types.ObjectId(foodId)) ? true : false;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
 
 
