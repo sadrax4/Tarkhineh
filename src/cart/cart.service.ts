@@ -87,7 +87,7 @@ export class CartService {
         phone: string,
         response: Response
     ): Promise<Response> {
-        const [foodPrice, _] = await Promise.all([
+        const [foodPrice] = await Promise.all([
             this.foodService.getPrice(
                 incrementFood.foodId
             ),

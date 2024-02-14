@@ -17,6 +17,7 @@ import {
     projectAggregate,
 } from 'src/common/projection';
 import { UserService } from '../user/user.service';
+import { Food } from './db/food.schema';
 
 @Injectable()
 export class FoodService {
@@ -565,9 +566,14 @@ export class FoodService {
     ): Promise<number> {
         try {
             let foodPrice: number;
-            const food = await this.foodRepository.findOne({
-                _id: new Types.ObjectId(foodId)
-            })
+            const food = await this.foodRepository.findOne(
+                { _id: new Types.ObjectId(foodId) },
+                {
+                    discount: 1,
+                    price: 1,
+                    _id: false
+                }
+            )
             if (food.discount > 0) {
                 foodPrice = calculatePrice(food.price, food.discount);
             } else {
@@ -586,10 +592,14 @@ export class FoodService {
         foodId: string,
         count: number = 1
     ): Promise<void> {
-        const { quantity } = await this.foodRepository.findOne({
-            _id: new Types.ObjectId(foodId)
-        })
-        const remainingFood = quantity - count;
+        const quantity: Pick<Food, "quantity"> = await this.foodRepository.findOne(
+            { _id: new Types.ObjectId(foodId) },
+            {
+                quantity: 1,
+                _id: false
+            }
+        )
+        const remainingFood = Number(quantity) - count;
         if (remainingFood < 0) {
             throw new HttpException(
                 "  متاسفانه موجودی غذا از تعداد درخواستی شما کمتر است",
