@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { UnAuthorizeResponseMessage } from 'src/common/constant';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
@@ -60,7 +60,7 @@ export class CartController {
         type: UnAuthorizeResponseMessage,
         status: HttpStatus.UNAUTHORIZED
     })
-    @Post("inc-food")
+    @Put("inc-food")
     async incrementFood(
         @Body() incrementFood: IncrementFood,
         @Res() response: Response,
@@ -68,6 +68,26 @@ export class CartController {
     ) {
         return this.cartService.incrementFood(
             incrementFood,
+            phone,
+            response
+        )
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "decrement food quantity" })
+    @ApiTags('cart')
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
+    @Put("dec-food")
+    async decrementFood(
+        @Body() decrementFood: IncrementFood,
+        @Res() response: Response,
+        @GetCurrentUser("phone") phone: string
+    ) {
+        return this.cartService.decrementFood(
+            decrementFood,
             phone,
             response
         )
