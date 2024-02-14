@@ -6,6 +6,7 @@ import { generateFakePhone } from 'src/common/utils/generate-fake-phone';
 import { FoodService } from 'src/food/food.service';
 import { AuthService } from 'src/auth/auth.service';
 import { RemoveCartDto } from './dto/remove-cart.dto';
+import { IncrementFood } from './dto';
 
 @Injectable()
 export class CartService {
@@ -79,6 +80,26 @@ export class CartService {
                 message: "غذا با موفقیت از سبد خرید حذف شد",
                 statusCode: HttpStatus.OK
             })
+    }
+
+    async incrementFood(
+        incrementFood: IncrementFood,
+        phone: string,
+        response: Response
+    ) {
+        const [foodPrice] = await Promise.all([
+            this.foodService.getPrice(
+                incrementFood.foodId
+            ),
+            this.foodService.checkFoodQuantity(
+                incrementFood.foodId
+            )
+        ])
+        await this.userService.incrementFood(
+            phone,
+            incrementFood.foodId,
+            foodPrice
+        )
     }
 
     private async createUnknowUser(
