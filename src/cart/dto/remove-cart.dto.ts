@@ -1,6 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { CreateCartDto } from "./create-cart.dto";
 
-export class RemoveCartDto {
-    @ApiProperty()
-    foodId: string;
-}
+export class RemoveCartDto extends CreateCartDto {}

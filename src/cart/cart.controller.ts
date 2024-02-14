@@ -3,7 +3,7 @@ import { CartService } from './cart.service';
 import { UnAuthorizeResponseMessage } from 'src/common/constant';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
 import { ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { CreateCartDto, RemoveCartDto } from './dto';
+import { CreateCartDto, IncrementFood, RemoveCartDto } from './dto';
 import { GetCurrentUser } from 'src/common/decorators';
 import { Response } from 'express';
 
@@ -44,10 +44,30 @@ export class CartController {
     async removeFromCart(
         @Body() removeCartDto: RemoveCartDto,
         @Res() response: Response,
-        @GetCurrentUser("phone") phone: string = null
+        @GetCurrentUser("phone") phone: string
     ) {
         return this.cartService.removeFromCart(
             removeCartDto,
+            phone,
+            response
+        )
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "increment food quantity" })
+    @ApiTags('cart')
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
+    @Post("inc-food")
+    async incrementFood(
+        @Body() incrementFood: IncrementFood,
+        @Res() response: Response,
+        @GetCurrentUser("phone") phone: string
+    ) {
+        return this.cartService.incrementFood(
+            incrementFood,
             phone,
             response
         )
