@@ -53,7 +53,7 @@ class FoodDetail {
     @Prop()
     foodId: mongoose.Types.ObjectId
 
-    @Prop({ default: 1 })
+    @Prop({ min: 0, default: 1 })
     quantity: number
 }
 
@@ -63,7 +63,7 @@ class CartDetail {
     @Prop({ type: [FoodDetail] })
     foodDetail: FoodDetail[]
 
-    @Prop({ default: 0 })
+    @Prop({ min: 0, default: 0 })
     totalPayment: number
 }
 

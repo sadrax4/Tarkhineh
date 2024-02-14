@@ -772,9 +772,13 @@ export class UserService {
         try {
             await this.userRepository.findOneAndUpdate(
                 {
+
                     "carts.foodDetail": {
                         $elemMatch: {
-                            foodId: new Types.ObjectId(foodId)
+                            foodId: new Types.ObjectId(foodId),
+                            quantity: {
+                                $gte: 2
+                            }
                         }
                     }
                 },
