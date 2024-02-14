@@ -6,7 +6,7 @@ import { generateFakePhone } from 'src/common/utils/generate-fake-phone';
 import { FoodService } from 'src/food/food.service';
 import { AuthService } from 'src/auth/auth.service';
 import { RemoveCartDto } from './dto/remove-cart.dto';
-import { IncrementFood } from './dto';
+import { DecrementFood, IncrementFood } from './dto';
 
 @Injectable()
 export class CartService {
@@ -104,6 +104,27 @@ export class CartService {
             .status(HttpStatus.OK)
             .json({
                 message: "تعداد غذا با موفقیت افزایش یافت",
+                statusCode: HttpStatus.OK
+            })
+    }
+
+    async decrementFood(
+        decrementFood: DecrementFood,
+        phone: string,
+        response: Response
+    ): Promise<Response> {
+        const foodPrice = await this.foodService.getPrice(
+            decrementFood.foodId
+        )
+        await this.userService.decrementFood(
+            phone,
+            decrementFood.foodId,
+            foodPrice
+        )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "تعداد غذا با موفقیت کاهش یافت",
                 statusCode: HttpStatus.OK
             })
     }

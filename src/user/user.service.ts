@@ -764,4 +764,33 @@ export class UserService {
         }
     }
 
+    async decrementFood(
+        phone: string,
+        foodId: string,
+        foodPrice: number
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                {
+                    "carts.foodDetail": {
+                        $elemMatch: {
+                            foodId: new Types.ObjectId(foodId)
+                        }
+                    }
+                },
+                {
+                    $inc: {
+                        'carts.foodDetail.$.quantity': -1,
+                        "carts.totalPayment": -foodPrice
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
 }

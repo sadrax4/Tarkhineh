@@ -3,7 +3,7 @@ import { CartService } from './cart.service';
 import { UnAuthorizeResponseMessage } from 'src/common/constant';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
 import { ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { CreateCartDto, IncrementFood, RemoveCartDto } from './dto';
+import { CreateCartDto, DecrementFood, IncrementFood, RemoveCartDto } from './dto';
 import { GetCurrentUser } from 'src/common/decorators';
 import { Response } from 'express';
 
@@ -82,7 +82,7 @@ export class CartController {
     })
     @Put("dec-food")
     async decrementFood(
-        @Body() decrementFood: IncrementFood,
+        @Body() decrementFood: DecrementFood,
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
     ) {
