@@ -7,14 +7,17 @@ import { FoodService } from 'src/food/food.service';
 import { AuthService } from 'src/auth/auth.service';
 import { RemoveCartDto } from './dto/remove-cart.dto';
 import { DecrementFood, IncrementFood } from './dto';
+import { AccessCookieConfig } from 'src/common/constant';
 
 @Injectable()
 export class CartService {
+
     constructor(
         private readonly userService: UserService,
         private readonly authService: AuthService,
         private readonly foodService: FoodService
     ) { }
+
     async addToCart(
         createCartDto: CreateCartDto,
         phone: string,
@@ -30,17 +33,12 @@ export class CartService {
             response.cookie(
                 'access-token',
                 accessToken,
-                {
-                    sameSite: 'none',
-                    httpOnly: false,
-                    secure: true,
-                    maxAge: (1 * 3600 * 1000),
-                }
+                AccessCookieConfig
             )
         } else {
             userPhone = phone;
         }
-        const [foodPrice, _] = await Promise.all([
+        const [foodPrice] = await Promise.all([
             this.foodService.getPrice(
                 createCartDto.foodId
             ),

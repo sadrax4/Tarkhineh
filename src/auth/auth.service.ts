@@ -10,6 +10,7 @@ import { JwtPayload } from './types/jwt-payload-type';
 import { JwtService } from '@nestjs/jwt';
 import { Token } from './types';
 import * as bcrypt from "bcrypt"
+import { AccessCookieConfig, RefreshCookieConfig } from 'src/common/constant';
 
 @Injectable()
 export class AuthService {
@@ -87,22 +88,12 @@ export class AuthService {
         response.cookie(
             'access-token',
             tokens.accessToken,
-            {
-                sameSite: 'none',
-                httpOnly: false,
-                secure: true,
-                maxAge: (1 * 3600 * 1000),
-            }
+            AccessCookieConfig
         );
         response.cookie(
             "refresh-token",
             tokens.refreshToken,
-            {
-                sameSite: 'none',
-                httpOnly: false,
-                secure: true,
-                maxAge: (3 * 3600 * 24 * 1000),
-            }
+            RefreshCookieConfig
         );
         const successMessage = "ورود با موفقیت انجام شد";
         return response
@@ -161,24 +152,12 @@ export class AuthService {
         response.cookie(
             'access-token',
             tokens.accessToken,
-            {
-                sameSite: 'none',
-                httpOnly: false,
-                secure: true,
-                //domain: "tarkhineh.liara.run",
-                maxAge: (1 * 3600 * 1000)
-            }
+            AccessCookieConfig
         );
         response.cookie(
             "refresh-token",
             tokens.refreshToken,
-            {
-                sameSite: 'none',
-                httpOnly: false,
-                secure: true,
-                //domain: "tarkhineh.liara.run"
-                maxAge: (3 * 3600 * 24 * 1000)
-            }
+            RefreshCookieConfig
         );
         const responseMessage = 'توکن جدید تولید شد'
         return response
@@ -202,7 +181,6 @@ export class AuthService {
                 secure: true
             }
         );
-
         response.clearCookie(
             "access-token",
             {
