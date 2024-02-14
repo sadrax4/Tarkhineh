@@ -40,7 +40,7 @@ export class CartService {
         } else {
             userPhone = phone;
         }
-        const [foodPrice] = await Promise.all([
+        const [foodPrice, _] = await Promise.all([
             this.foodService.getPrice(
                 createCartDto.foodId
             ),
@@ -86,8 +86,8 @@ export class CartService {
         incrementFood: IncrementFood,
         phone: string,
         response: Response
-    ) {
-        const [foodPrice] = await Promise.all([
+    ): Promise<Response> {
+        const [foodPrice, _] = await Promise.all([
             this.foodService.getPrice(
                 incrementFood.foodId
             ),
@@ -100,6 +100,12 @@ export class CartService {
             incrementFood.foodId,
             foodPrice
         )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "تعداد غذا با موفقیت افزایش یافت",
+                statusCode: HttpStatus.OK
+            })
     }
 
     private async createUnknowUser(
