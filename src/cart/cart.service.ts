@@ -89,16 +89,16 @@ export class CartService {
             phone
         )
         let totalDiscount: number = 0;
-        carts.foodDetails.forEach(
+        carts?.foodDetails?.forEach(
             (food: any) => {
-                for (let index = 0; index < carts.foodDetail.length; index++) {
-                    if (food._id == carts.foodDetail[index].foodId.toString()) {
+                for (let index = 0; index < carts?.foodDetail?.length; index++) {
+                    if (food._id == carts?.foodDetail[index].foodId.toString()) {
                         carts.foodDetail[index].foodDetail = food
                     }
                 }
             }
         )
-        carts.foodDetail.forEach(
+        carts?.foodDetail?.forEach(
             (food: any) => {
                 if (food.foodDetail.discount > 0) {
                     food.foodDetail.newPrice = calculatePrice(
@@ -107,14 +107,14 @@ export class CartService {
                     );
                     totalDiscount += (food.foodDetail.price - food.foodDetail.newPrice) * food.quantity;
                 }
-                delete food.foodId;
+                delete food?.foodId;
             }
         )
-        const data = carts.foodDetail;
+        const data = carts?.foodDetail;
         const detail = {
-            totalPrice: carts.totalPayment,
+            totalPrice: carts?.totalPayment,
             totalDiscount,
-            cardQunatity: carts.foodDetail.length
+            cardQunatity: carts?.foodDetail?.length
         }
         return response
             .status(HttpStatus.OK)
@@ -182,7 +182,7 @@ export class CartService {
         return response
             .status(HttpStatus.OK)
             .json({
-                message: "تعداد غذا با موفقیت کاهش یافت",
+                message: "سبد خرید شما با موفقیت حذف شد",
                 statusCode: HttpStatus.OK
             })
     }
