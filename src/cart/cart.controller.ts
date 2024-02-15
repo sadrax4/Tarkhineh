@@ -21,12 +21,30 @@ export class CartController {
         type: UnAuthorizeResponseMessage,
         status: HttpStatus.UNAUTHORIZED
     })
-    @Get("")
+    @Get()
     async getCarts(
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
     ) {
         return this.cartService.getCarts(
+            phone,
+            response
+        )
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "delete  carts" })
+    @ApiTags('cart')
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
+    @Delete()
+    async deleteCarts(
+        @Res() response: Response,
+        @GetCurrentUser("phone") phone: string
+    ) {
+        return this.cartService.deleteCarts(
             phone,
             response
         )

@@ -799,7 +799,7 @@ export class UserService {
 
     async getCarts(
         phone: string,
-    ) {
+    ): Promise<any> {
         try {
             const carts = await this.userRepository.aggregate([
                 {
@@ -820,6 +820,26 @@ export class UserService {
                 }
             ])
             return carts[0].carts;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async deleteCarts(
+        phone: string,
+    ): Promise<void> {
+        try {
+            await this.userRepository.findOneAndUpdate(
+                { phone },
+                {
+                    $set: {
+                        carts: null
+                    }
+                }
+            )
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

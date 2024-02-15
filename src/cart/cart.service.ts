@@ -113,8 +113,8 @@ export class CartService {
         const data = carts.foodDetail;
         const detail = {
             totalPrice: carts.totalPayment,
-            cardQunatity: carts.foodDetail.length,
-            totalDiscount
+            totalDiscount,
+            cardQunatity: carts.foodDetail.length
         }
         return response
             .status(HttpStatus.OK)
@@ -163,6 +163,21 @@ export class CartService {
             phone,
             decrementFood.foodId,
             foodPrice
+        )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "تعداد غذا با موفقیت کاهش یافت",
+                statusCode: HttpStatus.OK
+            })
+    }
+
+    async deleteCarts(
+        phone: string,
+        response: Response
+    ): Promise<Response> {
+        await this.userService.deleteCarts(
+            phone,
         )
         return response
             .status(HttpStatus.OK)
