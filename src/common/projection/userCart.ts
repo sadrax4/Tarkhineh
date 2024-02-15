@@ -22,6 +22,5 @@ export const userCartProjection = {
     "carts.foodDetails.category": 0,
     "carts.foodDetails.images": 0,
     "carts.foodDetails.subCategory": 0,
-    "carts.foodDetails.rateCount": 0,
-    "carts.foodDetail.foodId": 0
+    "carts.foodDetails.rateCount": 0
 }

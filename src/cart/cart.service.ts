@@ -88,9 +88,19 @@ export class CartService {
         let carts = await this.userService.getCarts(
             phone
         )
-        for (let index = 0; index < carts.foodDetail.length; index++) {
-            carts.foodDetail[index].foodDetail = carts.foodDetails[index];
-        }
+        // for (let index = 0; index < carts.foodDetail.length; index++) {
+        //     carts.foodDetail[index].foodDetail = carts.foodDetails[index];
+        // }
+        carts.foodDetails.forEach(
+            food => {
+                for (let index = 0; index < carts.foodDetail.length; index++) {
+                    if (food._id == carts.foodDetail[index].foodId.toString()) {
+                        carts.foodDetail[index].foodDetail = food
+                    }
+                }
+            }
+        )
+        let totalDiscount: number = 0;
         carts.foodDetail.forEach(
             food => {
                 if (food.foodDetail.discount > 0) {
@@ -98,13 +108,17 @@ export class CartService {
                         food.foodDetail.price,
                         food.foodDetail.discount
                     );
+                    totalDiscount += (food.foodDetail.price - food.foodDetail.newPrice) * food.quantity;
                 }
             }
         )
         const data = carts.foodDetail;
         const detail = {
-            totalPrice: carts.totalPayment
+            totalPrice: carts.totalPayment,
+            cardQunatity: carts.foodDetail.length,
+            totalDiscount
         }
+
 
         return response
             .status(HttpStatus.OK)
