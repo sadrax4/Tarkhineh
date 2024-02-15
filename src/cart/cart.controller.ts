@@ -13,6 +13,25 @@ export class CartController {
         private cartService: CartService
     ) { }
 
+
+    @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "decrement food quantity" })
+    @ApiTags('cart')
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
+    @Get("")
+    async getCarts(
+        @Res() response: Response,
+        @GetCurrentUser("phone") phone: string
+    ) {
+        return this.cartService.getCarts(
+            phone,
+            response
+        )
+    }
+
     @UseGuards(PublicGuard)
     @ApiOperation({ summary: "add food to carts" })
     @ApiTags('cart')

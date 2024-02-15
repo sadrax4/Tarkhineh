@@ -12,7 +12,7 @@ import { UpdateUserDto } from '../profile/dto/update-user-dto';
 import { DeleteUserDto } from '../profile/dto/delete-user-dto';
 import { USER_FOLDER } from 'src/common/constant';
 import { StorageService } from '../storage/storage.service';
-import { favoriteFoodProjection, getCommentProjection, getUsersProjecton } from 'src/common/projection';
+import { favoriteFoodProjection, getCommentProjection, getUsersProjecton, userCartProjection } from 'src/common/projection';
 import { AdminUserService } from 'src/admin/admin-user/admin-user.service';
 import { Roles } from 'src/common/enums';
 
@@ -789,6 +789,37 @@ export class UserService {
                     }
                 }
             )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async getCarts(
+        phone: string,
+    ) {
+        try {
+            const carts = await this.userRepository.aggregate([
+                {
+                    $match: {
+                        phone
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'foods',
+                        localField: "carts.foodDetail.foodId",
+                        foreignField: "_id",
+                        as: "carts.foodDetails"
+                    }
+                },
+                {
+                    $project: userCartProjection
+                }
+            ])
+            return carts[0].carts;
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

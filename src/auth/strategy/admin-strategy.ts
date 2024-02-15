@@ -20,7 +20,6 @@ export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {
                 let data = request?.headers["access-token"] ?
                     request?.headers["access-token"] :
                     request?.cookies["access-token"]
-                console.log(data);
                 return data ? data : null;
             }])
         })

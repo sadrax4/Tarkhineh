@@ -80,6 +80,21 @@ export class CartService {
             })
     }
 
+    async getCarts(
+        phone: string,
+        response: Response
+    ) {
+        const carts = await this.userService.getCarts(
+            phone
+        )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                data: carts,
+                statusCode: HttpStatus.OK
+            })
+    }
+
     async incrementFood(
         incrementFood: IncrementFood,
         phone: string,
