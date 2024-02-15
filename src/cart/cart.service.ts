@@ -8,6 +8,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { RemoveCartDto } from './dto/remove-cart.dto';
 import { DecrementFood, IncrementFood } from './dto';
 import { AccessCookieConfig } from 'src/common/constant';
+import { calculatePrice } from 'src/common/utils';
 
 @Injectable()
 export class CartService {
@@ -90,12 +91,26 @@ export class CartService {
         for (let index = 0; index < carts.foodDetail.length; index++) {
             carts.foodDetail[index].foodDetail = carts.foodDetails[index];
         }
+        carts.foodDetail.forEach(
+            food => {
+                if (food.foodDetail.discount > 0) {
+                    food.foodDetail.newPrice = calculatePrice(
+                        food.foodDetail.price,
+                        food.foodDetail.discount
+                    );
+                }
+            }
+        )
         const data = carts.foodDetail;
+        const detail = {
+            totalPrice: carts.totalPayment
+        }
 
         return response
             .status(HttpStatus.OK)
             .json({
                 data,
+                detail,
                 statusCode: HttpStatus.OK
             })
     }
