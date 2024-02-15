@@ -84,13 +84,18 @@ export class CartService {
         phone: string,
         response: Response
     ) {
-        const carts = await this.userService.getCarts(
+        let carts = await this.userService.getCarts(
             phone
         )
+        for (let index = 0; index < carts.foodDetail.length; index++) {
+            carts.foodDetail[index].foodDetail = carts.foodDetails[index];
+        }
+        const data = carts.foodDetail;
+
         return response
             .status(HttpStatus.OK)
             .json({
-                data: carts,
+                data,
                 statusCode: HttpStatus.OK
             })
     }
