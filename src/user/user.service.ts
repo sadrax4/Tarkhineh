@@ -816,7 +816,18 @@ export class UserService {
                     }
                 },
                 {
+                    $addFields: {
+                        "carts.foodDetail.foodData": "$carts.foodDetail.foodId",
+                        "carts.carts": "$carts.foodDetail"
+                    }
+                },
+                {
                     $project: userCartProjection
+                },
+                {
+                    $project: {
+                        "carts.foodDetail": 0
+                    }
                 }
             ])
             return carts[0].carts;
