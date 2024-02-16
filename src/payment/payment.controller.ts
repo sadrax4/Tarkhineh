@@ -19,7 +19,7 @@ export class PaymentController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Get()
+    @Get("gateway")
     async paymentGatewat(
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response

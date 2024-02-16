@@ -5,6 +5,8 @@ import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { ZarinPallResponse } from 'src/common/types';
+import { generateInvoiceNumber } from 'src/auth/utils';
+import { getPersianDate } from 'src/common/utils';
 
 @Injectable()
 export class PaymentService {
@@ -37,6 +39,9 @@ export class PaymentService {
                 ZARINPALL_OPTION
             ).then(result => result.data)
             const { authority, code } = requestResult.data;
+            const invoiceNumber = generateInvoiceNumber();
+            const paymentDate = getPersianDate();
+            console.log(paymentDate, invoiceNumber)
             return response
                 .status(HttpStatus.OK)
                 .json({
