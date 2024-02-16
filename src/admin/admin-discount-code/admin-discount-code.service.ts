@@ -120,12 +120,22 @@ export class AdminDiscountCodeService {
             })
             if (!code) {
                 throw new HttpException(
-                    (INTERNAL_SERVER_ERROR_MESSAGE + " کد اشتباه است "),
-                    HttpStatus.INTERNAL_SERVER_ERROR
+                    (" کد اشتباه است "),
+                    HttpStatus.BAD_REQUEST
                 )
             }
             if (code?.isLimit == true && code?.maxUses == 0) {
-                return null;
+                throw new HttpException(
+                    ("تعداد استفاده از کد به اتمام رسیده است "),
+                    HttpStatus.BAD_REQUEST
+                )
+            }
+            const date = new Date();
+            if (code.expireAt < date) {
+                throw new HttpException(
+                    (" کد منقضی شده است "),
+                    HttpStatus.BAD_REQUEST
+                )
             }
             return code.percentage;
         } catch (error) {

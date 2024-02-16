@@ -9,6 +9,7 @@ import { RemoveCartDto } from './dto/remove-cart.dto';
 import { DecrementFood, IncrementFood } from './dto';
 import { AccessCookieConfig } from 'src/common/constant';
 import { calculatePrice } from 'src/common/utils';
+import { AdminDiscountCodeService } from '../admin/admin-discount-code/admin-discount-code.service';
 
 @Injectable()
 export class CartService {
@@ -16,6 +17,7 @@ export class CartService {
     constructor(
         private readonly userService: UserService,
         private readonly authService: AuthService,
+        private readonly adminDiscountCodeService: AdminDiscountCodeService,
         private readonly foodService: FoodService
     ) { }
 
@@ -100,6 +102,7 @@ export class CartService {
                 }
             }
         )
+
         carts?.foodDetail?.forEach(
             (food: any) => {
                 if (food.foodDetail.discount > 0) {
@@ -110,11 +113,15 @@ export class CartService {
                     totalDiscount += (food.foodDetail.price - food.foodDetail.newPrice) * food.quantity;
                 }
                 delete food?.foodId;
-                if(discountCode){
-                    const percentage = await 
-                }
             }
         )
+        if (discountCode) {
+            const percentage = await this.adminDiscountCodeService.checkDiscountCode(
+                discountCode
+            )
+            totalDiscount += (totalPayment - calculatePrice(totalPayment, percentage));
+            totalPayment = calculatePrice(totalPayment, percentage);
+        }
         const data = carts?.foodDetail;
         const detail = {
             totalPrice: totalPayment,
