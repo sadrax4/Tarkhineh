@@ -34,7 +34,7 @@ export class Order extends AbstractDocument {
     @Prop({ required: true })
     paymentDate: string
 
-    @Prop({ required: true })
+    @Prop({ type: Object, required: true })
     carts: object
 
 }
