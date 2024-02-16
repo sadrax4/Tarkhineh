@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AdminGuard } from 'src/auth/guards';
@@ -52,6 +52,28 @@ export class AdminDiscountCodeController {
     ) {
         return this.adminDiscountCodeService.generate(
             generateDicountCodeDto,
+            response
+        )
+    }
+
+    @UseGuards(AdminGuard)
+    @ApiOperation({ summary: " delete discount code " })
+    @ApiTags('admin-dicount-code')
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Delete("dicount-code/:id")
+    async deleteDicountCode(
+        @Query('id') dicountCodeId: string,
+        @Res() response: Response,
+    ) {
+        return this.adminDiscountCodeService.deleteDiscountCode(
+            dicountCodeId,
             response
         )
     }

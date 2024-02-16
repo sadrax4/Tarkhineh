@@ -55,4 +55,26 @@ export class AdminDiscountCodeService {
             )
         }
     }
+
+    async deleteDiscountCode(
+        discountCodeId: string,
+        response: Response
+    ): Promise<Response> {
+        try {
+            await this.dicountCodeRepository.deleteOne({
+                _id: new Types.ObjectId(discountCodeId)
+            })
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    message: "کد تخفیف با موفقیت حذف شد",
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
