@@ -2,10 +2,11 @@ import { Body, Controller, Delete, Get, HttpStatus, Post, Put, Req, Res, UseGuar
 import { CartService } from './cart.service';
 import { UnAuthorizeResponseMessage } from 'src/common/constant';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
-import { ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CreateCartDto, DecrementFood, IncrementFood, RemoveCartDto } from './dto';
 import { GetCurrentUser } from 'src/common/decorators';
 import { Response } from 'express';
+import { RedeemDiscountCodeDto } from 'src/payment/dto';
 
 @Controller('cart')
 export class CartController {
@@ -16,18 +17,21 @@ export class CartController {
 
     @UseGuards(JwtGuard)
     @ApiOperation({ summary: "decrement food quantity" })
+    @ApiBody({ type: RedeemDiscountCodeDto, required: false })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
         type: UnAuthorizeResponseMessage,
         status: HttpStatus.UNAUTHORIZED
     })
-    @Get()
+    @Post()
     async getCarts(
+        @Body() redeemDiscountCodeDto: RedeemDiscountCodeDto,
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
     ): Promise<Response> {
         return this.cartService.getCarts(
             phone,
+            redeemDiscountCodeDto.discountCode,
             response
         )
     }

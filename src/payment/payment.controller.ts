@@ -21,7 +21,7 @@ export class PaymentController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Get("gateway")
+    @Post("gateway")
     async paymentGatewat(
         @Body() redeemDiscountCodeDto: RedeemDiscountCodeDto,
         @GetCurrentUser('phone') phone: string,

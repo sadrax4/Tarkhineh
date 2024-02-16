@@ -85,7 +85,13 @@ export class AdminDiscountCodeService {
             const code = await this.dicountCodeRepository.findOne({
                 value: discountCode
             })
-            if (code.isLimit == true && code?.maxUses == 0) {
+            if (!code) {
+                throw new HttpException(
+                    (INTERNAL_SERVER_ERROR_MESSAGE + " کد اشتباه است "),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                )
+            }
+            if (code?.isLimit == true && code?.maxUses == 0) {
                 return null;
             }
             await this.dicountCodeRepository.findOneAndUpdate(
@@ -96,6 +102,31 @@ export class AdminDiscountCodeService {
                     }
                 }
             )
+            return code.percentage;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async checkDiscountCode(
+        discountCode: string
+    ): Promise<number> {
+        try {
+            const code = await this.dicountCodeRepository.findOne({
+                value: discountCode
+            })
+            if (!code) {
+                throw new HttpException(
+                    (INTERNAL_SERVER_ERROR_MESSAGE + " کد اشتباه است "),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                )
+            }
+            if (code?.isLimit == true && code?.maxUses == 0) {
+                return null;
+            }
             return code.percentage;
         } catch (error) {
             throw new HttpException(

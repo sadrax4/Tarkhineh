@@ -83,12 +83,14 @@ export class CartService {
 
     async getCarts(
         phone: string,
+        discountCode: string = null,
         response: Response
     ) {
         let carts = await this.userService.getCarts(
             phone
         )
         let totalDiscount: number = 0;
+        let totalPayment = carts?.totalPayment;
         carts?.foodDetails?.forEach(
             (food: any) => {
                 for (let index = 0; index < carts?.foodDetail?.length; index++) {
@@ -108,11 +110,14 @@ export class CartService {
                     totalDiscount += (food.foodDetail.price - food.foodDetail.newPrice) * food.quantity;
                 }
                 delete food?.foodId;
+                if(discountCode){
+                    const percentage = await 
+                }
             }
         )
         const data = carts?.foodDetail;
         const detail = {
-            totalPrice: carts?.totalPayment,
+            totalPrice: totalPayment,
             totalDiscount,
             cardQunatity: carts?.foodDetail?.length
         }
