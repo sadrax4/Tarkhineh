@@ -6,7 +6,7 @@ export class GenerateDiscountCode {
     amount: number;
 
     @ApiProperty()
-    maxUses: number;
+    maxUses?: number;
 
     @ApiProperty()
     isLimit: boolean;

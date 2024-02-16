@@ -25,7 +25,7 @@ export class CartController {
     async getCarts(
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
-    ) {
+    ): Promise<Response> {
         return this.cartService.getCarts(
             phone,
             response
@@ -43,7 +43,7 @@ export class CartController {
     async deleteCarts(
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
-    ) {
+    ): Promise<Response> {
         return this.cartService.deleteCarts(
             phone,
             response
@@ -62,7 +62,7 @@ export class CartController {
         @Body() createCartDto: CreateCartDto,
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string = null
-    ) {
+    ): Promise<Response> {
         return this.cartService.addToCart(
             createCartDto,
             phone,
@@ -82,7 +82,7 @@ export class CartController {
         @Body() removeCartDto: RemoveCartDto,
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
-    ) {
+    ): Promise<Response> {
         return this.cartService.removeFromCart(
             removeCartDto,
             phone,
@@ -102,7 +102,7 @@ export class CartController {
         @Body() incrementFood: IncrementFood,
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
-    ) {
+    ): Promise<Response> {
         return this.cartService.incrementFood(
             incrementFood,
             phone,
@@ -122,7 +122,7 @@ export class CartController {
         @Body() decrementFood: DecrementFood,
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
-    ) {
+    ): Promise<Response> {
         return this.cartService.decrementFood(
             decrementFood,
             phone,
