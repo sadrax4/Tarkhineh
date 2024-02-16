@@ -6,7 +6,7 @@ import { Order } from "./order.schema";
 
 
 @Injectable()
-export class UserRepository extends AbstractRepository<Order> {
+export class OrderRepository extends AbstractRepository<Order> {
     constructor(
         @InjectModel(Order.name)
         private orderSchema: Model<Order>

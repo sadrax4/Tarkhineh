@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { PaymentController } from './payment.controller';
 import { UserModule } from 'src/user/user.module';
+import { OrderModule } from 'src/order/order.module';
 
 @Module({
   imports:[
-    UserModule
+    UserModule,
+    OrderModule
   ],
   providers: [PaymentService],
   controllers: [PaymentController]

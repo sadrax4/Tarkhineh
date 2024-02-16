@@ -7,12 +7,15 @@ import axios from 'axios';
 import { ZarinPallResponse } from 'src/common/types';
 import { generateInvoiceNumber } from 'src/auth/utils';
 import { getPersianDate } from 'src/common/utils';
+import { OrderService } from 'src/order/order.service';
+import { CreateOrderDto } from 'src/order/dto';
 
 @Injectable()
 export class PaymentService {
     constructor(
         private readonly configService: ConfigService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly orderService: OrderService
     ) { }
 
     async paymentGateway(
@@ -38,16 +41,34 @@ export class PaymentService {
                 this.configService.get<string>("ZARINPALL_REQUEST_URL"),
                 ZARINPALL_OPTION
             ).then(result => result.data)
-            const { authority, code } = requestResult.data;
+            const { authority, code } = requestResult?.data;
             const invoiceNumber = generateInvoiceNumber();
             const paymentDate = getPersianDate();
-            console.log(paymentDate, invoiceNumber)
-            return response
-                .status(HttpStatus.OK)
-                .json({
-                    requestResult,
-                    statusCode: HttpStatus.OK
-                })
+            const orderData: CreateOrderDto = {
+                userPhone: phone,
+                userId: user._id,
+                invoiceNumber,
+                totalPayment: amount,
+                verify: false,
+                paymentDate,
+                authority,
+                description,
+                carts: user.carts
+            }
+            await this.orderService.createOrder(
+                orderData
+            )
+            if (code == 100 && authority) {
+                const gatewayURL = `${this.configService.get<string>("ZARINPALL_GATEWAT")}/${authority}`;
+                return response.status(HttpStatus.OK).json({
+                    statusCode: HttpStatus.OK,
+                    gatewayURL
+                });
+            }
+            throw new HttpException(
+                "مقادیر ارسال شده صحیح نمیباشد",
+                HttpStatus.BAD_REQUEST
+            );
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
