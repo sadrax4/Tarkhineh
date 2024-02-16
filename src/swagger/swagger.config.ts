@@ -13,6 +13,7 @@ export function SwaggerInit(
         .addTag(SwaggerDocument.TAG1)
         .addTag(SwaggerDocument.TAG2)
         .addTag(SwaggerDocument.TAG3)
+        .addTag(SwaggerDocument.TAG4)
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup(SwaggerDocument.PATH, app, document);
