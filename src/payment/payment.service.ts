@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { ZarinPallResponse } from 'src/common/types';
 import { generateInvoiceNumber } from 'src/auth/utils';
-import { getPersianDate } from 'src/common/utils';
+import { calculatePrice, getPersianDate } from 'src/common/utils';
 import { OrderService } from 'src/order/order.service';
 import { CreateOrderDto } from 'src/order/dto';
 import { RedeemDiscountCodeDto } from './dto';
@@ -18,8 +18,7 @@ export class PaymentService {
         private readonly configService: ConfigService,
         private readonly userService: UserService,
         private readonly orderService: OrderService,
-        private readonly discountCodeService: AdminDiscountCodeService,
-
+        private readonly discountCodeService: AdminDiscountCodeService
     ) { }
 
     async paymentGateway(
@@ -28,11 +27,20 @@ export class PaymentService {
         response: Response
     ) {
         try {
-            if(dicountCode){
-
-            }
             const user = await this.userService.findUser(phone);
-            const amount: number = user?.carts.totalPayment;
+            let amount: number;
+            if (dicountCode) {
+                const discountPercentage = await this.discountCodeService.redeemDicountCode(
+                    dicountCode
+                );
+                amount = calculatePrice(
+                    user.carts.totalPayment,
+                    discountPercentage
+                );
+            } else {
+                amount = user.carts.totalPayment
+            }
+            user?.carts.totalPayment
             const description = "درگاه خرید ترخینه";
             const ZARINPALL_OPTION = {
                 merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
