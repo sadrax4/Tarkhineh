@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 export class GenerateDiscountCodeDto {
 
     @ApiProperty()
-    amount: number;
+    percentage: number;
 
     @ApiProperty()
     maxUses?: number;

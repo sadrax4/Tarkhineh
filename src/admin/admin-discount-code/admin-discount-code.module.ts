@@ -18,6 +18,9 @@ import { DiscountCodeRepository } from './db/discount-code.repository';
     AdminDiscountCodeService,
     DiscountCodeRepository
   ],
-  controllers: [AdminDiscountCodeController]
+  controllers: [AdminDiscountCodeController],
+  exports: [
+    AdminDiscountCodeService
+  ]
 })
 export class AdminDiscountCodeModule { }

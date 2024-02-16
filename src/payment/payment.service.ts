@@ -9,20 +9,28 @@ import { generateInvoiceNumber } from 'src/auth/utils';
 import { getPersianDate } from 'src/common/utils';
 import { OrderService } from 'src/order/order.service';
 import { CreateOrderDto } from 'src/order/dto';
+import { RedeemDiscountCodeDto } from './dto';
+import { AdminDiscountCodeService } from 'src/admin/admin-discount-code/admin-discount-code.service';
 
 @Injectable()
 export class PaymentService {
     constructor(
         private readonly configService: ConfigService,
         private readonly userService: UserService,
-        private readonly orderService: OrderService
+        private readonly orderService: OrderService,
+        private readonly discountCodeService: AdminDiscountCodeService,
+
     ) { }
 
     async paymentGateway(
         phone: string,
+        dicountCode: string = null,
         response: Response
     ) {
         try {
+            if(dicountCode){
+
+            }
             const user = await this.userService.findUser(phone);
             const amount: number = user?.carts.totalPayment;
             const description = "درگاه خرید ترخینه";

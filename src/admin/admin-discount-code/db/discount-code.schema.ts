@@ -11,7 +11,7 @@ export class DiscountCode extends AbstractDocument {
     createdAt: number;
 
     @Prop({ min: 1, max: 100, required: true })
-    amount: number;
+    percentage: number;
 
     @Prop()
     maxUses: number;

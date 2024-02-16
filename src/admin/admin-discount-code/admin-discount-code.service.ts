@@ -77,4 +77,31 @@ export class AdminDiscountCodeService {
             )
         }
     }
+
+    async redeemDicountCode(
+        discountCode: string
+    ): Promise<number> {
+        try {
+            const code = await this.dicountCodeRepository.findOne({
+                value: discountCode
+            })
+            if (code.isLimit == true && code?.maxUses == 0) {
+                return null;
+            }
+            await this.dicountCodeRepository.findOneAndUpdate(
+                { value: discountCode },
+                {
+                    $inc: {
+                        maxUses: -1
+                    }
+                }
+            )
+            return code.percentage;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
