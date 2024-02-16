@@ -1,4 +1,4 @@
 import * as crypto from "crypto";
-export const discountCode = () => {
-    return crypto.randomBytes(8).toString('base64url');
+export const dicountCodeGenerator = () => {
+    return crypto.randomBytes(4).toString('hex');
 }

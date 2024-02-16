@@ -5,8 +5,6 @@ import { GetCurrentUser } from 'src/common/decorators';
 import { Request, Response } from 'express';
 import { ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UnAuthorizeResponseMessage } from 'src/common/constant';
-import { discountCode } from 'src/common/utils';
-
 
 @Controller('user')
 export class UserController {
@@ -32,7 +30,6 @@ export class UserController {
             otp: 0
         };
         let user: any = await this.userService.findUser(phone, projection);
-        console.log(discountCode());
         return response
             .status(HttpStatus.OK)
             .json({
