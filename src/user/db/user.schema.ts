@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { AbstractDocument } from "libs/database";
 import mongoose, { now } from "mongoose";
-import * as fs from 'fs';
-import { hostname } from "os";
+
 
 @Schema({ _id: false })
 class OTP {
@@ -65,6 +64,9 @@ class CartDetail {
 
     @Prop({ min: 0, default: 0 })
     totalPayment: number
+
+    @Prop({ required: false })
+    discountCode: string;
 }
 
 @Schema({
