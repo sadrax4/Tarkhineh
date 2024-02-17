@@ -9,6 +9,7 @@ import { calculatePrice, getPersianDate } from '@app/common';
 import { OrderService } from 'src/order/order.service';
 import { CreateOrderDto } from 'src/order/dto';
 import { AdminDiscountCodeService } from 'src/admin';
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 @Injectable()
 export class PaymentService {
@@ -104,7 +105,24 @@ export class PaymentService {
                 amount: payment.totalPayment,
                 authority
             })
-
+            const verifyResult: any = await fetch(process.env.ZARINPALL_VERIFY_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: verifyBody
+            }).then(result => result.json());
+            if (verifyResult.data.code == Number(100)) {
+                const refId = verifyResult.data.ref_id;
+                const cardPan = verifyResult.data.card_pan;
+                const cardHash = verifyResult.data.card_hash;
+                await Promise.all([
+                    this.orderService.updatePayment(
+                        authority,
+                        refId,
+                        cardPan,
+                        cardHash
+                    )
+                ])
+            }
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

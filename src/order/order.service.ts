@@ -53,4 +53,30 @@ export class OrderService {
             )
         }
     }
+
+    async updatePayment(
+        authority: string,
+        refId: string,
+        cardPan: string,
+        cardHash: string
+    ): Promise<void> {
+        try {
+            await this.orderRepository.findOneAndUpdate(
+                { authority },
+                {
+                    $set: {
+                        refId,
+                        cardPan,
+                        cardHash
+                    }
+                }
+            )
+
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
