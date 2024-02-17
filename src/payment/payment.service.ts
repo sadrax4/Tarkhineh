@@ -24,7 +24,7 @@ export class PaymentService {
         phone: string,
         dicountCode: string = null,
         response: Response
-    ) {
+    ): Promise<Response> {
         try {
             const user = await this.userService.findUser(phone);
             let amount: number;
@@ -46,7 +46,7 @@ export class PaymentService {
                 currency: "IRR",
                 amount: 10000,
                 description,
-                callback_url: this.configService.get<string>("PRODUCTION_PAYMENT_CALLBACK_URL"),
+                callback_url: this.configService.get<string>("DEVELOPMENT_PAYMENT_CALLBACK_URL"),
                 metadata: {
                     email: user?.email,
                     mobile: phone
@@ -95,14 +95,15 @@ export class PaymentService {
     async paymentVerify(
         authority: string,
         response: Response
-    ) {
+    ): Promise<Response> {
         try {
             const payment = await this.orderService.findByAuthority(
                 authority
             )
+            console.log("payment", payment)
             const verifyBody = JSON.stringify({
                 merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
-                amount: payment.totalPayment,
+                amount: 10000,//payment.totalPayment,
                 authority
             })
             const verifyResult: any = await fetch(process.env.ZARINPALL_VERIFY_URL, {
@@ -110,7 +111,7 @@ export class PaymentService {
                 headers: { "Content-Type": "application/json" },
                 body: verifyBody
             }).then(result => result.json());
-            if (verifyResult.data.code == Number(100)) {
+            if (verifyResult.data.code == Number(101)) {
                 const refId = verifyResult.data.ref_id;
                 const cardPan = verifyResult.data.card_pan;
                 const cardHash = verifyResult.data.card_hash;
@@ -138,6 +139,10 @@ export class PaymentService {
                 )
             }
         } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
         }
     }
 }

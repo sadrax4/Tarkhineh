@@ -67,7 +67,8 @@ export class OrderService {
                     $set: {
                         refId,
                         cardPan,
-                        cardHash
+                        cardHash,
+                        verify: true
                     }
                 }
             )

@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards';
 import { OkResponseMessage } from '@app/common';
@@ -36,12 +36,11 @@ export class PaymentController {
 
     @ApiOperation({ summary: "payment verify " })
     @ApiTags('payment')
-    @ApiBody({ type: RedeemDiscountCodeDto, required: false })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Post("verify")
+    @Get("verify")
     async paymentVerify(
         @Query("Authority") authority: string,
         @Res() response: Response
@@ -51,6 +50,4 @@ export class PaymentController {
             response
         )
     }
-
-
 }
