@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards';
 import { MIMETYPE, OkResponseMessage } from '@app/common';
@@ -25,6 +25,25 @@ export class PaymentController {
     async paymentGatewat(
         @Body() redeemDiscountCodeDto: RedeemDiscountCodeDto,
         @GetCurrentUser('phone') phone: string,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.paymentService.paymentGateway(
+            phone,
+            redeemDiscountCodeDto.discountCode,
+            response
+        )
+    }
+
+    @ApiOperation({ summary: "payment verify " })
+    @ApiTags('payment')
+    @ApiBody({ type: RedeemDiscountCodeDto, required: false })
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Post("verify")
+    async paymentVerify(
+        @Query("")
         @Res() response: Response
     ): Promise<Response> {
         return this.paymentService.paymentGateway(

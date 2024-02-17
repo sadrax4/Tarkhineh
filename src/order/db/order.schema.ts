@@ -37,6 +37,15 @@ export class Order extends AbstractDocument {
     @Prop({ type: Object, required: true })
     carts: object
 
+    @Prop({ required: false })
+    cardHash: string
+
+    @Prop({ required: false })
+    cardPan: string
+
+    @Prop({ required: false })
+    refId: string
+
 }
 export const OrderSchema = SchemaFactory.createForClass(Order)
 

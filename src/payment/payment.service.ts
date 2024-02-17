@@ -43,9 +43,9 @@ export class PaymentService {
             const ZARINPALL_OPTION = {
                 merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
                 currency: "IRR",
-                amount,
+                amount:10000,
                 description,
-                callback_url: "http://localhost:3000/payment/verify",
+                callback_url: this.configService.get<string>("PRODUCTION_PAYMENT_CALLBACK_URL"),
                 metadata: {
                     email: user?.email,
                     mobile: phone
@@ -55,6 +55,7 @@ export class PaymentService {
                 this.configService.get<string>("ZARINPALL_REQUEST_URL"),
                 ZARINPALL_OPTION
             ).then(result => result.data)
+            console.log(requestResult)
             const { authority, code } = requestResult?.data;
             const invoiceNumber = generateInvoiceNumber();
             const paymentDate = getPersianDate();

@@ -7,17 +7,10 @@ import { ProfileModule } from './profile/profile.module';
 import { FoodModule } from './food/food.module';
 import { CommentModule } from './comment/comment.module';
 import { StorageModule } from './storage/storage.module';
-import { AdminFoodController } from './admin/admin-food/admin-food.controller';
-import { AdminFoodService } from './admin/admin-food/admin-food.service';
-import { AdminFoodModule } from './admin/admin-food/admin-food.module';
-import { AdminUserModule } from './admin/admin-user/admin-user.module';
-import { AdminCommentModule } from './admin/admin-comment/admin-comment.module';
-import { AdminPermissionModule } from './admin/admin-permission/admin-permission.module';
 import { PaymentModule } from './payment/payment.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
-import { AdminDiscountCodeModule } from './admin/admin-discount-code/admin-discount-code.module';
-
+import { AdminCommentModule, AdminDiscountCodeModule, AdminFoodModule, AdminPermissionModule, AdminUserModule } from './admin';
 
 @Module({
   imports: [
@@ -41,10 +34,8 @@ import { AdminDiscountCodeModule } from './admin/admin-discount-code/admin-disco
     AdminDiscountCodeModule
   ],
   controllers: [
-    AdminFoodController
   ],
   providers: [
-    AdminFoodService
   ],
   exports: []
 })
