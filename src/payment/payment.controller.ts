@@ -43,12 +43,11 @@ export class PaymentController {
     })
     @Post("verify")
     async paymentVerify(
-        @Query("")
+        @Query("Authority") authority:string,
         @Res() response: Response
     ): Promise<Response> {
-        return this.paymentService.paymentGateway(
-            phone,
-            redeemDiscountCodeDto.discountCode,
+        return this.paymentService.paymentVerify(
+            authority,
             response
         )
     }

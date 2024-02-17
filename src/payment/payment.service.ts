@@ -43,7 +43,7 @@ export class PaymentService {
             const ZARINPALL_OPTION = {
                 merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
                 currency: "IRR",
-                amount:10000,
+                amount: 10000,
                 description,
                 callback_url: this.configService.get<string>("PRODUCTION_PAYMENT_CALLBACK_URL"),
                 metadata: {
@@ -55,7 +55,6 @@ export class PaymentService {
                 this.configService.get<string>("ZARINPALL_REQUEST_URL"),
                 ZARINPALL_OPTION
             ).then(result => result.data)
-            console.log(requestResult)
             const { authority, code } = requestResult?.data;
             const invoiceNumber = generateInvoiceNumber();
             const paymentDate = getPersianDate();
@@ -84,6 +83,28 @@ export class PaymentService {
                 "مقادیر ارسال شده صحیح نمیباشد",
                 HttpStatus.BAD_REQUEST
             );
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async paymentVerify(
+        authority: string,
+        response: Response
+    ) {
+        try {
+            const payment = await this.orderService.findByAuthority(
+                authority
+            )
+            const verifyBody = JSON.stringify({
+                merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
+                amount: payment.totalPayment,
+                authority
+            })
+
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
