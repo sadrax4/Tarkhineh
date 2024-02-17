@@ -71,7 +71,6 @@ export class OrderService {
                     }
                 }
             )
-
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

@@ -120,14 +120,24 @@ export class PaymentService {
                         refId,
                         cardPan,
                         cardHash
+                    ),
+                    this.userService.deleteCarts(
+                        payment.userPhone
                     )
                 ])
+                return response
+                    .status(HttpStatus.OK)
+                    .json({
+                        statusCode: HttpStatus.OK,
+                        message: "برداخت با موفقیت انجام شد"
+                    })
+            } else {
+                throw new HttpException(
+                    "برداخت ناموفق.در صورت کسر وجه طی ۲۴ ساعت برگشت میخورد",
+                    HttpStatus.BAD_GATEWAY
+                )
             }
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
         }
     }
 }
