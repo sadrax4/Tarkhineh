@@ -1,7 +1,7 @@
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
 
 @Injectable()
 export class StorageService {

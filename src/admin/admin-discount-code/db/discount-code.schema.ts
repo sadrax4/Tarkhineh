@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { AbstractDocument } from "libs/database";
+import { AbstractDocument } from "@app/common";
 
 @Schema({ versionKey: false, collection: 'discount-code' })
 export class DiscountCode extends AbstractDocument {

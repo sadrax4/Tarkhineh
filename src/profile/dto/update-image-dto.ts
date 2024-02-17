@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MulterFile } from "src/common/types";
+import { MulterFile } from "@app/common";
 
 export class UpdateImageDto {
 

@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateUserDto } from './dto';
 import { Response } from 'express';
-import { deleteInvalidValue, pagination } from 'src/common/utils';
+import { deleteInvalidValue, pagination } from '@app/common';
 import { StorageService } from 'src/storage/storage.service';
-import { USER_FOLDER } from 'src/common/constant';
+import { USER_FOLDER } from '@app/common';
 import { FoodService } from '../food/food.service';
 
 @Injectable()

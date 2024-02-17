@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
+import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
 import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateImageDto, UpdateUserDto, UpdateUserSwagger } from './dto';
 import { AdminGuard, JwtGuard } from 'src/auth/guards';
-import { GetCurrentUser } from 'src/common/decorators';
+import { GetCurrentUser } from '@app/common';
 import { ProfileService } from './profile.service';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { UploadFileAws } from 'src/common/interceptors';
+import { UploadFileAws } from '@app/common';
 
 
 @Controller('profile')

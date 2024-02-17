@@ -2,11 +2,11 @@ import { HttpException, HttpStatus, Injectable, Inject, forwardRef } from '@nest
 import { CreateCommentDto, ReplyCommentDto } from './dto';
 import { UserService } from 'src/user/user.service';
 import { CommentRepository } from './db/comment.repository';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
 import { Response } from 'express';
 import mongoose, { Types } from 'mongoose';
 import { FoodService } from 'src/food/food.service';
-import { deleteInvalidValue } from 'src/common/utils';
+import { deleteInvalidValue } from '@app/common';
 import { Comment } from './db/comment.schema';
 
 @Injectable()

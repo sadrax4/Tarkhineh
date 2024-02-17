@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { generateOtpCode } from './utils/generate-otp-code';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant/error.constant';
+import { INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
 import { SmsPanel } from './utils';
 import { ResendCodeDto } from './dto/resend-code-dto';
 import { Response } from 'express';
@@ -10,7 +10,7 @@ import { JwtPayload } from './types/jwt-payload-type';
 import { JwtService } from '@nestjs/jwt';
 import { Token } from './types';
 import * as bcrypt from "bcrypt"
-import { AccessCookieConfig, RefreshCookieConfig } from 'src/common/constant';
+import { AccessCookieConfig, RefreshCookieConfig } from '@app/common';
 
 @Injectable()
 export class AuthService {

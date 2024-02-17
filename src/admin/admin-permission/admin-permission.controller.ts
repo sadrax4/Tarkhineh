@@ -1,7 +1,7 @@
 import { Body, Controller, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
-import { OkResponseMessage } from 'src/common/constant';
+import { OkResponseMessage } from '@app/common';
 import { AdminPermissionService } from './admin-permission.service';
 import { GiveAccessDto } from './dto/giveAccess.dto';
 import { Response } from 'express';

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Post, Query, Res, UseGuards 
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AdminGuard } from 'src/auth/guards';
-import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
+import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
 import { AdminDiscountCodeService } from './admin-discount-code.service';
 import { GenerateDiscountCodeDto } from './dto';
 

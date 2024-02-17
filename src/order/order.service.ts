@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { OrderRepository } from './db/order.repository';
 import { CreateOrderDto } from './dto/createOrder';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
 import { Types } from 'mongoose';
 
 @Injectable()

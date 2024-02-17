@@ -2,13 +2,12 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { Response } from 'express';
 import { UserService } from 'src/user/user.service';
-import { generateFakePhone } from 'src/common/utils/generate-fake-phone';
 import { FoodService } from 'src/food/food.service';
 import { AuthService } from 'src/auth/auth.service';
 import { RemoveCartDto } from './dto/remove-cart.dto';
 import { DecrementFood, IncrementFood } from './dto';
-import { AccessCookieConfig } from 'src/common/constant';
-import { calculatePrice } from 'src/common/utils';
+import { AccessCookieConfig, generateFakePhone } from '@app/common';
+import { calculatePrice } from '@app/common';
 import { AdminDiscountCodeService } from '../admin/admin-discount-code/admin-discount-code.service';
 
 @Injectable()
@@ -119,7 +118,7 @@ export class CartService {
             const percentage = await this.adminDiscountCodeService.checkDiscountCode(
                 discountCode
             )
-            totalDiscount += (totalPayment - calculatePrice(totalPayment, percentage));
+            totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
             totalPayment = calculatePrice(totalPayment, percentage);
         }
         const data = carts?.foodDetail;

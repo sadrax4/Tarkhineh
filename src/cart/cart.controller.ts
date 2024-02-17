@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, HttpStatus, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { UnAuthorizeResponseMessage } from 'src/common/constant';
+import { UnAuthorizeResponseMessage } from '@app/common';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
 import { ApiBody, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CreateCartDto, DecrementFood, IncrementFood, RemoveCartDto } from './dto';
-import { GetCurrentUser } from 'src/common/decorators';
+import { GetCurrentUser } from '@app/common';
 import { Response } from 'express';
 import { RedeemDiscountCodeDto } from 'src/payment/dto';
 

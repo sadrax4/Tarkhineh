@@ -4,9 +4,9 @@ import { BlackListRepository } from './db/blackLIst.repository';
 import { Response } from 'express';
 import { BlackListDto, FindUserDto } from './dto';
 import { DeleteUserDto } from 'src/profile/dto';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
 import { User } from 'src/user/db/user.schema';
-import { getUsersProjecton } from 'src/common/projection';
+import { getUsersProjecton } from '@app/common';
 
 @Injectable()
 export class AdminUserService {

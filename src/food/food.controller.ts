@@ -3,12 +3,12 @@ import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
 import { FoodService } from './food.service';
 import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from 'src/common/constant';
+import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
 import { foodSchema } from './config';
-import { UploadMultiFilesAws } from 'src/common/interceptors';
-import { MulterFile } from 'src/common/types';
+import { UploadMultiFilesAws } from '@app/common';
+import { MulterFile } from '@app/common';
 import { ConfigService } from '@nestjs/config';
-import { GetCurrentUser, StringToArray } from 'src/common/decorators';
+import { GetCurrentUser, StringToArray } from '@app/common';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
 
 @Controller('food')

@@ -5,8 +5,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
 import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
-import { AllowOrigins, HOST_PORT, PORT, compressionConfig } from './common/constant';
-import { ErrorValidation } from './common/pipe';
+import { AllowOrigins, HOST_PORT, PORT, compressionConfig } from '../libs/common/src/common/constant';
+import { ErrorValidation } from '../libs/common/src/common/pipe';
 import * as compression from 'compression'
 
 async function bootstrap() {

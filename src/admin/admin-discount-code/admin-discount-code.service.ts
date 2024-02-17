@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { GenerateDiscountCodeDto } from './dto';
 import { Response } from 'express';
-import { deleteInvalidValue, dicountCodeGenerator } from 'src/common/utils';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { deleteInvalidValue, dicountCodeGenerator } from '@app/common';
+import { INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
 import { DiscountCodeRepository } from './db/discount-code.repository';
 import { Types } from 'mongoose';
 
@@ -114,35 +114,28 @@ export class AdminDiscountCodeService {
     async checkDiscountCode(
         discountCode: string
     ): Promise<number> {
-        try {
-            const code = await this.dicountCodeRepository.findOne({
-                value: discountCode
-            })
-            if (!code) {
-                throw new HttpException(
-                    (" کد اشتباه است "),
-                    HttpStatus.BAD_REQUEST
-                )
-            }
-            if (code?.isLimit == true && code?.maxUses == 0) {
-                throw new HttpException(
-                    ("تعداد استفاده از کد به اتمام رسیده است "),
-                    HttpStatus.BAD_REQUEST
-                )
-            }
-            const date = new Date();
-            if (code.expireAt < date) {
-                throw new HttpException(
-                    (" کد منقضی شده است "),
-                    HttpStatus.BAD_REQUEST
-                )
-            }
-            return code.percentage;
-        } catch (error) {
+        const code = await this.dicountCodeRepository.findOne({
+            value: discountCode
+        })
+        if (!code) {
             throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
+                (" کد اشتباه است "),
+                HttpStatus.BAD_REQUEST
             )
         }
+        if (code?.isLimit == true && code?.maxUses == 0) {
+            throw new HttpException(
+                ("تعداد استفاده از کد به اتمام رسیده است "),
+                HttpStatus.BAD_REQUEST
+            )
+        }
+        // const date = new Date();
+        // if (code.expireAt < date) {
+        //     throw new HttpException(
+        //         (" کد منقضی شده است "),
+        //         HttpStatus.BAD_REQUEST
+        //     )
+        // }
+        return code.percentage;
     }
 }

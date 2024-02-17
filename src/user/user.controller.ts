@@ -1,10 +1,10 @@
 import { Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AdminGuard, JwtGuard } from 'src/auth/guards';
-import { GetCurrentUser } from 'src/common/decorators';
+import { GetCurrentUser } from '@app/common';
 import { Request, Response } from 'express';
 import { ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { UnAuthorizeResponseMessage } from 'src/common/constant';
+import { UnAuthorizeResponseMessage } from '@app/common';
 
 @Controller('user')
 export class UserController {

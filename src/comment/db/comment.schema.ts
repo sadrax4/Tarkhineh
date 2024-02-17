@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { AbstractDocument } from "libs/database";
+import { AbstractDocument } from "@app/common";
 import mongoose, { now } from "mongoose";
 
 @Schema({ _id: false })

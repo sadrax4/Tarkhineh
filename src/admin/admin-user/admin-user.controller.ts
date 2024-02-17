@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
-import { OkResponseMessage } from 'src/common/constant';
+import { OkResponseMessage } from '@app/common';
 import { BlackListDto, FindUserDto } from './dto';
 import { DeleteUserDto } from 'src/profile/dto';
 import { AdminUserService } from './admin-user.service';

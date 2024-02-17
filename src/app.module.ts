@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
+import { DatabaseModule } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from 'libs/database';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ProfileModule } from './profile/profile.module';
@@ -17,6 +17,7 @@ import { PaymentModule } from './payment/payment.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { AdminDiscountCodeModule } from './admin/admin-discount-code/admin-discount-code.module';
+
 
 @Module({
   imports: [

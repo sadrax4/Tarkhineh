@@ -3,18 +3,17 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { UserRepository } from '../user/db/user.repository';
 import mongoose, { Types } from 'mongoose';
 import { User } from './db/user.schema';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant/error.constant';
 import { CreateAddressDto } from '../profile/dto/create-address-dto';
-import { deleteInvalidValue, pagination } from 'src/common/utils';
+import { INTERNAL_SERVER_ERROR_MESSAGE, deleteInvalidValue, pagination } from '@app/common';
 import { UpdateAddressDto } from 'src/profile/dto';
 import { ObjectId } from 'mongodb';
 import { UpdateUserDto } from '../profile/dto/update-user-dto';
 import { DeleteUserDto } from '../profile/dto/delete-user-dto';
-import { USER_FOLDER } from 'src/common/constant';
+import { USER_FOLDER } from '@app/common';
 import { StorageService } from '../storage/storage.service';
-import { favoriteFoodProjection, getCommentProjection, getUsersProjecton, userCartProjection } from 'src/common/projection';
+import { favoriteFoodProjection, getCommentProjection, getUsersProjecton, userCartProjection } from '@app/common';
 import { AdminUserService } from 'src/admin/admin-user/admin-user.service';
-import { Roles } from 'src/common/enums';
+import { Roles } from '@app/common';
 
 @Injectable()
 export class UserService {

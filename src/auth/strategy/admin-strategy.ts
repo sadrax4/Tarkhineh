@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../../user/user.service';
 import { JwtPayload } from "../types";
-import { Roles } from "src/common/enums";
+import { Roles } from "@app/common";
 
 @Injectable()
 export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {

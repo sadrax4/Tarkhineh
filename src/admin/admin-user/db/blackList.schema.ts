@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { AbstractDocument } from "libs/database";
+import { AbstractDocument } from "@app/common";
 
 @Schema({ collection: 'black_list', versionKey: false })
 export class BlackList extends AbstractDocument {

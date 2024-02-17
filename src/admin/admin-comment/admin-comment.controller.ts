@@ -4,8 +4,8 @@ import { Response } from 'express';
 import { AdminGuard } from 'src/auth/guards';
 import { CommentService } from 'src/comment/comment.service';
 import { IsShowCommentDto, ReplyCommentDto } from 'src/comment/dto';
-import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
-import { GetCurrentUser } from 'src/common/decorators';
+import { MIMETYPE, OkResponseMessage } from '@app/common';
+import { GetCurrentUser } from '@app/common';
 
 @Controller('admin')
 export class AdminCommentController {

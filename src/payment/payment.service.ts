@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Response } from 'express';
-import { INTERNAL_SERVER_ERROR_MESSAGE } from 'src/common/constant';
+import { INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { ZarinPallResponse } from 'src/common/types';
+import { ZarinPallResponse } from '@app/common';
 import { generateInvoiceNumber } from 'src/auth/utils';
-import { calculatePrice, getPersianDate } from 'src/common/utils';
+import { calculatePrice, getPersianDate } from '@app/common';
 import { OrderService } from 'src/order/order.service';
 import { CreateOrderDto } from 'src/order/dto';
 import { RedeemDiscountCodeDto } from './dto';

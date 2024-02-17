@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiFoundResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { MIMETYPE, OkResponseMessage } from 'src/common/constant';
+import { MIMETYPE, OkResponseMessage } from '@app/common';
 import { CreateCommentDto, IsShowCommentDto, ReplyCommentDto } from './dto';
 import { AdminGuard, JwtGuard } from 'src/auth/guards';
-import { GetCurrentUser } from 'src/common/decorators';
+import { GetCurrentUser } from '@app/common';
 import { CommentService } from './comment.service';
 import { Response } from 'express';
 
