@@ -4,11 +4,10 @@ import { CheckOtpDto, LoginUserDto } from './dto';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { MIMETYPE } from '@app/common';
+import { GetCurrentUserCookies, MIMETYPE } from '@app/common';
 import { OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
 import { ResendCodeDto } from './dto/resend-code-dto';
 import { JwtGuard, PublicGuard, RefreshGuard } from './guards';
-import { GetCurrentUserCookies } from './decorator';
 import { GetCurrentUser } from '@app/common';
 
 @Controller('auth')

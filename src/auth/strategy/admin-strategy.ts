@@ -4,8 +4,7 @@ import { Request } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../../user/user.service';
-import { JwtPayload } from "../types";
-import { Roles } from "@app/common";
+import { JwtPayload, Roles } from "@app/common";
 
 @Injectable()
 export class AdminStrategy extends PassportStrategy(Strategy, 'admin') {

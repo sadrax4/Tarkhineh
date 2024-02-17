@@ -8,3 +8,4 @@ export * from "./app-config.constant";
 export * from './food.folder.constant';
 export * from "./compression.constant";
 export * from "./token-config.constants"
+export * from "./allow-origins.constant"

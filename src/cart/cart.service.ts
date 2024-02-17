@@ -8,11 +8,10 @@ import { RemoveCartDto } from './dto/remove-cart.dto';
 import { DecrementFood, IncrementFood } from './dto';
 import { AccessCookieConfig, generateFakePhone } from '@app/common';
 import { calculatePrice } from '@app/common';
-import { AdminDiscountCodeService } from '../admin/admin-discount-code/admin-discount-code.service';
+import { AdminDiscountCodeService } from 'src/admin';
 
 @Injectable()
 export class CartService {
-
     constructor(
         private readonly userService: UserService,
         private readonly authService: AuthService,
