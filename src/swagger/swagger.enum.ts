@@ -6,5 +6,6 @@ export enum SwaggerDocument {
     TAG1 = "admin-food",
     TAG2 = "admin-user",
     TAG3 = "admin-comment",
-    TAG4 = "admin-dicount-code"
+    TAG4 = "admin-dicount-code",
+    TAG5 = "admin-order"
 }
