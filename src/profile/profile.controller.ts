@@ -30,11 +30,11 @@ export class ProfileController {
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ) {
-        return await this.profileService.getUserOrders(
-            updateUserDto,
-            phone,
-            response
-        );
+        // return await this.profileService.getUserOrders(
+        //     updateUserDto,
+        //     phone,
+        //     response
+        // );
     }
 
     @UseGuards(JwtGuard)
@@ -54,7 +54,7 @@ export class ProfileController {
         @Body() updateUserDto: UpdateUserDto,
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
-    ) {
+    ): Promise<Response> {
         return await this.profileService.updateUser(
             updateUserDto,
             phone,
@@ -78,7 +78,7 @@ export class ProfileController {
     async deleteUser(
         @Body() deleteUserDto: DeleteUserDto,
         @Res() response: Response
-    ) {
+    ) : Promise<Response> {
         return await this.profileService.deleteUser(
             deleteUserDto,
             response
