@@ -28,6 +28,18 @@ export class OrderService {
         }
     }
 
+    async getOrders(
+    ): Promise<Order[]> {
+        try {
+            return await this.orderRepository.find({});
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
     async findByAuthority(
         authority: string
     ): Promise<Order> {

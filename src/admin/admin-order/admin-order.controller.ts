@@ -1,6 +1,6 @@
-import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
-import { Body, Controller, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
+import { Controller, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
 import { AdminOrderService } from './admin-order.service';
 
@@ -11,25 +11,21 @@ export class AdminOrderController {
     ) { }
 
     @UseGuards(AdminGuard)
-    @ApiOperation({ summary: "get all orders" })
-    @ApiBody({ type: GenerateDiscountCodeDto })
+    @ApiOperation({ summary: "get all orders " })
     @ApiTags('admin-order')
     @ApiUnauthorizedResponse({
         type: UnAuthorizeResponseMessage,
         status: HttpStatus.UNAUTHORIZED
     })
-    @ApiConsumes(MIMETYPE.JSON)
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.CREATED
     })
-    @Post("order")
+    @Get("order")
     async getOrders(
-        @Body() generateDicountCodeDto: GenerateDiscountCodeDto,
-        @Res() response: Response,
+        @Res() response: Response
     ) {
         return this.adminOrderService.getOrders(
-            generateDicountCodeDto,
             response
         )
     }
