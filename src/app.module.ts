@@ -11,6 +11,7 @@ import { PaymentModule } from './payment/payment.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { AdminCommentModule, AdminDiscountCodeModule, AdminFoodModule, AdminPermissionModule, AdminUserModule } from './admin';
+import { AdminOrderModule } from './admin/admin-order/admin-order.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { AdminCommentModule, AdminDiscountCodeModule, AdminFoodModule, AdminPerm
     PaymentModule,
     CartModule,
     OrderModule,
-    AdminDiscountCodeModule
+    AdminDiscountCodeModule,
+    AdminOrderModule
   ],
   controllers: [
   ],
