@@ -34,11 +34,6 @@ import { AdminOrderModule } from './admin/admin-order/admin-order.module';
     OrderModule,
     AdminDiscountCodeModule,
     AdminOrderModule
-  ],
-  controllers: [
-  ],
-  providers: [
-  ],
-  exports: []
+  ]
 })
 export class AppModule { }
