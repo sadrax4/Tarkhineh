@@ -11,11 +11,11 @@ export class AdminOrderService {
     async getOrders(
         response: Response
     ): Promise<Response> {
-        const foods = await this.orderService.getOrders();
+        const orders = await this.orderService.getOrders();
         return response
             .status(HttpStatus.OK)
             .json({
-                foods,
+                orders,
                 statusCode: HttpStatus.OK
             })
     }
