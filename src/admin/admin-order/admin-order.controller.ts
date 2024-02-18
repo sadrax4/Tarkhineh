@@ -3,6 +3,7 @@ import { Controller, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/commo
 import { ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
 import { AdminOrderService } from './admin-order.service';
+import { Response } from 'express';
 
 @Controller('admin')
 export class AdminOrderController {
@@ -24,7 +25,7 @@ export class AdminOrderController {
     @Get("order")
     async getOrders(
         @Res() response: Response
-    ) {
+    ): Promise<Response> {
         return this.adminOrderService.getOrders(
             response
         )
