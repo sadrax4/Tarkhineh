@@ -17,6 +17,26 @@ export class ProfileController {
         private configService: ConfigService
     ) { }
 
+
+    @UseGuards(JwtGuard)
+    @ApiOperation({ summary: " user orders " })
+    @ApiTags('profile-order')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Post('orders')
+    async getUserOrders(
+        @GetCurrentUser('phone') phone: string,
+        @Res() response: Response
+    ) {
+        return await this.profileService.getUserOrders(
+            updateUserDto,
+            phone,
+            response
+        );
+    }
+
     @UseGuards(JwtGuard)
     @ApiOperation({ summary: "update user profile " })
     @ApiBody({
