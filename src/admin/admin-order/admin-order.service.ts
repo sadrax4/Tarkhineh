@@ -33,7 +33,7 @@ export class AdminOrderService {
         return response
             .status(HttpStatus.OK)
             .json({
-                message: "وضعیت سفارش با موفقیت  ثبت شد",
+                message: "وضعیت سفارش با موفقیت ثبت شد",
                 statusCode: HttpStatus.OK
             })
     }

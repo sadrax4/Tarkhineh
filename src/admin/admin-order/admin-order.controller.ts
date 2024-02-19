@@ -46,13 +46,13 @@ export class AdminOrderController {
     })
     @Post("order")
     async setOrderStatus(
-        @Body() orderStatusDto: OrderStatusDto
+        @Body() orderStatusDto: OrderStatusDto,
         @Query("id") orderId: string,
         @Res() response: Response
     ): Promise<Response> {
         return this.adminOrderService.setOrderStatus(
             orderId,
-            orderStatusDto
+            orderStatusDto,
             response
         )
     }

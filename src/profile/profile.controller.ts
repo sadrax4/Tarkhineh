@@ -37,6 +37,25 @@ export class ProfileController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: " cancel order " })
+    @ApiTags('profile-order')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Get('orders')
+    async cancelOrder(
+        @GetCurrentUser('phone') phone: string,
+        @Query("id") orderId:string,
+        @Res() response: Response
+    ): Promise<Response> {
+        return await this.profileService.getUserOrders(
+            phone,
+            response
+        );
+    }
+
+    @UseGuards(JwtGuard)
     @ApiOperation({ summary: "update user profile " })
     @ApiBody({
         type: UpdateUserSwagger,

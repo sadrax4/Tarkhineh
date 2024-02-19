@@ -122,11 +122,33 @@ export class OrderService {
         try {
             await this.orderRepository.findOneAndUpdate(
                 {
-                    _id: orderId
+                    _id: new Types.ObjectId(orderId)
                 },
                 {
                     $set: {
                         status
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
+    async cancelOrder(
+        orderId: string
+    ): Promise<void> {
+        try {
+            await this.orderRepository.findOneAndUpdate(
+                {
+                    _id: new Types.ObjectId(orderId)
+                },
+                {
+                    $set: {
+                        status: "لغو شده"
                     }
                 }
             )
