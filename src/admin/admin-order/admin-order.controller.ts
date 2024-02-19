@@ -1,5 +1,5 @@
 import { OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
-import { Controller, Get, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AdminGuard } from 'src/auth/guards';
 import { AdminOrderService } from './admin-order.service';
@@ -20,7 +20,7 @@ export class AdminOrderController {
     })
     @ApiResponse({
         type: OkResponseMessage,
-        status: HttpStatus.CREATED
+        status: HttpStatus.OK
     })
     @Get("order")
     async getOrders(
@@ -30,6 +30,5 @@ export class AdminOrderController {
             response
         )
     }
-
 
 }

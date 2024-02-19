@@ -46,6 +46,8 @@ export class Order extends AbstractDocument {
     @Prop({ required: false })
     refId: string
 
+    @Prop({ required: false })
+    status: string
 }
 export const OrderSchema = SchemaFactory.createForClass(Order)
 
