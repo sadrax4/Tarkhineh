@@ -114,4 +114,27 @@ export class OrderService {
             )
         }
     }
+
+    async setOrderStatus(
+        orderId: string,
+        status: string
+    ): Promise<void> {
+        try {
+            await this.orderRepository.findOneAndUpdate(
+                {
+                    _id: orderId
+                },
+                {
+                    $set: {
+                        status
+                    }
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }

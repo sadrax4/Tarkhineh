@@ -23,12 +23,12 @@ export class AdminOrderService {
 
     async setOrderStatus(
         orderId: string,
-        orderStatusDto: OrderStatusDto,
+        { status }: OrderStatusDto,
         response: Response
     ): Promise<Response> {
         await this.orderService.setOrderStatus(
             orderId,
-            orderStatusDto
+            status
         );
         return response
             .status(HttpStatus.OK)
