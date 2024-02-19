@@ -25,11 +25,11 @@ export class ProfileController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Post('orders')
+    @Get('orders')
     async getUserOrders(
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
-    ) {
+    ):Promise<Response> {
         return await this.profileService.getUserOrders(
             phone,
             response
