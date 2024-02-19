@@ -92,7 +92,7 @@ export class OrderService {
         }
     }
 
-    async getUserOrder(
+    async getUserOrders(
         userPhone: string
     ): Promise<Order[]> {
         try {

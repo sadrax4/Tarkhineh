@@ -7,6 +7,7 @@ import { StorageModule } from 'src/storage/storage.module';
 import { UserModule } from 'src/user/user.module';
 import { FoodModule } from 'src/food/food.module';
 import { AddressSwaggerMiddleware } from '@app/common';
+import { OrderModule } from 'src/order/order.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { AddressSwaggerMiddleware } from '@app/common';
     ]),
     StorageModule,
     UserModule,
-    FoodModule
+    FoodModule,
+    OrderModule
   ],
   controllers: [
     ProfileController

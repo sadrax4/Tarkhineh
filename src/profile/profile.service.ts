@@ -6,13 +6,15 @@ import { deleteInvalidValue, pagination } from '@app/common';
 import { StorageService } from 'src/storage/storage.service';
 import { USER_FOLDER } from '@app/common';
 import { FoodService } from '../food/food.service';
+import { OrderService } from 'src/order/order.service';
 
 @Injectable()
 export class ProfileService {
     constructor(
         private userService: UserService,
         private storageService: StorageService,
-        private foodService: FoodService
+        private foodService: FoodService,
+        private orderService: OrderService
     ) { }
 
     async updateUser(
@@ -46,7 +48,22 @@ export class ProfileService {
             .status(HttpStatus.CREATED)
             .json({
                 message: "کاربر با موفقیت حذف شد",
-                statusCode: HttpStatus.CREATED
+                statusCode: HttpStatus.OK
+            })
+    }
+
+    async getUserOrders(
+        phone: string,
+        response: Response
+    ): Promise<Response> {
+        const userOrders = await this.orderService.getUserOrders(
+            phone
+        )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                userOrders,
+                statusCode: HttpStatus.OK
             })
     }
 
