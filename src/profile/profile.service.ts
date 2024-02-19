@@ -67,6 +67,21 @@ export class ProfileService {
             })
     }
 
+    async cancelOrder(
+        orderId: string,
+        response: Response
+    ): Promise<Response> {
+        await this.orderService.cancelOrder(
+            orderId
+        )
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "سفارش با موفقیت لغو شد",
+                statusCode: HttpStatus.OK
+            })
+    }
+
     async createAddress(
         phone: string,
         createAddressDto: CreateAddressDto,
