@@ -30,11 +30,10 @@ export class ProfileController {
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ) {
-        // return await this.profileService.getUserOrders(
-        //     updateUserDto,
-        //     phone,
-        //     response
-        // );
+        return await this.profileService.getUserOrders(
+            phone,
+            response
+        );
     }
 
     @UseGuards(JwtGuard)

@@ -91,4 +91,19 @@ export class OrderService {
             )
         }
     }
+
+    async getUserOrder(
+        userPhone: string
+    ): Promise<Order[]> {
+        try {
+            return await this.orderRepository.find({
+                userPhone
+            })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
