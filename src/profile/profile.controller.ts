@@ -45,12 +45,11 @@ export class ProfileController {
     })
     @Get('orders')
     async cancelOrder(
-        @GetCurrentUser('phone') phone: string,
         @Query("id") orderId:string,
         @Res() response: Response
     ): Promise<Response> {
-        return await this.profileService.getUserOrders(
-            phone,
+        return await this.profileService.cancelOrder(
+            orderId,
             response
         );
     }
