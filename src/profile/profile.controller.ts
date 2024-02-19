@@ -29,7 +29,7 @@ export class ProfileController {
     async getUserOrders(
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
-    ):Promise<Response> {
+    ): Promise<Response> {
         return await this.profileService.getUserOrders(
             phone,
             response
@@ -77,7 +77,7 @@ export class ProfileController {
     async deleteUser(
         @Body() deleteUserDto: DeleteUserDto,
         @Res() response: Response
-    ) : Promise<Response> {
+    ): Promise<Response> {
         return await this.profileService.deleteUser(
             deleteUserDto,
             response

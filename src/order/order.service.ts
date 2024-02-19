@@ -96,9 +96,17 @@ export class OrderService {
         userPhone: string
     ): Promise<Order[]> {
         try {
-            return await this.orderRepository.find({
-                userPhone
-            })
+            return await this.orderRepository.find(
+                {
+                    userPhone
+                },
+                {
+                    userId: 0,
+                    authority: 0,
+                    createdAt: 0,
+                    updatedAt: 0
+                }
+            )
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

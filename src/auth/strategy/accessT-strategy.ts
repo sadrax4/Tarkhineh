@@ -19,7 +19,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
                 let data = request?.headers["access-token"] ?
                     request?.headers["access-token"] :
                     request?.cookies["access-token"]
-                console.log(request.headers);
                 return data ? data : null;
             }])
         })
