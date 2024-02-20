@@ -1,15 +1,12 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
-import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateImageDto, UpdateUserDto, UpdateUserSwagger } from './dto';
 import { AdminGuard, JwtGuard } from 'src/auth/guards';
 import { GetCurrentUser } from '@app/common';
 import { ProfileService } from './profile.service';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { UploadFileAws } from '@app/common';
-
-
+import { Body, Controller, Delete, Get, HttpStatus, Put, Param, Patch, Post, Query, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage, UploadFileAws } from '@app/common';
+import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateImageDto, UpdateUserDto, UpdateUserSwagger } from './dto';
 @Controller('profile')
 export class ProfileController {
     constructor(
@@ -43,9 +40,9 @@ export class ProfileController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Get('orders')
+    @Put('orders/:id')
     async cancelOrder(
-        @Query("id") orderId:string,
+        @Query("id") orderId: string,
         @Res() response: Response
     ): Promise<Response> {
         return await this.profileService.cancelOrder(

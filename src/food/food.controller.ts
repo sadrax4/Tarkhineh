@@ -1,19 +1,15 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
 import { FoodService } from './food.service';
-import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { MIMETYPE, OkResponseMessage, UnAuthorizeResponseMessage } from '@app/common';
 import { foodSchema } from './config';
-import { UploadMultiFilesAws } from '@app/common';
-import { MulterFile } from '@app/common';
 import { ConfigService } from '@nestjs/config';
-import { GetCurrentUser, StringToArray } from '@app/common';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
+import { ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { MIMETYPE, OkResponseMessage, MulterFile, UnAuthorizeResponseMessage, GetCurrentUser, StringToArray, UploadMultiFilesAws } from '@app/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 
 @Controller('food')
 export class FoodController {
-
     constructor(
         private foodService: FoodService,
         private configService: ConfigService,

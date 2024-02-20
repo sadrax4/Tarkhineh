@@ -1,19 +1,14 @@
+import { favoriteFoodProjection, INTERNAL_SERVER_ERROR_MESSAGE, deleteInvalidValue, pagination, USER_FOLDER, Roles, getCommentProjection, getUsersProjecton, userCartProjection } from '@app/common';
 import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UserRepository } from '../user/db/user.repository';
 import mongoose, { Types } from 'mongoose';
 import { User } from './db/user.schema';
 import { CreateAddressDto } from '../profile/dto/create-address-dto';
-import { INTERNAL_SERVER_ERROR_MESSAGE, deleteInvalidValue, pagination } from '@app/common';
-import { UpdateAddressDto } from 'src/profile/dto';
+import { DeleteUserDto, UpdateAddressDto, UpdateUserDto } from 'src/profile/dto';
 import { ObjectId } from 'mongodb';
-import { UpdateUserDto } from '../profile/dto/update-user-dto';
-import { DeleteUserDto } from '../profile/dto/delete-user-dto';
-import { USER_FOLDER } from '@app/common';
 import { StorageService } from '../storage/storage.service';
-import { favoriteFoodProjection, getCommentProjection, getUsersProjecton, userCartProjection } from '@app/common';
-import { AdminUserService } from 'src/admin/admin-user/admin-user.service';
-import { Roles } from '@app/common';
+import { AdminUserService } from 'src/admin';
 
 @Injectable()
 export class UserService {
@@ -800,7 +795,7 @@ export class UserService {
         phone: string,
     ): Promise<any> {
         try {
-            const carts = await this.userRepository.aggregate([
+            const user = await this.userRepository.aggregate([
                 {
                     $match: {
                         phone
@@ -818,7 +813,7 @@ export class UserService {
                     $project: userCartProjection
                 }
             ])
-            return carts[0].carts;
+            return user[0].carts;
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),

@@ -19,18 +19,11 @@ async function bootstrap() {
 
   app.setGlobalPrefix('v1');
 
-  app.enableVersioning({
-    type: VersioningType.URI
-  });
+  app.enableVersioning({ type: VersioningType.URI });
 
-  app.useGlobalPipes(
-    ErrorValidation()
-  );
+  app.useGlobalPipes(ErrorValidation());
 
-  app.enableCors({
-    credentials: true,
-    origin: AllowOrigins
-  });
+  app.enableCors({ credentials: true, origin: AllowOrigins });
 
   SwaggerInit(app);
 

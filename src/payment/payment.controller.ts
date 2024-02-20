@@ -1,8 +1,7 @@
 import { Body, Controller, Get, HttpStatus, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards';
-import { OkResponseMessage } from '@app/common';
-import { GetCurrentUser } from '@app/common';
+import { OkResponseMessage, GetCurrentUser } from '@app/common';
 import { PaymentService } from './payment.service';
 import { Response } from 'express';
 import { RedeemDiscountCodeDto } from './dto';

@@ -2,20 +2,12 @@ import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nest
 import { FoodRepository } from './db/food.repository';
 import { CreateFoodDto, UpdateFoodDto } from './dto';
 import { Response } from 'express';
-import { calculatePrice, deleteInvalidValue, pagination } from '@app/common';
-import { FOOD_FOLDER, INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
+import { calculatePrice, deleteInvalidValue, pagination, FOOD_FOLDER, INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
 import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { StorageService } from 'src/storage/storage.service';
 import { CommentService } from 'src/comment/comment.service';
-import {
-    FoodDetailProjection,
-    getCommentsByFoodIdProjection,
-    getFavoriteFoodProjection,
-    getFoodByCategoryProjection,
-    groupAggregate,
-    projectAggregate,
-} from '@app/common';
+import { FoodDetailProjection, getCommentsByFoodIdProjection, getFavoriteFoodProjection, getFoodByCategoryProjection, groupAggregate, projectAggregate } from '@app/common';
 import { UserService } from '../user/user.service';
 import { Food } from './db/food.schema';
 

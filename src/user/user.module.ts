@@ -4,9 +4,10 @@ import { UserController } from './user.controller';
 import { UserRepository } from './db/user.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './db/user.schema';
-import { StorageService } from 'src/storage/storage.service';
 import { StorageModule } from 'src/storage/storage.module';
-import { AdminUserModule } from 'src/admin/admin-user/admin-user.module';
+import { AdminUserModule } from 'src/admin';
+import { StorageService } from 'src/storage/storage.service';
+
 
 @Module({
   imports: [
