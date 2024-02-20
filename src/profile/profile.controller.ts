@@ -22,13 +22,17 @@ export class ProfileController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
+    @ApiQuery({ name: "filterQuery", required: false })
     @Get('orders')
     async getUserOrders(
+        @Query("filterQuery") filterQuery: string = null,
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ): Promise<Response> {
+        console.log(filterQuery)
         return await this.profileService.getUserOrders(
             phone,
+            filterQuery,
             response
         );
     }
