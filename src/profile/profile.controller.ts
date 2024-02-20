@@ -25,7 +25,7 @@ export class ProfileController {
     @ApiQuery({ name: "filterQuery", required: false })
     @Get('orders')
     async getUserOrders(
-        @Query("filterQuery") filterQuery: string = null,
+        @Query("filterQuery") filterQuery: string ,
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ): Promise<Response> {

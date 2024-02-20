@@ -93,12 +93,14 @@ export class OrderService {
     }
 
     async getUserOrders(
-        userPhone: string
+        userPhone: string,
+        filterQuery: string = null
     ): Promise<Order[]> {
         try {
             return await this.orderRepository.find(
                 {
-                    userPhone
+                    userPhone,
+                    status: filterQuery
                 },
                 {
                     userId: 0,

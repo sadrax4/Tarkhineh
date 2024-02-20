@@ -53,10 +53,12 @@ export class ProfileService {
 
     async getUserOrders(
         phone: string,
+        filterQuery: string ,
         response: Response
     ): Promise<Response> {
         const userOrders = await this.orderService.getUserOrders(
-            phone
+            phone,
+            filterQuery
         )
         return response
             .status(HttpStatus.OK)
