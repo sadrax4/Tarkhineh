@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, forwardRef, Inject } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { GiveAccessDto } from './dto/giveAccess.dto';
 import { Response } from 'express';
@@ -6,6 +6,7 @@ import { Response } from 'express';
 @Injectable()
 export class AdminPermissionService {
     constructor(
+        @Inject(forwardRef(() => UserService))
         private readonly userService: UserService
     ) { }
 

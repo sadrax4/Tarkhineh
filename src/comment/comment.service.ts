@@ -13,8 +13,8 @@ import { Comment } from './db/comment.schema';
 export class CommentService {
 
     constructor(
+        @Inject(forwardRef(() => UserService))
         private userService: UserService,
-
         @Inject(forwardRef(() => FoodService))
         private foodService: FoodService,
         private commentRepository: CommentRepository

@@ -16,6 +16,7 @@ export class FoodService {
     constructor(
         private readonly foodRepository: FoodRepository,
         private readonly storageService: StorageService,
+        @Inject(forwardRef(() => UserService))
         private readonly userService: UserService,
         @Inject(forwardRef(() => CommentService))
         private readonly commentService: CommentService
