@@ -53,7 +53,7 @@ export class ProfileService {
 
     async getUserOrders(
         phone: string,
-        filterQuery: string ,
+        filterQuery: string,
         response: Response
     ): Promise<Response> {
         const userOrders = await this.orderService.getUserOrders(
