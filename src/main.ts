@@ -5,9 +5,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
 import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
-import { AllowOrigins, HOST_PORT, PORT, compressionConfig } from '../libs/common/src/common/constant';
-import { ErrorValidation } from '../libs/common/src/common/pipe';
 import * as compression from 'compression'
+import { AllowOrigins, ErrorValidation, HOST, PORT, compressionConfig } from '@app/common';
 
 async function bootstrap() {
 
@@ -29,7 +28,7 @@ async function bootstrap() {
 
   app.use(compression(compressionConfig));
 
-  await app.listen(PORT, HOST_PORT);
+  await app.listen(PORT, HOST);
 
 }
 bootstrap();

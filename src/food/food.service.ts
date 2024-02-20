@@ -112,7 +112,6 @@ export class FoodService {
                 message: "غذا با موفقیت به روز رسانی  شد",
                 statusCode: HttpStatus.OK
             })
-
     }
 
     async getFoodsByCategory(
@@ -141,7 +140,7 @@ export class FoodService {
                 }
             })
         }
-        if (subCategory) {
+        if (subCategory && subCategory != "اقتصادی ترین") {
             matchStage.push({
                 $match: {
                     "subCategory": subCategory
@@ -164,7 +163,7 @@ export class FoodService {
             },
             {
                 $sort: {
-                    "subCategory": 1
+                    "price": -1
                 }
             }
         ]
@@ -204,6 +203,7 @@ export class FoodService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
+            console.log(error);
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
                 HttpStatus.INTERNAL_SERVER_ERROR
