@@ -1,5 +1,5 @@
-import {  REPRESENTATION_FOLDER, deleteInvalidValue } from '@app/common';
-import { Injectable } from '@nestjs/common';
+import { INTERNAL_SERVER_ERROR_MESSAGE, REPRESENTATION_FOLDER, deleteInvalidValue } from '@app/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRepresentationDto } from './dto';
 import { StorageService } from 'src/storage/storage.service';
 import { Response } from 'express';
@@ -26,7 +26,7 @@ export class RepresentationService {
                     REPRESENTATION_FOLDER
                 )
             })
-        const foodData = {
+        const representationData = {
             _id: new Types.ObjectId(),
             ...createRepresentationDto,
         }
@@ -36,8 +36,8 @@ export class RepresentationService {
                     images,
                     REPRESENTATION_FOLDER
                 ),
-                this.foodRepository.create(
-                    foodData
+                this.representationRepository.create(
+                    representationData
                 )
             ])
         } catch (error) {
@@ -49,7 +49,7 @@ export class RepresentationService {
         return response
             .status(HttpStatus.CREATED)
             .json({
-                message: "غذا با موفقیت ثبت شد",
+                message: "نمایندگی با موفقیت ثبت شد",
                 statusCode: HttpStatus.CREATED
             })
     }
