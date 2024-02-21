@@ -1,5 +1,5 @@
 import { MIMETYPE, MulterFile, OkResponseMessage, UploadMultiFilesAws } from '@app/common';
-import { Body, Controller, Get, HttpStatus, Patch, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { RepresentationService } from './representation.service';
@@ -49,14 +49,14 @@ export class RepresentationController {
         )
     }
 
-    @ApiOperation({ summary: "create representation " })
+    @ApiOperation({ summary: "update representation " })
     @ApiBody(representationSchema)
     @UseInterceptors(UploadMultiFilesAws('imagesUrl'))
     @ApiTags('representation')
     @ApiConsumes(MIMETYPE.MULTIPART)
     @ApiResponse({
         type: OkResponseMessage,
-        status: HttpStatus.CREATED
+        status: HttpStatus.OK
     })
     @Patch(":id")
     async updateRepresentation(
@@ -69,6 +69,23 @@ export class RepresentationController {
             representationId,
             updateRepresentationDto,
             images,
+            response
+        )
+    }
+
+    @ApiOperation({ summary: "delete representation " })
+    @ApiTags('representation')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Delete(":id")
+    async deleteRepresentation(
+        @Query("id") representationId: string,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.representationService.deleteRepresentation(
+            representationId,
             response
         )
     }

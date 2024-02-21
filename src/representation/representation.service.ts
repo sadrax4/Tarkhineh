@@ -110,7 +110,7 @@ export class RepresentationService {
             )
         }
         return response
-            .status(HttpStatus.CREATED)
+            .status(HttpStatus.OK)
             .json({
                 message: "نمایندگی با موفقیت به روز رسانی  شد",
                 statusCode: HttpStatus.OK
