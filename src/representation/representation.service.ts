@@ -73,6 +73,28 @@ export class RepresentationService {
         }
     }
 
+    async deleteRepresentation(
+        representationId: string,
+        response: Response
+    ): Promise<Response> {
+        try {
+            await this.representationRepository.deleteOne({
+                _id: new Types.ObjectId(representationId)
+            })
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    message: "نمایندگی با موفقیت حذف شد",
+                    statusCode: HttpStatus.CREATED
+                })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
+
     async updateRepresentation(
         representationId: string,
         updateRepresentation: CreateRepresentationDto,
