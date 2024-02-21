@@ -108,7 +108,6 @@ export function UploadMultiFilesAws(fieldName: string) {
                 const newName = `${Date.now()}${ext}`;
                 file.filename = newName;
                 callback(null, true)
-
             }
         })
 }
