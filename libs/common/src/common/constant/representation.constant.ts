@@ -1,0 +1,1 @@
+export const REPRESENTATION_FOLDER: string = "representation";

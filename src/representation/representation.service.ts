@@ -1,9 +1,13 @@
-import { deleteInvalidValue } from '@app/common';
+import { FOOD_FOLDER, deleteInvalidValue } from '@app/common';
 import { Injectable } from '@nestjs/common';
 import { CreateRepresentationDto } from './dto';
+import { StorageService } from 'src/storage/storage.service';
 
 @Injectable()
 export class RepresentationService {
+    constructor(
+        private storageService: StorageService
+    ) { }
 
     async createRepresentation(
         createRepresentationDto: CreateRepresentationDto,
@@ -11,7 +15,6 @@ export class RepresentationService {
         response: Response
     ): Promise<Response> {
         deleteInvalidValue(createRepresentationDto);
-     
         createRepresentationDto.imagesUrl = images.map(
             image => {
                 return this.storageService.getFileLink(
