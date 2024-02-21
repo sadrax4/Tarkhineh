@@ -57,7 +57,6 @@ export class RepresentationService {
     async getRepresentations(
         response: Response
     ): Promise<Response> {
-
         try {
             const representations = await this.representationRepository.find({})
             return response

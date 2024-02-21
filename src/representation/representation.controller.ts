@@ -1,5 +1,5 @@
 import { MIMETYPE, MulterFile, OkResponseMessage, UploadMultiFilesAws } from '@app/common';
-import { Body, Controller, Get, HttpStatus, Post, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Patch, Post, Query, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { RepresentationService } from './representation.service';
@@ -22,7 +22,7 @@ export class RepresentationController {
         status: HttpStatus.CREATED
     })
     @Post()
-    async createFood(
+    async createRepresentation(
         @UploadedFiles() images: Array<MulterFile>,
         @Body() createRepresentationDto: CreateRepresentationDto,
         @Res() response: Response
@@ -45,6 +45,30 @@ export class RepresentationController {
         @Res() response: Response
     ): Promise<Response> {
         return this.representationService.getRepresentations(
+            response
+        )
+    }
+
+    @ApiOperation({ summary: "create representation " })
+    @ApiBody(representationSchema)
+    @UseInterceptors(UploadMultiFilesAws('imagesUrl'))
+    @ApiTags('representation')
+    @ApiConsumes(MIMETYPE.MULTIPART)
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.CREATED
+    })
+    @Patch(":id")
+    async updateRepresentation(
+        @UploadedFiles() images: Array<MulterFile>,
+        @Query("id") representationId: string,
+        @Body() updateRepresentationDto: CreateRepresentationDto,
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.representationService.updateRepresentation(
+            representationId,
+            updateRepresentationDto,
+            images,
             response
         )
     }
