@@ -1,12 +1,16 @@
-import { FOOD_FOLDER, deleteInvalidValue } from '@app/common';
+import {  REPRESENTATION_FOLDER, deleteInvalidValue } from '@app/common';
 import { Injectable } from '@nestjs/common';
 import { CreateRepresentationDto } from './dto';
 import { StorageService } from 'src/storage/storage.service';
+import { Response } from 'express';
+import { Types } from 'mongoose';
+import { RepresentationRepository } from './db/representation.repository';
 
 @Injectable()
 export class RepresentationService {
     constructor(
-        private storageService: StorageService
+        private storageService: StorageService,
+        private readonly representationRepository: RepresentationRepository,
     ) { }
 
     async createRepresentation(
@@ -19,18 +23,18 @@ export class RepresentationService {
             image => {
                 return this.storageService.getFileLink(
                     image.filename,
-                    FOOD_FOLDER
+                    REPRESENTATION_FOLDER
                 )
             })
         const foodData = {
             _id: new Types.ObjectId(),
-            ...createFoodDto,
+            ...createRepresentationDto,
         }
         try {
             await Promise.all([
                 this.storageService.uploadMultiFile(
                     images,
-                    FOOD_FOLDER
+                    REPRESENTATION_FOLDER
                 ),
                 this.foodRepository.create(
                     foodData

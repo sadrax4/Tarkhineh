@@ -4,6 +4,7 @@ import { RepresentationController } from './representation.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Representation, RepresentationSchema } from './db/representation.schema';
 import { StorageModule } from 'src/storage/storage.module';
+import { RepresentationRepository } from './db/representation.repository';
 
 @Module({
   imports: [
@@ -15,7 +16,12 @@ import { StorageModule } from 'src/storage/storage.module';
     ]),
     StorageModule
   ],
-  providers: [RepresentationService],
-  controllers: [RepresentationController]
+  providers: [
+    RepresentationService,
+    RepresentationRepository
+  ],
+  controllers: [
+    RepresentationController
+  ]
 })
 export class RepresentationModule { }
