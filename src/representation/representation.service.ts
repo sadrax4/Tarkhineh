@@ -6,15 +6,13 @@ import { CreateRepresentationDto } from './dto';
 export class RepresentationService {
 
     async createRepresentation(
-        createFoodDto: CreateRepresentationDto,
+        createRepresentationDto: CreateRepresentationDto,
         images: Express.Multer.File[],
         response: Response
     ): Promise<Response> {
-        deleteInvalidValue(createFoodDto);
-        createFoodDto.images = images.map(
-            image => image.filename
-        )
-        createFoodDto.imagesUrl = images.map(
+        deleteInvalidValue(createRepresentationDto);
+     
+        createRepresentationDto.imagesUrl = images.map(
             image => {
                 return this.storageService.getFileLink(
                     image.filename,

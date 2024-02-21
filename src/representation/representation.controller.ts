@@ -14,7 +14,7 @@ export class RepresentationController {
     @ApiOperation({ summary: "create representation " })
     @ApiBody({ type: CreateRepresentationDto })
     @UseInterceptors(UploadMultiFilesAws('images'))
-    @ApiTags('food')
+    @ApiTags('representation')
     @ApiConsumes(MIMETYPE.MULTIPART)
     @ApiResponse({
         type: OkResponseMessage,
