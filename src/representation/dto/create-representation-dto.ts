@@ -1,9 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-type Points = {
+class Points  {
+
+    @ApiProperty()
     businessLicense: boolean
+
+    @ApiProperty()
     kitchen: boolean
+
+    @ApiProperty()
     parking: boolean
+
+    @ApiProperty()
     Warehouse: boolean
 }
 
@@ -13,7 +21,7 @@ export class CreateRepresentationDto {
     name: string;
 
     @ApiProperty()
-    phone: number
+    phone: string
 
     @ApiProperty()
     nationalCode: string
@@ -31,9 +39,9 @@ export class CreateRepresentationDto {
     ownership: string
 
     @ApiProperty()
-    buildAge: string
+    buildAge: number
 
-    @ApiProperty()
+    @ApiProperty({type:Points})
     points: Points
 
     @ApiProperty({ required: false })

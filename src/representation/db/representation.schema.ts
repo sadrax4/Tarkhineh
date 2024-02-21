@@ -22,7 +22,7 @@ export class Representation extends AbstractDocument {
     name: string;
 
     @Prop()
-    phone: number
+    phone: string
 
     @Prop()
     nationalCode: string
@@ -40,7 +40,7 @@ export class Representation extends AbstractDocument {
     ownership: string
 
     @Prop()
-    buildAge: string
+    buildAge: number
 
     @Prop({ type: Points })
     points: Points
