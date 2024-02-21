@@ -60,16 +60,60 @@ export class RepresentationService {
         try {
             const representations = await this.representationRepository.find({})
             return response
-            .status(HttpStatus.OK)
-            .json({
-                representations,
-                statusCode: HttpStatus.CREATED
-            })
+                .status(HttpStatus.OK)
+                .json({
+                    representations,
+                    statusCode: HttpStatus.CREATED
+                })
         } catch (error) {
             throw new HttpException(
                 (INTERNAL_SERVER_ERROR_MESSAGE + error),
                 HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
+    }
+
+    async updateRepresentation(
+        representationId: string,
+        updateRepresentation: CreateRepresentationDto,
+        images: Express.Multer.File[],
+        response: Response
+    ): Promise<Response> {
+        deleteInvalidValue(updateRepresentation);
+
+        try {
+            if (images.length > 0) {
+                updateRepresentation.imagesUrl = images?.map(
+                    image => {
+                        return this.storageService.getFileLink(
+                            image.filename,
+                            REPRESENTATION_FOLDER
+                        )
+                    })
+                await this.storageService.uploadMultiFile(
+                    images,
+                    REPRESENTATION_FOLDER
+                )
+            }
+            await this.representationRepository.findOneAndUpdate(
+                {
+                    _id: new Types.ObjectId(representationId)
+                },
+                {
+                    $set: updateRepresentation
+                }
+            )
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+        return response
+            .status(HttpStatus.CREATED)
+            .json({
+                message: "نمایندگی با موفقیت به روز رسانی  شد",
+                statusCode: HttpStatus.OK
+            })
     }
 }
