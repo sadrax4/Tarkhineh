@@ -11,7 +11,7 @@ export class RepresentationController {
         private representationService: RepresentationService
     ) { }
 
-    @ApiOperation({ summary: "create food " })
+    @ApiOperation({ summary: "create representation " })
     @ApiBody({ type: CreateRepresentationDto })
     @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('food')
