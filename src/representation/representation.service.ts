@@ -30,7 +30,6 @@ export class RepresentationService {
             _id: new Types.ObjectId(),
             ...createRepresentationDto,
         }
-        console.log(createRepresentationDto)
         try {
             await Promise.all([
                 this.storageService.uploadMultiFile(
@@ -53,5 +52,25 @@ export class RepresentationService {
                 message: "نمایندگی با موفقیت ثبت شد",
                 statusCode: HttpStatus.CREATED
             })
+    }
+
+    async getRepresentations(
+        response: Response
+    ): Promise<Response> {
+
+        try {
+            const representations = await this.representationRepository.find({})
+            return response
+            .status(HttpStatus.OK)
+            .json({
+                representations,
+                statusCode: HttpStatus.CREATED
+            })
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
     }
 }
