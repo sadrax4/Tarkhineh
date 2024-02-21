@@ -9,7 +9,7 @@ export const representationSchema = {
                 type: 'string'
             },
             nationalCode: {
-                type: 'number'
+                type: 'string'
             },
             state: {
                 type: 'string'
@@ -27,10 +27,23 @@ export const representationSchema = {
                 type: 'string'
             },
             points: {
-                type: 'number',
-                default: 0
+                type: 'object',
+                properties: {
+                    businessLicense: {
+                        type: 'boolean'
+                    },
+                    kitchen: {
+                        type: 'boolean'
+                    },
+                    parking: {
+                        type: 'boolean'
+                    },
+                    Warehouse: {
+                        type: 'boolean'
+                    },
+                }
             },
-          
+
             imagesUrl: {
                 type: 'array',
                 items: {
