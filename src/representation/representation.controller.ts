@@ -1,5 +1,5 @@
 import { MIMETYPE, MulterFile, OkResponseMessage, UploadMultiFilesAws } from '@app/common';
-import { Body, Controller, HttpStatus, Post, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { RepresentationService } from './representation.service';
@@ -30,6 +30,21 @@ export class RepresentationController {
         return this.representationService.createRepresentation(
             createRepresentationDto,
             images,
+            response
+        )
+    }
+
+    @ApiOperation({ summary: "get representations " })
+    @ApiTags('representation')
+    @ApiResponse({
+        type: OkResponseMessage,
+        status: HttpStatus.OK
+    })
+    @Get()
+    async getRepresentations(
+        @Res() response: Response
+    ): Promise<Response> {
+        return this.representationService.getRepresentations(
             response
         )
     }
