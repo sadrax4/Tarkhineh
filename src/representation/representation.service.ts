@@ -1,11 +1,12 @@
 import { deleteInvalidValue } from '@app/common';
 import { Injectable } from '@nestjs/common';
+import { CreateRepresentationDto } from './dto';
 
 @Injectable()
 export class RepresentationService {
 
-    async createFood(
-        createFoodDto: CreateFoodDto,
+    async createRepresentation(
+        createFoodDto: CreateRepresentationDto,
         images: Express.Multer.File[],
         response: Response
     ): Promise<Response> {

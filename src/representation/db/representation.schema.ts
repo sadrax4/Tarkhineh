@@ -46,7 +46,7 @@ export class Representation extends AbstractDocument {
     points: Points
 
     @Prop()
-    images: string[]
+    imagesUrl: string[]
 
 }
 export const RepresentationSchema = SchemaFactory.createForClass(Representation)

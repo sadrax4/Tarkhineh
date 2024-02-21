@@ -3,6 +3,7 @@ import { Body, Controller, HttpStatus, Post, Res, UploadedFiles, UseInterceptors
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { RepresentationService } from './representation.service';
+import { CreateRepresentationDto } from './dto';
 
 @Controller('representation')
 export class RepresentationController {
@@ -11,7 +12,7 @@ export class RepresentationController {
     ) { }
 
     @ApiOperation({ summary: "create food " })
-    @ApiBody()
+    @ApiBody({ type: CreateRepresentationDto })
     @UseInterceptors(UploadMultiFilesAws('images'))
     @ApiTags('food')
     @ApiConsumes(MIMETYPE.MULTIPART)
@@ -22,11 +23,11 @@ export class RepresentationController {
     @Post()
     async createFood(
         @UploadedFiles() images: Array<MulterFile>,
-        @Body() createFoodDto: CreateFoodDto,
+        @Body() createRepresentationDto: CreateRepresentationDto,
         @Res() response: Response
     ): Promise<Response> {
-        return this.representationService.createRepresenation(
-            createFoodDto,
+        return this.representationService.createRepresentation(
+            createRepresentationDto,
             images,
             response
         )
