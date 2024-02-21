@@ -1,20 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-class Points  {
-
-    @ApiProperty()
-    businessLicense: boolean
-
-    @ApiProperty()
-    kitchen: boolean
-
-    @ApiProperty()
-    parking: boolean
-
-    @ApiProperty()
-    Warehouse: boolean
-}
-
 export class CreateRepresentationDto {
 
     @ApiProperty()
@@ -41,8 +26,17 @@ export class CreateRepresentationDto {
     @ApiProperty()
     buildAge: number
 
-    @ApiProperty({type:Points})
-    points: Points
+    @ApiProperty()
+    businessLicense: boolean
+
+    @ApiProperty()
+    kitchen: boolean
+
+    @ApiProperty()
+    parking: boolean
+
+    @ApiProperty()
+    Warehouse: boolean
 
     @ApiProperty({ required: false })
     imagesUrl: string[]

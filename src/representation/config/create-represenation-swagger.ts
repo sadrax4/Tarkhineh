@@ -26,24 +26,18 @@ export const representationSchema = {
             buildAge: {
                 type: 'string'
             },
-            points: {
-                type: 'object',
-                properties: {
-                    businessLicense: {
-                        type: 'boolean'
-                    },
-                    kitchen: {
-                        type: 'boolean'
-                    },
-                    parking: {
-                        type: 'boolean'
-                    },
-                    Warehouse: {
-                        type: 'boolean'
-                    },
-                }
+            businessLicense: {
+                type: 'boolean'
             },
-
+            kitchen: {
+                type: 'boolean'
+            },
+            parking: {
+                type: 'boolean'
+            },
+            Warehouse: {
+                type: 'boolean'
+            },
             imagesUrl: {
                 type: 'array',
                 items: {
@@ -54,3 +48,5 @@ export const representationSchema = {
         }
     }
 }
+
+

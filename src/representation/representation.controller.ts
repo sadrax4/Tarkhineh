@@ -4,6 +4,7 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestj
 import { Response } from 'express';
 import { RepresentationService } from './representation.service';
 import { CreateRepresentationDto } from './dto';
+import { representationSchema } from './config';
 
 @Controller('representation')
 export class RepresentationController {
@@ -12,8 +13,8 @@ export class RepresentationController {
     ) { }
 
     @ApiOperation({ summary: "create representation " })
-    @ApiBody({ type: CreateRepresentationDto })
-    @UseInterceptors(UploadMultiFilesAws('images'))
+    @ApiBody(representationSchema)
+    @UseInterceptors(UploadMultiFilesAws('imagesUrl'))
     @ApiTags('representation')
     @ApiConsumes(MIMETYPE.MULTIPART)
     @ApiResponse({

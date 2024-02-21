@@ -2,13 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { AbstractDocument } from "@app/common";
 import mongoose from "mongoose";
 
-@Schema({ _id: false })
-class Points {
-    businessLicense: boolean
-    kitchen: boolean
-    parking: boolean
-    Warehouse: boolean
-}
+
 
 @Schema({
     timestamps: true,
@@ -41,9 +35,18 @@ export class Representation extends AbstractDocument {
 
     @Prop()
     buildAge: number
+    
+    @Prop()
+    businessLicense: boolean
 
-    @Prop({ type: Points })
-    points: Points
+    @Prop()
+    kitchen: boolean
+
+    @Prop()
+    parking: boolean
+
+    @Prop()
+    Warehouse: boolean
 
     @Prop()
     imagesUrl: string[]

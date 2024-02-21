@@ -30,6 +30,7 @@ export class RepresentationService {
             _id: new Types.ObjectId(),
             ...createRepresentationDto,
         }
+        console.log(createRepresentationDto)
         try {
             await Promise.all([
                 this.storageService.uploadMultiFile(
