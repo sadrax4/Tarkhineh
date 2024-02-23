@@ -63,7 +63,7 @@ export class RepresentationService {
                 .status(HttpStatus.OK)
                 .json({
                     representations,
-                    statusCode: HttpStatus.CREATED
+                    statusCode: HttpStatus.OK
                 })
         } catch (error) {
             throw new HttpException(
@@ -85,7 +85,7 @@ export class RepresentationService {
                 .status(HttpStatus.OK)
                 .json({
                     message: "نمایندگی با موفقیت حذف شد",
-                    statusCode: HttpStatus.CREATED
+                    statusCode: HttpStatus.OK
                 })
         } catch (error) {
             throw new HttpException(
