@@ -25,11 +25,20 @@ async function bootstrap() {
 
   app.enableCors({ credentials: true, origin: AllowOrigins });
 
+  app.use(
+    "/v1/api-docs",
+    basicAuth({
+      challenge: true,
+      users: {
+        sadra: "123456",
+      },
+    })
+  );
+
   SwaggerInit(app);
 
   app.use(compression(compressionConfig));
 
-  app.use(basicAuth({ authorizer: myAuthorizer }))
 
 
   await app.listen(PORT, HOST);
