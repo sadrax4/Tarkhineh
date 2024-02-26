@@ -26,15 +26,7 @@ async function bootstrap() {
 
   app.enableCors({ credentials: true, origin: AllowOrigins });
 
-  app.use(SwaggerDocument.PATH,
-   
-    basicAuth({
-      challenge: true,
-      users: {
-        sadra: "123456",
-      },
-    })
-  );
+  app.use(SwaggerDocument.PATH, );
 
   SwaggerInit(app);
 

@@ -1,7 +1,9 @@
 import * as basicAuth from "express-basic-auth"
-export function myAuthorizer(username: string, password: string) {
-
-    const userMatches = basicAuth.safeCompare(username, 'customuser')
-    const passwordMatches = basicAuth.safeCompare(password, 'custompassword')
-    return userMatches && passwordMatches
+export function basicAuthorize() {
+    return basicAuth({
+        challenge: true,
+        users: {
+            sadra: "123456",
+        }
+    })
 }
