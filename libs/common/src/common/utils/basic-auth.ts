@@ -1,4 +1,4 @@
-export const basicAuthorize = {
+export const basicAuthConfig = {
     challenge: true,
     users: {
         sadra: "123456",
