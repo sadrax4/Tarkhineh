@@ -6,7 +6,7 @@ import * as cookieParser from 'cookie-parser';
 import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
 import * as compression from 'compression'
-import { AllowOrigins, ErrorValidation, HOST, PORT, compressionConfig } from '@app/common';
+import { AllowOrigins, ErrorValidation, HOST, PORT, compressionConfig, myAuthorizer } from '@app/common';
 import * as basicAuth from "express-basic-auth"
 
 async function bootstrap() {
