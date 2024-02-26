@@ -11,4 +11,4 @@ export * from "./token-config.constants";
 export * from "./allow-origins.constant";
 export * from "./allow-origins.constant";
 export * from "./representation.constant";
-
+export * from "./basic-auth"
