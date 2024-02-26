@@ -10,8 +10,7 @@ import { StorageModule } from './storage/storage.module';
 import { PaymentModule } from './payment/payment.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
-import { AdminCommentModule, AdminDiscountCodeModule, AdminFoodModule, AdminPermissionModule, AdminUserModule } from './admin';
-import { AdminOrderModule } from './admin/admin-order/admin-order.module';
+import { AdminCommentModule, AdminOrderModule, AdminDiscountCodeModule, AdminFoodModule, AdminPermissionModule, AdminUserModule } from './admin';
 import { RepresentationModule } from './representation/representation.module';
 
 @Module({

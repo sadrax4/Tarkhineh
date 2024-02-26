@@ -43,6 +43,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
+    "express-basic-auth": "^1.2.1",
     "helmet": "^7.1.0",
     "install": "^0.13.0",
     "jalali-moment": "^3.3.11",
