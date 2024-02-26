@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import * as compression from 'compression'
 import { AllowOrigins, ErrorValidation, HOST, PORT, compressionConfig, myAuthorizer } from '@app/common';
 import * as basicAuth from "express-basic-auth"
+import { SwaggerDocument } from './swagger';
 
 async function bootstrap() {
 
@@ -25,8 +26,8 @@ async function bootstrap() {
 
   app.enableCors({ credentials: true, origin: AllowOrigins });
 
-  app.use(
-    "/v1/api-docs",
+  app.use(SwaggerDocument.PATH,
+   
     basicAuth({
       challenge: true,
       users: {
