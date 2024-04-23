@@ -4,7 +4,7 @@ import { JwtGuard } from 'src/auth/guards';
 import { OkResponseMessage, GetCurrentUser } from '@app/common';
 import { PaymentService } from './payment.service';
 import { Response } from 'express';
-import { RedeemDiscountCodeDto } from './dto';
+import { PaymentGatewayDto } from './dto';
 
 @Controller('payment')
 export class PaymentController {
@@ -15,20 +15,20 @@ export class PaymentController {
     @UseGuards(JwtGuard)
     @ApiOperation({ summary: "payment gateway "})
     @ApiTags('payment')
-    @ApiBody({ type: RedeemDiscountCodeDto, required: false })
+    @ApiBody({ type:PaymentGatewayDto , required: false })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
     @Post("gateway")
     async paymentGatewat(
-        @Body() paymentGatewayDto: paymentGatewayDto,
+        @Body() paymentGatewayDto: PaymentGatewayDto,
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ): Promise<Response> {
         return this.paymentService.paymentGateway(
             phone,
-            redeemDiscountCodeDto.discountCode,
+            PaymentGatewayDto,
             response
         )
     }
