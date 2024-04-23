@@ -8,6 +8,7 @@ import { calculatePrice, getPersianDate, ZarinPallResponse, INTERNAL_SERVER_ERRO
 import { OrderService } from 'src/order/order.service';
 import { CreateOrderDto } from 'src/order/dto';
 import { AdminDiscountCodeService } from 'src/admin';
+import { PaymentGatewayDto } from './dto';
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 @Injectable()
@@ -21,15 +22,18 @@ export class PaymentService {
 
     async paymentGateway(
         phone: string,
-        dicountCode: string = null,
+        {
+            addressId,
+            discountCode
+        }: PaymentGatewayDto,
         response: Response
     ): Promise<Response> {
         try {
             const user = await this.userService.findUser(phone);
             let amount: number;
-            if (dicountCode) {
+            if (discountCode) {
                 const discountPercentage = await this.discountCodeService.redeemDicountCode(
-                    dicountCode
+                    discountCode
                 );
                 amount = calculatePrice(
                     user.carts.totalPayment,

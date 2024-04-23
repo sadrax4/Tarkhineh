@@ -78,7 +78,7 @@ export class AdminDiscountCodeService {
         }
     }
 
-    async redeemDicountCode(
+    async redeemDiscountCode(
         discountCode: string
     ): Promise<number> {
         try {
