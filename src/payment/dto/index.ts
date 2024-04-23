@@ -1,1 +1,1 @@
-export * from "./redeemDicountCode"
+export * from "./paymentGateway"
