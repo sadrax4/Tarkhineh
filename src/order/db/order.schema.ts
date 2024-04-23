@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 export class Order extends AbstractDocument {
 
     @Prop({ required: true })
-    userPhone: string;
+    userPhone: string
 
     @Prop({ required: true })
     totalPayment: number
@@ -24,6 +24,9 @@ export class Order extends AbstractDocument {
 
     @Prop({ required: true })
     userId: mongoose.Types.ObjectId
+
+    @Prop({ required: true })
+    addressId: mongoose.Types.ObjectId
 
     @Prop({ required: true })
     authority: string
