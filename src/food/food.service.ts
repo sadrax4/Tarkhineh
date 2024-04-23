@@ -600,4 +600,37 @@ export class FoodService {
             )
         }
     }
+
+    async homeSearchFood(
+        search: string
+    ) {
+        try {
+            const regexPattern = `[a-zA-Z]*${search}[a-zA-Z]*`;
+            const foods = await this.foodRepository.find({
+                $or: [
+                    {
+                        $text: {
+                            $search: search
+                        }
+                    },
+                    {
+                        title: {
+                            $regex: regexPattern
+                        }
+                    },
+                    {
+                        description: {
+                            $regex: regexPattern
+                        }
+                    }
+                ]
+            })
+            return foods;
+        } catch (error) {
+            throw new HttpException(
+                (INTERNAL_SERVER_ERROR_MESSAGE + error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
+    }
 }
