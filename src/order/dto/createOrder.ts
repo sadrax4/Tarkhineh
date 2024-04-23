@@ -6,18 +6,20 @@ export class CreateOrderDto {
 
     userId: ObjectId;
 
-    totalPayment: number
+    addressId: ObjectId;
 
-    description: string
+    totalPayment: number;
 
-    invoiceNumber: number
+    description: string;
 
-    authority: string
+    invoiceNumber: number;
 
-    verify: boolean
+    authority: string;
 
-    paymentDate: string
+    verify: boolean;
 
-    carts: object
+    paymentDate: string;
+
+    carts: object;
 
 }

@@ -32,7 +32,7 @@ export class PaymentService {
             const user = await this.userService.findUser(phone);
             let amount: number;
             if (discountCode) {
-                const discountPercentage = await this.discountCodeService.redeemDicountCode(
+                const discountPercentage = await this.discountCodeService.redeemDiscountCode(
                     discountCode
                 );
                 amount = calculatePrice(
@@ -71,6 +71,7 @@ export class PaymentService {
                 paymentDate,
                 authority,
                 description,
+                addressId
                 carts: user.carts
             }
             await this.orderService.createOrder(
