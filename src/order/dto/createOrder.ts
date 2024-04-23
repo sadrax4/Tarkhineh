@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 export class CreateOrderDto {
 
-    userPhone: string
+    userPhone: string;
 
     userId: ObjectId;
 

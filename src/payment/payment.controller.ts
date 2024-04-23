@@ -28,7 +28,7 @@ export class PaymentController {
     ): Promise<Response> {
         return this.paymentService.paymentGateway(
             phone,
-            PaymentGatewayDto,
+            paymentGatewayDto,
             response
         )
     }
