@@ -68,13 +68,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
             updateQueryData
         ).exec();
     }
-    async deleteMany(
-        filterQuery: FilterQuery<TDocument>,
-        options?: QueryOptions<TDocument>
-    ): Promise<Boolean> {
-        const deleteResult = await this.entityModel.deleteMany(filterQuery, options);
-        return deleteResult.deletedCount >= 1
-    }
+    
     async deleteOne(
         filterQuery: FilterQuery<TDocument>
     ): Promise<Boolean> {

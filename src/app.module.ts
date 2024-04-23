@@ -12,6 +12,7 @@ import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { AdminCommentModule, AdminOrderModule, AdminDiscountCodeModule, AdminFoodModule, AdminPermissionModule, AdminUserModule } from './admin';
 import { RepresentationModule } from './representation/representation.module';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { RepresentationModule } from './representation/representation.module';
     OrderModule,
     AdminDiscountCodeModule,
     AdminOrderModule,
-    RepresentationModule
+    RepresentationModule,
+    HomeModule
   ]
 })
 export class AppModule { }
