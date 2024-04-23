@@ -13,7 +13,7 @@ export class PaymentController {
     ) { }
 
     @UseGuards(JwtGuard)
-    @ApiOperation({ summary: "payment gateway " })
+    @ApiOperation({ summary: "payment gateway "})
     @ApiTags('payment')
     @ApiBody({ type: RedeemDiscountCodeDto, required: false })
     @ApiResponse({
