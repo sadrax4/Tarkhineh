@@ -22,7 +22,7 @@ export class PaymentController {
     })
     @Post("gateway")
     async paymentGatewat(
-        @Body() paymentGatewayDto: PaymentGatewayDto,
+        @Body() paymentGatewayDto: paymentGatewayDto,
         @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ): Promise<Response> {

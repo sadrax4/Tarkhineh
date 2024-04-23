@@ -1,1 +1,1 @@
-export * from "./paymentGateway"
+export * from "./payment-gateway"
