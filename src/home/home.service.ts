@@ -1,9 +1,23 @@
-import { OkResponseMessage } from '@app/common';
-import { Get, HttpStatus, Injectable, Post, Res, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtGuard } from 'src/auth/guards';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { Response } from 'express';
+import { FoodService } from 'src/food/food.service';
+
 
 @Injectable()
 export class HomeService {
-  
+    constructor(
+        private foodService: FoodService
+    ) { }
+
+    async search(
+        response: Response
+    ): Promise<Response> {
+    
+        return response
+            .status(HttpStatus.OK)
+            .json({
+                message: "کاربر با موفقیت حذف شد",
+                statusCode: HttpStatus.OK
+            })
+    }
 }
