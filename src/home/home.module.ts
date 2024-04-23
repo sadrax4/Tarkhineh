@@ -6,4 +6,6 @@ import { HomeController } from './home.controller';
   providers: [HomeService],
   controllers: [HomeController]
 })
-export class HomeModule {}
+export class HomeModule {
+  
+}
