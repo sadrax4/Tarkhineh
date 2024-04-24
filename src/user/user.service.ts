@@ -22,25 +22,36 @@ export class UserService {
     async createUser(
         createUser: CreateUserDto,
     ): Promise<void> {
-        const blackListPhones = await this.adminUserService.getAllBlacklist();
-        if (blackListPhones.includes(createUser.phone)) {
-            throw new HttpException(
-                "متاسفانه این شماره امکان ثبت نام ندارد",
-                HttpStatus.BAD_REQUEST
-            )
-        }
-        deleteInvalidValue(createUser);
-        const userData = {
-            _id: new Types.ObjectId(),
-            username: this.generateUsername(createUser.phone),
-            ...createUser
-        }
-        const createResult = await this.userRepository.create(userData);
-        if (!createResult) {
-            throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE,
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+        try {
+            const blackListPhones = await this.adminUserService.getAllBlacklist();
+            if (blackListPhones.includes(createUser.phone)) {
+                throw new HttpException(
+                    "متاسفانه این شماره امکان ثبت نام ندارد",
+                    HttpStatus.BAD_REQUEST
+                )
+            }
+            deleteInvalidValue(createUser);
+            const userData = {
+                _id: new Types.ObjectId(),
+                username: this.generateUsername(createUser.phone),
+                ...createUser
+            }
+            const createResult = await this.userRepository.create(userData);
+            if (!createResult) {
+                throw new HttpException(
+                    INTERNAL_SERVER_ERROR_MESSAGE,
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                )
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -57,10 +68,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -72,10 +87,14 @@ export class UserService {
                 deleteUserDto
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -98,10 +117,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -124,10 +147,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -144,10 +171,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -165,16 +196,31 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
     async findAllUsers(): Promise<User[]> {
-        const users = await this.userRepository.find({});
-        return users;
+        try {
+            const users = await this.userRepository.find({});
+            return users;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async getAddress(
@@ -182,38 +228,71 @@ export class UserService {
         page: number,
         limit: number
     ): Promise<[number, any]> {
-        const { address } = await this.userRepository.findOne(
-            { phone },
-            {
-                address: 1,
-                _id: false
+        try {
+            const { address } = await this.userRepository.findOne(
+                { phone },
+                {
+                    address: 1,
+                    _id: false
+                }
+            );
+            const maxPage = Math.ceil(address.length / limit)
+            const newAddress = pagination(
+                address,
+                limit,
+                page
+            )
+            return [
+                maxPage,
+                newAddress
+            ];
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
             }
-        );
-        const maxPage = Math.ceil(address.length / limit)
-        const newAddress = pagination(
-            address,
-            limit,
-            page
-        )
-        return [
-            maxPage,
-            newAddress
-        ];
+        }
     }
 
     async haveAccount(
         phone: string
     ): Promise<boolean> {
-        const user = await this.findUser(phone);
-        return user ? true : false;
+        try {
+            const user = await this.findUser(phone);
+            return user ? true : false;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     private generateUsername(
         phone: string
     ): string {
-        const phoneSlice: string = phone.slice(6, 11);
-        const username: string = ('user' + phoneSlice);
-        return username;
+        try {
+            const phoneSlice: string = phone.slice(6, 11);
+            const username: string = ('user' + phoneSlice);
+            return username;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async saveOtp(
@@ -232,10 +311,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -253,10 +336,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -277,10 +364,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -308,10 +399,14 @@ export class UserService {
             ])
             return comments;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -328,10 +423,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -339,15 +438,26 @@ export class UserService {
         username: string,
         phone: string
     ): Promise<void> {
-        const isDuplicateUsername = await this.userRepository.findOne({
-            phone: { $ne: phone },
-            username
-        })
-        if (isDuplicateUsername) {
-            throw new HttpException(
-                "این نام کاربری قبلا مورد استفاده قرار گرفته است",
-                HttpStatus.CONFLICT
-            )
+        try {
+            const isDuplicateUsername = await this.userRepository.findOne({
+                phone: { $ne: phone },
+                username
+            })
+            if (isDuplicateUsername) {
+                throw new HttpException(
+                    "این نام کاربری قبلا مورد استفاده قرار گرفته است",
+                    HttpStatus.CONFLICT
+                )
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -355,31 +465,53 @@ export class UserService {
         phone: string,
         projection: {} = undefined
     ): Promise<User> {
-        const user = await this.userRepository.findOne(
-            { phone },
-            projection
-        );
-        return user;
+        try {
+            const user = await this.userRepository.findOne(
+                { phone },
+                projection
+            );
+            return user;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async findUserById(
         userId: string,
         projection: {} = undefined
     ): Promise<User> {
-        const user = await this.userRepository.findOne(
-            {
-                _id: new Types.ObjectId(userId)
-            },
-            projection
-        );
-        if (user?.image) {
-            const imageUrl = this.storageService.getFileLink(
-                user.image,
-                USER_FOLDER
-            )
-            user.imageUrl = imageUrl;
+        try {
+            const user = await this.userRepository.findOne(
+                {
+                    _id: new Types.ObjectId(userId)
+                },
+                projection
+            );
+            if (user?.image) {
+                const imageUrl = this.storageService.getFileLink(
+                    user.image,
+                    USER_FOLDER
+                )
+                user.imageUrl = imageUrl;
+            }
+            return user;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
-        return user;
     }
 
     async updateImage(
@@ -398,12 +530,17 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
+
 
     async updateUserPhone(
         lastPhone: string,
@@ -419,10 +556,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -440,10 +581,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -461,10 +606,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -482,10 +631,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -499,10 +652,14 @@ export class UserService {
             )
             return user ? user.favoriteFood : []
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -514,10 +671,14 @@ export class UserService {
             );
             return users
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -566,10 +727,14 @@ export class UserService {
             }
             return user
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -592,10 +757,14 @@ export class UserService {
                 )
             }
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -618,10 +787,14 @@ export class UserService {
                 )
             }
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -669,10 +842,14 @@ export class UserService {
                 )
             }
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -689,10 +866,14 @@ export class UserService {
             })
             return foodsId?.includes(foodId) ? true : false;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -722,10 +903,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -751,10 +936,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -784,10 +973,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -815,10 +1008,14 @@ export class UserService {
             ])
             return user[0].carts;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -835,10 +1032,14 @@ export class UserService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
