@@ -57,12 +57,15 @@ export class CommentService {
                     statusCode: HttpStatus.CREATED
                 })
         } catch (error) {
-            throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE + error,
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
-
     }
 
     async replyComment(
@@ -101,10 +104,14 @@ export class CommentService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE,
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -144,10 +151,14 @@ export class CommentService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE,
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -155,7 +166,7 @@ export class CommentService {
         commentId: string,
         show: boolean,
         response: Response
-    ) {
+    ): Promise<Response> {
         try {
             await this.commentRepository.findOneAndUpdate(
                 { _id: new mongoose.Types.ObjectId(commentId) },
@@ -172,16 +183,20 @@ export class CommentService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE,
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
     async getComments(
         response: Response
-    ) {
+    ): Promise<Response> {
         try {
             const comments: Comment[] = await this.commentRepository.find({});
             return response
@@ -191,17 +206,21 @@ export class CommentService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE,
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
     async deleteComment(
         commentId: string,
         response: Response
-    ) {
+    ): Promise<Response> {
         try {
             const deleteCommentQuery = this.commentRepository.deleteOne({
                 _id: new mongoose.Types.ObjectId(commentId)
@@ -224,43 +243,69 @@ export class CommentService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE,
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
     async getFoodComments(
         foodId: string,
         response: Response
-    ) {
-        const comments = await this.foodService.getCommentsByFoodId(foodId);
-        return response
-            .status(HttpStatus.OK)
-            .json({
-                data: comments,
-                statusCode: HttpStatus.OK
-            })
+    ): Promise<Response> {
+        try {
+            const comments = await this.foodService.getCommentsByFoodId(foodId);
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    data: comments,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async getUserComments(
         userId: string,
         response: Response
-    ) {
-        const comments = await this.userService.getComments(userId);
-        return response
-            .status(HttpStatus.OK)
-            .json({
-                data: comments,
-                statusCode: HttpStatus.OK
-            })
+    ): Promise<Response> {
+        try {
+            const comments = await this.userService.getComments(userId);
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    data: comments,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async getCommentById(
         commentId: string,
         response: Response
-    ) {
+    ): Promise<Response> {
         try {
             const comments = await this.commentRepository.findOne({
                 _id: new Types.ObjectId(commentId)
@@ -272,10 +317,14 @@ export class CommentService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                INTERNAL_SERVER_ERROR_MESSAGE,
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 }
