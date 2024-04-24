@@ -89,10 +89,14 @@ export class PaymentService {
                 HttpStatus.BAD_REQUEST
             );
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -104,7 +108,6 @@ export class PaymentService {
             const payment = await this.orderService.findByAuthority(
                 authority
             )
-            console.log("payment", payment)
             const verifyBody = JSON.stringify({
                 merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
                 amount: 10000,//payment.totalPayment,
@@ -143,10 +146,14 @@ export class PaymentService {
                 )
             }
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 }
