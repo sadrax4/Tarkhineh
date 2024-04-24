@@ -29,12 +29,16 @@ export class AdminDiscountCodeService {
                     discountCode: dicountCodeData.value,
                     statusCode: HttpStatus.CREATED
                 })
-        } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
-        }
+            } catch (error) {
+                if (error instanceof HttpException) {
+                    throw error;
+                } else {
+                    throw new HttpException(
+                        (error),
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                    );
+                }
+            }    
     }
 
     async getDiscountCodes(
@@ -48,12 +52,16 @@ export class AdminDiscountCodeService {
                     dicountCodes,
                     statusCode: HttpStatus.OK
                 })
-        } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
-        }
+            } catch (error) {
+                if (error instanceof HttpException) {
+                    throw error;
+                } else {
+                    throw new HttpException(
+                        (error),
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                    );
+                }
+            }    
     }
 
     async deleteDiscountCode(
@@ -70,12 +78,16 @@ export class AdminDiscountCodeService {
                     message: "کد تخفیف با موفقیت حذف شد",
                     statusCode: HttpStatus.OK
                 })
-        } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
-        }
+            } catch (error) {
+                if (error instanceof HttpException) {
+                    throw error;
+                } else {
+                    throw new HttpException(
+                        (error),
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                    );
+                }
+            }    
     }
 
     async redeemDiscountCode(
@@ -104,10 +116,14 @@ export class AdminDiscountCodeService {
             )
             return code.percentage;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
