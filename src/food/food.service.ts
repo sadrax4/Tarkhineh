@@ -53,10 +53,14 @@ export class FoodService {
                 )
             ])
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
         return response
             .status(HttpStatus.CREATED)
@@ -101,10 +105,14 @@ export class FoodService {
                 )
             ])
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
         return response
             .status(HttpStatus.OK)
@@ -202,13 +210,16 @@ export class FoodService {
                     maxPage,
                     statusCode: HttpStatus.OK
                 })
-        } catch (error) {
-            console.log(error);
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
-        }
+            } catch (error) {
+                if (error instanceof HttpException) {
+                    throw error;
+                } else {
+                    throw new HttpException(
+                        (error),
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                    );
+                }
+            }
     }
 
     async getFoods(
@@ -223,10 +234,14 @@ export class FoodService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -234,10 +249,14 @@ export class FoodService {
         try {
             return await this.foodRepository.find({});
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -322,10 +341,14 @@ export class FoodService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -352,10 +375,14 @@ export class FoodService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -390,10 +417,14 @@ export class FoodService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -414,10 +445,14 @@ export class FoodService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -445,10 +480,14 @@ export class FoodService {
             ])
             return comments;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -484,10 +523,14 @@ export class FoodService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -547,10 +590,14 @@ export class FoodService {
             )
             return foods;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -574,10 +621,14 @@ export class FoodService {
             }
             return foodPrice;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -585,6 +636,7 @@ export class FoodService {
         foodId: string,
         count: number = 1
     ): Promise<void> {
+        try{
         const quantity: Pick<Food, "quantity"> = await this.foodRepository.findOne(
             { _id: new Types.ObjectId(foodId) },
             {
@@ -599,11 +651,21 @@ export class FoodService {
                 HttpStatus.UNPROCESSABLE_ENTITY
             )
         }
+    } catch (error) {
+        if (error instanceof HttpException) {
+            throw error;
+        } else {
+            throw new HttpException(
+                (error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
     }
 
     async homeSearchFood(
         search: string
-    ) {
+    ):Promise<Food[]> {
         try {
             const regexPattern = `[a-zA-Z]*${search}[a-zA-Z]*`;
             const foods = await this.foodRepository.find({
@@ -627,10 +689,14 @@ export class FoodService {
             })
             return foods;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 }
