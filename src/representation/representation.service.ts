@@ -41,10 +41,14 @@ export class RepresentationService {
                 )
             ])
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
         return response
             .status(HttpStatus.CREATED)
@@ -66,10 +70,14 @@ export class RepresentationService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -88,10 +96,14 @@ export class RepresentationService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -102,7 +114,6 @@ export class RepresentationService {
         response: Response
     ): Promise<Response> {
         deleteInvalidValue(updateRepresentation);
-
         try {
             if (images.length > 0) {
                 updateRepresentation.imagesUrl = images?.map(
@@ -126,10 +137,14 @@ export class RepresentationService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
         return response
             .status(HttpStatus.OK)
