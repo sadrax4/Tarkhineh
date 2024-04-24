@@ -5,6 +5,6 @@ export class PaymentGatewayDto {
     @ApiProperty({ required: false })
     discountCode?: string
 
-    @ApiProperty({ required: false })
+    @ApiProperty({ required: true })
     addressId: mongoose.Types.ObjectId
 }
