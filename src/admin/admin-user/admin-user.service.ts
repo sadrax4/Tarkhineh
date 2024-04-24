@@ -19,43 +19,76 @@ export class AdminUserService {
     async getUsers(
         response: Response
     ): Promise<Response> {
-        const users = await this.userService.getUsers();
-        return response
-            .status(HttpStatus.OK)
-            .json({
-                users,
-                statusCode: HttpStatus.OK
-            })
+        try {
+            const users = await this.userService.getUsers();
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    users,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async findUser(
         findUserDto: FindUserDto,
         response: Response
     ): Promise<Response> {
-        const user = await this.userService.findByRegex(
-            findUserDto.query
-        );
-        return response
-            .status(HttpStatus.OK)
-            .json({
-                user,
-                statusCode: HttpStatus.OK
-            })
+        try {
+            const user = await this.userService.findByRegex(
+                findUserDto.query
+            );
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    user,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async deleteUser(
         delteUserDto: DeleteUserDto,
         response: Response
     ): Promise<Response> {
-        await this.userService.deleteUser(
-            delteUserDto
-        );
-        return response
-            .status(HttpStatus.OK)
-            .json({
-                message: "کاربر با موفقیت حذف شد",
-                statusCode: HttpStatus.OK
-            })
+        try {
+            await this.userService.deleteUser(
+                delteUserDto
+            );
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    message: "کاربر با موفقیت حذف شد",
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async addPhoneToBlacklist(
@@ -78,10 +111,14 @@ export class AdminUserService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -105,10 +142,14 @@ export class AdminUserService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -124,10 +165,14 @@ export class AdminUserService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -136,10 +181,14 @@ export class AdminUserService {
             const { phones } = await this.blackListRepository.findOne({})
             return phones
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -159,10 +208,14 @@ export class AdminUserService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 }
