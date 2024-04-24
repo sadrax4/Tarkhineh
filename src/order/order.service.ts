@@ -21,10 +21,14 @@ export class OrderService {
         try {
             await this.orderRepository.create(orderData)
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -33,10 +37,14 @@ export class OrderService {
         try {
             return await this.orderRepository.find({});
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -59,10 +67,14 @@ export class OrderService {
             }
             return payment;
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -85,10 +97,14 @@ export class OrderService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -110,10 +126,14 @@ export class OrderService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -133,10 +153,14 @@ export class OrderService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 
@@ -155,10 +179,14 @@ export class OrderService {
                 }
             )
         } catch (error) {
-            throw new HttpException(
-                (INTERNAL_SERVER_ERROR_MESSAGE + error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
     }
 }
