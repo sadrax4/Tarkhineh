@@ -1019,6 +1019,45 @@ export class UserService {
         }
     }
 
+    async getCountOfCart(
+        phone: string,
+    ): Promise<any> {
+        try {
+            const user = await this.userRepository.aggregate([
+                {
+                    $match: {
+                        phone
+                    }
+                },
+                {
+                    $match: {
+                        "carts": {
+                            $exists: true,
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        carts: {
+                            $size: "$carts.foodDetail"
+                        },
+                        _id: false,
+                    }
+                }
+            ])
+            return user[0];
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
+    }
+
     async deleteCarts(
         phone: string,
     ): Promise<void> {
@@ -1026,8 +1065,8 @@ export class UserService {
             await this.userRepository.findOneAndUpdate(
                 { phone },
                 {
-                    $set: {
-                        carts: null
+                    $unset: {
+                        carts: 1
                     }
                 }
             )

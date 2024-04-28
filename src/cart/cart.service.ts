@@ -172,7 +172,7 @@ export class CartService {
         response: Response
     ): Promise<Response> {
         try {
-            const numberOfCart = await this.userService.getCarts(
+            const numberOfCart = await this.userService.getCountOfCart(
                 phone
             )
             return response
