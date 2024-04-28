@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Post, Put,  Res, UseGuards } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { UnAuthorizeResponseMessage } from '@app/common';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
@@ -16,7 +16,7 @@ export class CartController {
 
 
     @UseGuards(JwtGuard)
-    @ApiOperation({ summary: "decrement food quantity" })
+    @ApiOperation({ summary: "get carts" })
     @ApiBody({ type: RedeemDiscountCodeDto, required: false })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
