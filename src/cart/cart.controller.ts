@@ -44,11 +44,11 @@ export class CartController {
         status: HttpStatus.UNAUTHORIZED
     })
     @Get()
-    async getCountOfCarts(
+    async getCountOfCart(
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
     ): Promise<Response> {
-        return this.cartService.getCountOfCarts(
+        return this.cartService.getCountOfCart(
             phone,
             response
         )

@@ -167,6 +167,32 @@ export class CartService {
         }
     }
 
+    async getCountOfCart(
+        phone: string,
+        response: Response
+    ): Promise<Response> {
+        try {
+            const numberOfCart = await this.userService.getCarts(
+                phone
+            )
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    numberOfCart,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
+    }
+
     async incrementFood(
         incrementFood: IncrementFood,
         phone: string,
