@@ -37,6 +37,24 @@ export class CartController {
     }
 
     @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "get count of cart" })
+    @ApiTags('cart')
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
+    @Get()
+    async getCountOfCarts(
+        @Res() response: Response,
+        @GetCurrentUser("phone") phone: string
+    ): Promise<Response> {
+        return this.cartService.getCountOfCarts(
+            phone,
+            response
+        )
+    }
+
+    @UseGuards(JwtGuard)
     @ApiOperation({ summary: "delete  carts" })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
