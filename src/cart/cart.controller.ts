@@ -44,10 +44,12 @@ export class CartController {
     @Post()
     async redeemDiscountCode(
         @Res() response: Response,
+        @Body() redeemDiscountCode: RedeemDiscountCodeDto,
         @GetCurrentUser("phone") phone: string
     ): Promise<Response> {
         return this.cartService.getCarts(
             phone,
+            redeemDiscountCode,
             response
         )
     }
