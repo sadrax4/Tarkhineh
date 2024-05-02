@@ -30,7 +30,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
         request: Request,
         payload: JwtPayload
     ): Promise<{ phone: string }> {
-        if (!payload || payload == null || !payload.phone.startsWith("09")) {
+        if (!payload || payload == null || !payload?.phone?.startsWith("09")) {
             throw new HttpException(
                 "توکن نا معتبر ",
                 HttpStatus.FORBIDDEN

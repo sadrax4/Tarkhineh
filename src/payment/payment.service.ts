@@ -29,7 +29,9 @@ export class PaymentService {
         response: Response
     ): Promise<Response> {
         try {
+            console.log("x")
             const user = await this.userService.findUser(phone);
+            console.log("2")
             let amount: number;
             if (discountCode) {
                 const discountPercentage = await this.discountCodeService.redeemDiscountCode(
@@ -42,7 +44,6 @@ export class PaymentService {
             } else {
                 amount = user.carts.totalPayment
             }
-            user?.carts.totalPayment
             const description = "درگاه خرید ترخینه";
             const ZARINPALL_OPTION = {
                 merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
@@ -55,11 +56,13 @@ export class PaymentService {
                     mobile: phone
                 }
             }
-            const requestResult: ZarinPallResponse = await axios.post(
+            console.log(ZARINPALL_OPTION)
+            const requestResult = await axios.post(
                 this.configService.get<string>("ZARINPALL_REQUEST_URL"),
                 ZARINPALL_OPTION
             ).then(result => result.data)
-            const { authority, code } = requestResult?.data;
+            console.log("ss")
+            const { authority, code } = { authority: "22", code: 200 } //requestResult?.data;
             const invoiceNumber = generateInvoiceNumber();
             const paymentDate = getPersianDate();
             const orderData: CreateOrderDto = {
@@ -78,7 +81,7 @@ export class PaymentService {
                 orderData
             )
             if (code == 100 && authority) {
-                const gatewayURL = `${this.configService.get<string>("ZARINPALL_GATEWAT")}/${authority}`;
+                const gatewayURL = `${this.configService.get<string>("ZARINPALL_GATEWAY")}/${authority}`;
                 return response.status(HttpStatus.OK).json({
                     statusCode: HttpStatus.OK,
                     gatewayURL
@@ -89,6 +92,8 @@ export class PaymentService {
                 HttpStatus.BAD_REQUEST
             );
         } catch (error) {
+            console.log(error);
+            return response.json(error)
             if (error instanceof HttpException) {
                 throw error;
             } else {
