@@ -29,16 +29,16 @@ export class AdminDiscountCodeService {
                     discountCode: dicountCodeData.value,
                     statusCode: HttpStatus.CREATED
                 })
-            } catch (error) {
-                if (error instanceof HttpException) {
-                    throw error;
-                } else {
-                    throw new HttpException(
-                        (error),
-                        HttpStatus.INTERNAL_SERVER_ERROR
-                    );
-                }
-            }    
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async getDiscountCodes(
@@ -52,16 +52,16 @@ export class AdminDiscountCodeService {
                     dicountCodes,
                     statusCode: HttpStatus.OK
                 })
-            } catch (error) {
-                if (error instanceof HttpException) {
-                    throw error;
-                } else {
-                    throw new HttpException(
-                        (error),
-                        HttpStatus.INTERNAL_SERVER_ERROR
-                    );
-                }
-            }    
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async deleteDiscountCode(
@@ -78,16 +78,16 @@ export class AdminDiscountCodeService {
                     message: "کد تخفیف با موفقیت حذف شد",
                     statusCode: HttpStatus.OK
                 })
-            } catch (error) {
-                if (error instanceof HttpException) {
-                    throw error;
-                } else {
-                    throw new HttpException(
-                        (error),
-                        HttpStatus.INTERNAL_SERVER_ERROR
-                    );
-                }
-            }    
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
     }
 
     async redeemDiscountCode(
@@ -144,6 +144,28 @@ export class AdminDiscountCodeService {
                 ("تعداد استفاده از کد به اتمام رسیده است "),
                 HttpStatus.BAD_REQUEST
             )
+        }
+        // const date = new Date();
+        // if (code.expireAt < date) {
+        //     throw new HttpException(
+        //         (" کد منقضی شده است "),
+        //         HttpStatus.BAD_REQUEST
+        //     )
+        // }
+        return code.percentage;
+    }
+
+    async returnDiscountCodeStatus(
+        discountCode: string
+    ): Promise<any> {
+        const code = await this.dicountCodeRepository.findOne({
+            value: discountCode
+        })
+        if (!code) {
+            return false;
+        }
+        if (code?.isLimit == true && code?.maxUses == 0) {
+            return false;
         }
         // const date = new Date();
         // if (code.expireAt < date) {

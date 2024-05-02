@@ -9,6 +9,7 @@ import { DecrementFood, IncrementFood } from './dto';
 import { AccessCookieConfig, generateFakePhone } from '@app/common';
 import { calculatePrice } from '@app/common';
 import { AdminDiscountCodeService } from 'src/admin';
+import { RedeemDiscountCodeDto } from 'src/payment/dto';
 
 @Injectable()
 export class CartService {
@@ -166,8 +167,9 @@ export class CartService {
         }
     }
 
-    async getCarts(
+    async redeemDiscountCode(
         phone: string,
+        { discountCode }: RedeemDiscountCodeDto,
         response: Response
     ): Promise<Response> {
         try {
@@ -197,19 +199,25 @@ export class CartService {
                     delete food?.foodId;
                 }
             )
-            // if (discountCode) {
-            //     const percentage = await this.adminDiscountCodeService.checkDiscountCode(
-            //         discountCode
-            //     )
-            //     totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
-            //     totalPayment = calculatePrice(totalPayment, percentage);
-            // }
-            const data = carts?.foodDetail;
-            const detail = {
+            let detail = {
                 totalPrice: totalPayment,
                 totalDiscount,
-                cardQunatity: carts?.foodDetail?.length
+                cardQunatity: carts?.foodDetail?.length,
+                discountCodeStatus: undefined
             }
+            if (discountCode) {
+                const percentage = await this.adminDiscountCodeService.returnDiscountCodeStatus(
+                    discountCode
+                )
+                if (!percentage) {
+                    detail.discountCodeStatus = false;
+                } else {
+                    detail.discountCodeStatus = true;
+                    totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
+                    totalPayment = calculatePrice(totalPayment, percentage);
+                }
+            }
+            const data = carts?.foodDetail;
             return response
                 .status(HttpStatus.OK)
                 .json({

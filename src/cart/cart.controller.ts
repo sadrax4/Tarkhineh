@@ -47,7 +47,7 @@ export class CartController {
         @Body() redeemDiscountCode: RedeemDiscountCodeDto,
         @GetCurrentUser("phone") phone: string
     ): Promise<Response> {
-        return this.cartService.getCarts(
+        return this.cartService.redeemDiscountCode(
             phone,
             redeemDiscountCode,
             response
