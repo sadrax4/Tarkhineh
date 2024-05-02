@@ -34,7 +34,7 @@ export class CartController {
     }
 
     @UseGuards(JwtGuard)
-    @ApiOperation({ summary: "get carts" })
+    @ApiOperation({ summary: "redeem discount code" })
     @ApiBody({ type: RedeemDiscountCodeDto, required: false })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({

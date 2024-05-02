@@ -166,6 +166,69 @@ export class CartService {
         }
     }
 
+    async getCarts(
+        phone: string,
+        response: Response
+    ): Promise<Response> {
+        try {
+            let carts = await this.userService.getCarts(
+                phone
+            )
+            let totalDiscount: number = 0;
+            let totalPayment = carts?.totalPayment;
+            carts?.foodDetails?.forEach(
+                (food: any) => {
+                    for (let index = 0; index < carts?.foodDetail?.length; index++) {
+                        if (food._id == carts?.foodDetail[index].foodId.toString()) {
+                            carts.foodDetail[index].foodDetail = food
+                        }
+                    }
+                }
+            )
+            carts?.foodDetail?.forEach(
+                (food: any) => {
+                    if (food.foodDetail.discount > 0) {
+                        food.foodDetail.newPrice = calculatePrice(
+                            food.foodDetail.price,
+                            food.foodDetail.discount
+                        );
+                        totalDiscount += (food.foodDetail.price - food.foodDetail.newPrice) * food.quantity;
+                    }
+                    delete food?.foodId;
+                }
+            )
+            // if (discountCode) {
+            //     const percentage = await this.adminDiscountCodeService.checkDiscountCode(
+            //         discountCode
+            //     )
+            //     totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
+            //     totalPayment = calculatePrice(totalPayment, percentage);
+            // }
+            const data = carts?.foodDetail;
+            const detail = {
+                totalPrice: totalPayment,
+                totalDiscount,
+                cardQunatity: carts?.foodDetail?.length
+            }
+            return response
+                .status(HttpStatus.OK)
+                .json({
+                    data,
+                    detail,
+                    statusCode: HttpStatus.OK
+                })
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
+    }
+
     async getCountOfCart(
         phone: string,
         response: Response
