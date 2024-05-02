@@ -29,10 +29,14 @@ export class PaymentService {
         response: Response
     ): Promise<Response> {
         try {
-            console.log("x")
             const user = await this.userService.findUser(phone);
-            console.log("2")
             let amount: number;
+            if (!user.carts) {
+                throw new HttpException(
+                    "سبد خرید شما خالی میباشد",
+                    HttpStatus.BAD_REQUEST
+                )
+            }
             if (discountCode) {
                 const discountPercentage = await this.discountCodeService.redeemDiscountCode(
                     discountCode
@@ -46,23 +50,16 @@ export class PaymentService {
             }
             const description = "درگاه خرید ترخینه";
             const ZARINPALL_OPTION = {
-                merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
-                currency: "IRR",
-                amount: 10000,
+                merchant: "zibal",
+                amount,
                 description,
-                callback_url: this.configService.get<string>("DEVELOPMENT_PAYMENT_CALLBACK_URL"),
-                metadata: {
-                    email: user?.email,
-                    mobile: phone
-                }
+                callbackUrl: this.configService.get<string>("DEVELOPMENT_PAYMENT_CALLBACK_URL"),
             }
-            console.log(ZARINPALL_OPTION)
             const requestResult = await axios.post(
                 this.configService.get<string>("ZARINPALL_REQUEST_URL"),
                 ZARINPALL_OPTION
             ).then(result => result.data)
-            console.log("ss")
-            const { authority, code } = { authority: "22", code: 200 } //requestResult?.data;
+            const { trackId, result } = requestResult;
             const invoiceNumber = generateInvoiceNumber();
             const paymentDate = getPersianDate();
             const orderData: CreateOrderDto = {
@@ -72,7 +69,7 @@ export class PaymentService {
                 totalPayment: amount,
                 verify: false,
                 paymentDate,
-                authority,
+                authority: trackId,
                 description,
                 addressId,
                 carts: user.carts
@@ -80,8 +77,8 @@ export class PaymentService {
             await this.orderService.createOrder(
                 orderData
             )
-            if (code == 100 && authority) {
-                const gatewayURL = `${this.configService.get<string>("ZARINPALL_GATEWAY")}/${authority}`;
+            if (result == 100 && trackId) {
+                const gatewayURL = `${this.configService.get<string>("ZARINPALL_GATEWAY")}/${trackId}`;
                 return response.status(HttpStatus.OK).json({
                     statusCode: HttpStatus.OK,
                     gatewayURL
@@ -92,16 +89,11 @@ export class PaymentService {
                 HttpStatus.BAD_REQUEST
             );
         } catch (error) {
-            console.log(error);
-            return response.json(error)
-            if (error instanceof HttpException) {
-                throw error;
-            } else {
-                throw new HttpException(
-                    (error),
-                    HttpStatus.INTERNAL_SERVER_ERROR
-                );
-            }
+            throw new HttpException(
+                (error),
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+
         }
     }
 
@@ -114,19 +106,18 @@ export class PaymentService {
                 authority
             )
             const verifyBody = JSON.stringify({
-                merchant_id: this.configService.get<string>("ZARINPALL_MERCHENT_ID"),
-                amount: 10000,//payment.totalPayment,
-                authority
+                merchant: "zibal",
+                trackId: authority
             })
             const verifyResult: any = await fetch(process.env.ZARINPALL_VERIFY_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: verifyBody
             }).then(result => result.json());
-            if (verifyResult.data.code == Number(101)) {
-                const refId = verifyResult.data.ref_id;
-                const cardPan = verifyResult.data.card_pan;
-                const cardHash = verifyResult.data.card_hash;
+            if (verifyResult.result == Number(100)) {
+                const refId = 'ss';
+                const cardPan = 'ss';
+                const cardHash = 'ss';
                 await Promise.all([
                     this.orderService.updatePayment(
                         authority,

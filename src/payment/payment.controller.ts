@@ -41,7 +41,7 @@ export class PaymentController {
     })
     @Get("verify")
     async paymentVerify(
-        @Query("Authority") authority: string,
+        @Query("trackId") authority: string,
         @Res() response: Response
     ): Promise<Response> {
         return this.paymentService.paymentVerify(

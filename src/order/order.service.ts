@@ -52,6 +52,7 @@ export class OrderService {
         authority: string
     ): Promise<Order> {
         try {
+            console.log(authority)
             const payment = await this.orderRepository.findOne({ authority })
             if (!payment) {
                 throw new HttpException(
@@ -85,7 +86,8 @@ export class OrderService {
         cardHash: string
     ): Promise<void> {
         try {
-            await this.orderRepository.findOneAndUpdate(
+            console.log('trtret')
+            const result = await this.orderRepository.findOneAndUpdate(
                 { authority },
                 {
                     $set: {
@@ -96,6 +98,7 @@ export class OrderService {
                     }
                 }
             )
+            console.log(result)
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
