@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Post, Put,  Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { UnAuthorizeResponseMessage } from '@app/common';
 import { JwtGuard, PublicGuard } from 'src/auth/guards';
@@ -17,6 +17,24 @@ export class CartController {
 
     @UseGuards(JwtGuard)
     @ApiOperation({ summary: "get carts" })
+    @ApiTags('cart')
+    @ApiUnauthorizedResponse({
+        type: UnAuthorizeResponseMessage,
+        status: HttpStatus.UNAUTHORIZED
+    })
+    @Get()
+    async getCarts(
+        @Res() response: Response,
+        @GetCurrentUser("phone") phone: string
+    ): Promise<Response> {
+        return this.cartService.getCarts(
+            phone,
+            response
+        )
+    }
+
+    @UseGuards(JwtGuard)
+    @ApiOperation({ summary: "get carts" })
     @ApiBody({ type: RedeemDiscountCodeDto, required: false })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
@@ -24,14 +42,12 @@ export class CartController {
         status: HttpStatus.UNAUTHORIZED
     })
     @Post()
-    async getCarts(
-        @Body() redeemDiscountCodeDto: RedeemDiscountCodeDto,
+    async redeemDiscountCode(
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
     ): Promise<Response> {
         return this.cartService.getCarts(
             phone,
-            redeemDiscountCodeDto.discountCode,
             response
         )
     }

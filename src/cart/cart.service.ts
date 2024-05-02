@@ -105,7 +105,6 @@ export class CartService {
 
     async getCarts(
         phone: string,
-        discountCode: string = null,
         response: Response
     ): Promise<Response> {
         try {
@@ -135,13 +134,13 @@ export class CartService {
                     delete food?.foodId;
                 }
             )
-            if (discountCode) {
-                const percentage = await this.adminDiscountCodeService.checkDiscountCode(
-                    discountCode
-                )
-                totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
-                totalPayment = calculatePrice(totalPayment, percentage);
-            }
+            // if (discountCode) {
+            //     const percentage = await this.adminDiscountCodeService.checkDiscountCode(
+            //         discountCode
+            //     )
+            //     totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
+            //     totalPayment = calculatePrice(totalPayment, percentage);
+            // }
             const data = carts?.foodDetail;
             const detail = {
                 totalPrice: totalPayment,
