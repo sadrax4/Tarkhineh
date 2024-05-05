@@ -5,7 +5,6 @@ import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/s
 import { JwtGuard } from 'src/auth/guards';
 import { HomeService } from './home.service';
 import { Response } from 'express';
-import { SearchDto } from './dto';
 @Controller('home')
 export class HomeController {
     constructor(
@@ -15,7 +14,6 @@ export class HomeController {
     @UseGuards(JwtGuard)
     @ApiOperation({ summary: " search in the home " })
     @ApiTags('home')
-    @ApiBody({ type: SearchDto })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK

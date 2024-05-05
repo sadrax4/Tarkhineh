@@ -86,7 +86,6 @@ export class OrderService {
         cardHash: string
     ): Promise<void> {
         try {
-            console.log('trtret')
             const result = await this.orderRepository.findOneAndUpdate(
                 { authority },
                 {
@@ -98,7 +97,6 @@ export class OrderService {
                     }
                 }
             )
-            console.log(result)
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
@@ -114,9 +112,20 @@ export class OrderService {
     async getUserOrders(
         userPhone: string,
         filterQuery: string = null
-    ): Promise<Order[]> {
+    ): Promise<any> {
         try {
-            return await this.orderRepository.aggregate([
+            let userOrder: any = await this.orderRepository.find(
+                {
+                    userPhone,
+                    verify: true,
+                    status: filterQuery
+                },
+                {
+                    authority: 0
+                }
+            )
+            let orderData = userOrder;
+            let orders: any = await this.orderRepository.aggregate([
                 {
                     $match: {
                         userPhone,
@@ -125,23 +134,52 @@ export class OrderService {
                     }
                 },
                 {
+                    $project: {
+                        "carts.foodDetail.foodId": 1,
+                        "carts.foodDetail.totalQuantity": "$carts.foodDetail.quantity",
+                        "_id": false
+                    }
+                },
+                {
                     $lookup: {
                         from: 'foods',
-                        as: 'carts.foodDetail.data',
+                        as: 'carts.order',
                         foreignField: '_id',
-                        localField: 'carts.foodDetail.foodId'
+                        localField: 'carts.foodDetail.foodId',
                     }
                 },
                 {
                     $project: {
-                        userId: 0,
-                        authority: 0,
-                        createdAt: 0,
-                        updatedAt: 0
+                        order: {
+                            $map: {
+                                input: { $range: [0, { $size: "$carts.foodDetail" }] },
+                                in: {
+                                    $mergeObjects: [
+                                        { $arrayElemAt: ["$carts.foodDetail", "$$this"] },
+                                        { $arrayElemAt: ["$carts.order", "$$this"] }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        "order.comments": 0,
+                        "order._id": 0
                     }
                 }
-            ]
+            ])
+            orderData.forEach(
+                order => {
+                    orders.forEach(
+                        userOrder => {
+                            order.carts = userOrder
+                        }
+                    )
+                }
             )
+            return orderData
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;

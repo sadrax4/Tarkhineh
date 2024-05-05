@@ -61,7 +61,7 @@ export class PaymentService {
             ).then(result => result.data)
             const { trackId, result } = requestResult;
             const invoiceNumber = generateInvoiceNumber();
-            const paymentDate = getPersianDate();
+            const paymentDate = String(new Date().getTime());
             const orderData: CreateOrderDto = {
                 userPhone: phone,
                 userId: user._id,
