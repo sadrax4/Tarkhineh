@@ -197,7 +197,6 @@ export class CartService {
                             food.foodDetail.price,
                             food.foodDetail.discount
                         );
-                        totalPercent += food.foodDetail.discount;
                         percentage += (food.foodDetail.price - food.foodDetail.newPrice) * food.quantity;
                     }
                     delete food?.foodId;
@@ -208,7 +207,7 @@ export class CartService {
                 totalDiscount: percentage,
                 discountCodeStatus: undefined,
                 lastPrice: undefined,
-                totalPercent,
+                totalPercent: 0,
             }
             if (discountCode) {
                 const discountPercentage = await this.adminDiscountCodeService.returnDiscountCodeStatus(
