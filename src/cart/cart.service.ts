@@ -10,6 +10,7 @@ import { AccessCookieConfig, generateFakePhone } from '@app/common';
 import { calculatePrice } from '@app/common';
 import { AdminDiscountCodeService } from 'src/admin';
 import { RedeemDiscountCodeDto } from 'src/payment/dto';
+import { unsubscribe } from 'diagnostics_channel';
 
 @Injectable()
 export class CartService {
@@ -176,7 +177,8 @@ export class CartService {
             let carts = await this.userService.getCarts(
                 phone
             )
-            let totalDiscount: number = 0;
+            let totalPercent: number = 0;
+            let percentage: number = 0;
             let totalPayment = carts?.totalPayment;
             carts?.foodDetails?.forEach(
                 (food: any) => {
@@ -194,34 +196,36 @@ export class CartService {
                             food.foodDetail.price,
                             food.foodDetail.discount
                         );
-                        totalDiscount += (food.foodDetail.price - food.foodDetail.newPrice) * food.quantity;
+                        totalPercent += food.foodDetail.discount;
+                        percentage += (food.foodDetail.price - food.foodDetail.newPrice) * food.quantity;
                     }
                     delete food?.foodId;
                 }
             )
             let detail = {
-                totalPrice: totalPayment,
-                totalDiscount,
-                cardQunatity: carts?.foodDetail?.length,
-                discountCodeStatus: undefined
+                newPrice: totalPayment,
+                totalDiscount: percentage,
+                discountCodeStatus: undefined,
+                lastPrice: undefined,
+                totalPercent,
             }
             if (discountCode) {
-                const percentage = await this.adminDiscountCodeService.returnDiscountCodeStatus(
+                const discountPercentage = await this.adminDiscountCodeService.returnDiscountCodeStatus(
                     discountCode
                 )
-                if (!percentage) {
+                if (!discountPercentage) {
                     detail.discountCodeStatus = false;
                 } else {
                     detail.discountCodeStatus = true;
-                    totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
-                    totalPayment = calculatePrice(totalPayment, percentage);
+                    detail.totalPercent += discountPercentage;
+                    detail.totalDiscount += (totalPayment - (calculatePrice(totalPayment, discountPercentage)));
+                    detail.newPrice = calculatePrice(totalPayment, discountPercentage);
                 }
             }
-            const data = carts?.foodDetail;
+            detail.lastPrice = (+detail.newPrice) + (+detail.totalDiscount);
             return response
                 .status(HttpStatus.OK)
                 .json({
-                    data,
                     detail,
                     statusCode: HttpStatus.OK
                 })
