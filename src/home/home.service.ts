@@ -12,10 +12,14 @@ export class HomeService {
 
     async search(
         search: string,
+        phone: string,
         response: Response
     ): Promise<Response> {
         try {
-            const foods = await this.foodService.homeSearchFood(search)
+            const foods = await this.foodService.homeSearchFood(
+                search,
+                phone
+            )
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -23,6 +27,7 @@ export class HomeService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
+            console.log(error);
             if (error instanceof HttpException) {
                 throw error;
             } else {

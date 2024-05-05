@@ -15,7 +15,7 @@ export class CartController {
     ) { }
 
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiOperation({ summary: "get carts" })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
@@ -33,7 +33,7 @@ export class CartController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiOperation({ summary: "redeem discount code" })
     @ApiBody({ type: RedeemDiscountCodeDto, required: false })
     @ApiTags('cart')
@@ -54,7 +54,7 @@ export class CartController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiOperation({ summary: "get count of cart" })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
@@ -72,7 +72,7 @@ export class CartController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiOperation({ summary: "delete  carts" })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
@@ -110,7 +110,7 @@ export class CartController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiOperation({ summary: "remove food from carts" })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
@@ -130,7 +130,7 @@ export class CartController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiOperation({ summary: "increment food quantity" })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({
@@ -143,6 +143,7 @@ export class CartController {
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
     ): Promise<Response> {
+        console.log(phone)
         return this.cartService.incrementFood(
             incrementFood,
             phone,
@@ -150,7 +151,7 @@ export class CartController {
         )
     }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiOperation({ summary: "decrement food quantity" })
     @ApiTags('cart')
     @ApiUnauthorizedResponse({

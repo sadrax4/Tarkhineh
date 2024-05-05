@@ -11,6 +11,7 @@ import { calculatePrice } from '@app/common';
 import { AdminDiscountCodeService } from 'src/admin';
 import { RedeemDiscountCodeDto } from 'src/payment/dto';
 import { unsubscribe } from 'diagnostics_channel';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class CartService {
@@ -273,12 +274,28 @@ export class CartService {
         response: Response
     ): Promise<Response> {
         try {
+            const user = await this.userService.findUser(phone);
+            const userFoodQuantity = user.carts.foodDetail.map(
+                food => {
+                    if (String(food.foodId) == incrementFood.foodId) {
+                        console.log('x')
+                        return food.quantity
+                    }
+                }
+            ).filter(
+                item => {
+                    return typeof item == 'number';
+                }
+            )
+            console.log(userFoodQuantity);
+
             const [foodPrice] = await Promise.all([
                 this.foodService.getPrice(
                     incrementFood.foodId
                 ),
                 this.foodService.checkFoodQuantity(
-                    incrementFood.foodId
+                    incrementFood.foodId,
+                    userFoodQuantity[0]
                 )
             ])
             await this.userService.incrementFood(
