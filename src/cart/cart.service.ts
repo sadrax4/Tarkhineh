@@ -203,7 +203,7 @@ export class CartService {
                 }
             )
             let detail = {
-                newPrice: totalPayment,
+                totalPrice: totalPayment,
                 totalDiscount: percentage,
                 discountCodeStatus: undefined,
                 lastPrice: undefined,
@@ -219,10 +219,10 @@ export class CartService {
                     detail.discountCodeStatus = true;
                     detail.totalPercent += discountPercentage;
                     detail.totalDiscount += (totalPayment - (calculatePrice(totalPayment, discountPercentage)));
-                    detail.newPrice = calculatePrice(totalPayment, discountPercentage);
+                    detail.totalPrice = calculatePrice(totalPayment, discountPercentage);
                 }
             }
-            detail.lastPrice = (+detail.newPrice) + (+detail.totalDiscount);
+            detail.lastPrice = (+detail.totalPrice) + (+detail.totalDiscount);
             return response
                 .status(HttpStatus.OK)
                 .json({
