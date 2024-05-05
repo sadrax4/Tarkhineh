@@ -116,17 +116,31 @@ export class OrderService {
         filterQuery: string = null
     ): Promise<Order[]> {
         try {
-            return await this.orderRepository.find(
+            return await this.orderRepository.aggregate([
                 {
-                    userPhone,
-                    status: filterQuery
+                    $match: {
+                        userPhone,
+                        verify: true,
+                        status: filterQuery
+                    }
                 },
                 {
-                    userId: 0,
-                    authority: 0,
-                    createdAt: 0,
-                    updatedAt: 0
+                    $lookup: {
+                        from: 'foods',
+                        as: 'carts.foodDetail.data',
+                        foreignField: '_id',
+                        localField: 'carts.foodDetail.foodId'
+                    }
+                },
+                {
+                    $project: {
+                        userId: 0,
+                        authority: 0,
+                        createdAt: 0,
+                        updatedAt: 0
+                    }
                 }
+            ]
             )
         } catch (error) {
             if (error instanceof HttpException) {

@@ -11,7 +11,7 @@ export class HomeService {
     ) { }
 
     async search(
-        { search }: SearchDto,
+        search: string,
         response: Response
     ): Promise<Response> {
         try {

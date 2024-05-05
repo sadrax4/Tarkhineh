@@ -1,4 +1,4 @@
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, Query } from '@nestjs/common';
 import { OkResponseMessage } from '@app/common';
 import { Get, HttpStatus, Injectable, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -20,13 +20,13 @@ export class HomeController {
         type: OkResponseMessage,
         status: HttpStatus.OK
     })
-    @Post('search')
+    @Get('search')
     async search(
-        @Body() searchDto: SearchDto,
+        @Query("search") search: string,
         @Res() response: Response
     ): Promise<Response> {
         return await this.homeService.search(
-            searchDto,
+            search,
             response
         );
     }
