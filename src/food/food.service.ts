@@ -210,16 +210,16 @@ export class FoodService {
                     maxPage,
                     statusCode: HttpStatus.OK
                 })
-            } catch (error) {
-                if (error instanceof HttpException) {
-                    throw error;
-                } else {
-                    throw new HttpException(
-                        (error),
-                        HttpStatus.INTERNAL_SERVER_ERROR
-                    );
-                }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
             }
+        }
     }
 
     async getFoods(
@@ -636,39 +636,39 @@ export class FoodService {
         foodId: string,
         count: number = 1
     ): Promise<void> {
-        try{
-        const quantity: Pick<Food, "quantity"> = await this.foodRepository.findOne(
-            { _id: new Types.ObjectId(foodId) },
-            {
-                quantity: 1,
-                _id: false
-            }
-        )
-        const remainingFood = Number(quantity) - count;
-        if (remainingFood < 0) {
-            throw new HttpException(
-                "  متاسفانه موجودی غذا از تعداد درخواستی شما کمتر است",
-                HttpStatus.UNPROCESSABLE_ENTITY
+        try {
+            const quantity: Pick<Food, "quantity"> = await this.foodRepository.findOne(
+                { _id: new Types.ObjectId(foodId) },
+                {
+                    quantity: 1,
+                    _id: false
+                }
             )
+            const remainingFood = Number(quantity) - count;
+            if (remainingFood < 0) {
+                throw new HttpException(
+                    "  متاسفانه موجودی غذا از تعداد درخواستی شما کمتر است",
+                    HttpStatus.UNPROCESSABLE_ENTITY
+                )
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            } else {
+                throw new HttpException(
+                    (error),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
-    } catch (error) {
-        if (error instanceof HttpException) {
-            throw error;
-        } else {
-            throw new HttpException(
-                (error),
-                HttpStatus.INTERNAL_SERVER_ERROR
-            );
-        }
-    }
     }
 
     async homeSearchFood(
         search: string
-    ):Promise<Food[]> {
+    ): Promise<Food[]> {
         try {
             const regexPattern = `[a-zA-Z]*${search}[a-zA-Z]*`;
-            const foods = await this.foodRepository.find({
+            let foods: any = await this.foodRepository.find({
                 $or: [
                     {
                         $text: {
@@ -687,6 +687,22 @@ export class FoodService {
                     }
                 ]
             })
+            const favoriteFood = await this.userService.getFavoriteFoodId(
+                phone
+            );
+            foods.forEach(
+                food => {
+                    food.data.forEach(
+                        fd => {
+                            if (fd.discount > 0) {
+                                fd.newPrice = calculatePrice(fd.price, fd.discount);
+                            }
+                            fd.isFavorite = favoriteFood ?
+                                favoriteFood.includes(new Types.ObjectId(fd._id)) : false;
+                        }
+                    )
+                }
+            );
             return foods;
         } catch (error) {
             if (error instanceof HttpException) {

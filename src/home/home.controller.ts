@@ -1,5 +1,5 @@
 import { Body, Controller, Query } from '@nestjs/common';
-import { OkResponseMessage } from '@app/common';
+import { GetCurrentUser, OkResponseMessage } from '@app/common';
 import { Get, HttpStatus, Injectable, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guards';
@@ -21,10 +21,12 @@ export class HomeController {
     @Get('search')
     async search(
         @Query("search") search: string,
+        @GetCurrentUser('phone') phone: string,
         @Res() response: Response
     ): Promise<Response> {
         return await this.homeService.search(
             search,
+            phone,
             response
         );
     }

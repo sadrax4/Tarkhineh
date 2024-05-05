@@ -179,7 +179,7 @@ export class OrderService {
                     )
                 }
             )
-            return orderData
+            return orderData;
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
