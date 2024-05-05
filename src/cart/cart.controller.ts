@@ -61,7 +61,7 @@ export class CartController {
         type: UnAuthorizeResponseMessage,
         status: HttpStatus.UNAUTHORIZED
     })
-    @Get()
+    @Get('count')
     async getCountOfCart(
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string

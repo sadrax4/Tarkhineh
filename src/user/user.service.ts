@@ -1037,10 +1037,15 @@ export class UserService {
                     }
                 },
                 {
+                    $addFields: {
+                        "carts": {
+                            $sum: "$carts.foodDetail.quantity"
+                        }
+                    }
+                },
+                {
                     $project: {
-                        carts: {
-                            $size: "$carts.foodDetail"
-                        },
+                        carts: true,
                         _id: false,
                     }
                 }
