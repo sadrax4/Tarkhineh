@@ -31,10 +31,8 @@ export class AuthService {
                 otpCode,
                 expireIn
             );
-            const text = `ترخینه
-            کد تایید : ${otpCode}
-            `;
-            SmsPanel(phone, otpCode, text);
+            const text = `${otpCode}`;
+            await SmsPanel(phone, text);
             return response
                 .status(HttpStatus.OK)
                 .json({
@@ -42,6 +40,7 @@ export class AuthService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
+            console.log(error);
             if (error instanceof HttpException) {
                 throw error;
             } else {
@@ -252,9 +251,9 @@ export class AuthService {
             }
             const otpCode: number = generateOtpCode();
             const text = `ترخینه
-            ارسال مجدد : ${otpCode}
+            ارسال مجدد: ${otpCode}
             `;
-            SmsPanel(phone, otpCode, text);
+            SmsPanel(phone, text);
             return response
                 .status(HttpStatus.OK)
                 .json({

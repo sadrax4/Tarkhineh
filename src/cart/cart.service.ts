@@ -144,7 +144,7 @@ export class CartService {
             //     totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
             //     totalPayment = calculatePrice(totalPayment, percentage);
             // }
-            const data = carts?.foodDetail;
+            const data = carts?.foodDetail ? carts.foodDetail : [];
             const detail = {
                 totalPrice: totalPayment,
                 totalDiscount,
