@@ -1,14 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { OrderRepository } from './db/order.repository';
 import { CreateOrderDto } from './dto/createOrder';
 import { INTERNAL_SERVER_ERROR_MESSAGE } from '@app/common';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { Order } from './db/order.schema';
+import { UserService } from 'src/user/user.service';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class OrderService {
     constructor(
-        private orderRepository: OrderRepository
+        private orderRepository: OrderRepository,
+        @Inject(forwardRef(() => UserService))
+        private userService: UserService
     ) { }
 
     async createOrder(
@@ -52,7 +56,6 @@ export class OrderService {
         authority: string
     ): Promise<Order> {
         try {
-            console.log(authority)
             const payment = await this.orderRepository.findOne({ authority })
             if (!payment) {
                 throw new HttpException(
@@ -114,20 +117,16 @@ export class OrderService {
         filterQuery: string = null
     ): Promise<any> {
         try {
-            let userOrder: any = await this.orderRepository.aggregate([
+            let userOrder: any = await this.orderRepository.find(
                 {
-                    $match: {
-                        userPhone,
-                        verify: true,
-                        status: filterQuery
-                    }
+                    userPhone,
+                    verify: true,
+                    status: filterQuery
                 },
                 {
-                    $project: {
-                        authority: 0
-                    }
+                    authority: 0
                 }
-            ])
+            )
             let orderData = userOrder;
             let orders: any = await this.orderRepository.aggregate([
                 {
@@ -174,10 +173,25 @@ export class OrderService {
                     }
                 }
             ])
+            const userAddress = await this.userService.findUser(
+                userPhone,
+                {
+                    address: true
+                }
+            )
             orderData.forEach(
                 order => {
                     orders.forEach(
                         userOrder => {
+                            userAddress.address.forEach(
+                                address => {
+                                    console.log(address._id == new ObjectId(order.addressId))
+                                    if (address._id.toHexString() == order.addressId) {
+                                        console.log(order, "ss")
+                                        order.addressId = address;
+                                    }
+                                }
+                            )
                             order.carts = userOrder
                         }
                     )

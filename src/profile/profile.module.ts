@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { forwardRef, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ProfileController } from './profile.controller';
 import { ProfileService } from './profile.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -18,9 +18,9 @@ import { OrderModule } from 'src/order/order.module';
       }
     ]),
     StorageModule,
-    UserModule,
     FoodModule,
-    OrderModule
+    forwardRef(() => OrderModule),
+    forwardRef(() => UserModule)
   ],
   controllers: [
     ProfileController

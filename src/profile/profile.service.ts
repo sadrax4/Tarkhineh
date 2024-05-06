@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { CreateAddressDto, DeleteUserDto, UpdateAddressDto, UpdateUserDto } from './dto';
 import { Response } from 'express';
@@ -10,9 +10,11 @@ import { OrderService } from 'src/order/order.service';
 @Injectable()
 export class ProfileService {
     constructor(
+        @Inject(forwardRef(() => UserService))
         private userService: UserService,
         private storageService: StorageService,
         private foodService: FoodService,
+        @Inject(forwardRef(() => OrderService))
         private orderService: OrderService
     ) { }
 
