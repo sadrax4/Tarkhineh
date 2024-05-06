@@ -117,12 +117,26 @@ export class OrderService {
         filterQuery: string = null
     ): Promise<any> {
         try {
-            let userOrder: any = await this.orderRepository.find(
-                {
+            let userOrderData;
+            if (filterQuery == "جاری") {
+                userOrderData = {
                     userPhone,
-                    verify: true,
-                    status: filterQuery
-                },
+                    verify: true
+                }
+            } else if (filterQuery == "لغو شده") {
+                userOrderData = {
+                    userPhone,
+                    verify: false
+                }
+            } else if (filterQuery == "" || !filterQuery) {
+                userOrderData = {
+                    userPhone
+                }
+            } else if (filterQuery == "تحویل شده") {
+                return [];
+            }
+            let userOrder: any = await this.orderRepository.find(
+                userOrderData,
                 {
                     authority: 0
                 }
@@ -130,11 +144,7 @@ export class OrderService {
             let orderData = userOrder;
             let orders: any = await this.orderRepository.aggregate([
                 {
-                    $match: {
-                        userPhone,
-                        verify: true,
-                        status: filterQuery
-                    }
+                    $match: userOrderData
                 },
                 {
                     $project: {

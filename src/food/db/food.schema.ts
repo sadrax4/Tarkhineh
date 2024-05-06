@@ -38,7 +38,7 @@ export class Food extends AbstractDocument {
     @Prop()
     imagesUrl: string[]
 
-    @Prop({ default: 0, min: 1, max: 5 })
+    @Prop({ default: 5, min: 1, max: 5 })
     rate: number
 
     @Prop({ default: 0 })
