@@ -49,7 +49,7 @@ export class Comment extends AbstractDocument {
     @Prop({ default: Date.now })
     createdAt: number;
 
-    @Prop({ default: false })
+    @Prop({ default: true })
     show: boolean
 
     @Prop({ type: Author })
