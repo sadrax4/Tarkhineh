@@ -114,16 +114,20 @@ export class OrderService {
         filterQuery: string = null
     ): Promise<any> {
         try {
-            let userOrder: any = await this.orderRepository.find(
+            let userOrder: any = await this.orderRepository.aggregate([
                 {
-                    userPhone,
-                    verify: true,
-                    status: filterQuery
+                    $match: {
+                        userPhone,
+                        verify: true,
+                        status: filterQuery
+                    }
                 },
                 {
-                    authority: 0
+                    $project: {
+                        authority: 0
+                    }
                 }
-            )
+            ])
             let orderData = userOrder;
             let orders: any = await this.orderRepository.aggregate([
                 {
