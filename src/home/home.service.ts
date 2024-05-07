@@ -27,7 +27,6 @@ export class HomeService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            console.log(error);
             if (error instanceof HttpException) {
                 throw error;
             } else {

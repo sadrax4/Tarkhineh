@@ -277,7 +277,6 @@ export class CartService {
             const userFoodQuantity = user.carts.foodDetail.map(
                 food => {
                     if (String(food.foodId) == incrementFood.foodId) {
-                        console.log('x')
                         return food.quantity
                     }
                 }

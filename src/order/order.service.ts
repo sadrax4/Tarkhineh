@@ -227,10 +227,9 @@ export class OrderService {
                             totalDiscount += +or.price * +or.totalQuantity
                         }
                     )
-                    order.totalDiscount = totalDiscount;
+                    order.totalDiscount = totalDiscount - order.totalPayment;
                 }
             )
-
             return userOrder
         } catch (error) {
             console.log(error)

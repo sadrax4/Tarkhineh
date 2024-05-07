@@ -143,7 +143,6 @@ export class CartController {
         @Res() response: Response,
         @GetCurrentUser("phone") phone: string
     ): Promise<Response> {
-        console.log(phone)
         return this.cartService.incrementFood(
             incrementFood,
             phone,

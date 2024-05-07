@@ -40,7 +40,6 @@ export class AuthService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
-            console.log(error);
             if (error instanceof HttpException) {
                 throw error;
             } else {

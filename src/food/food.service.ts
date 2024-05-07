@@ -148,13 +148,28 @@ export class FoodService {
                 }
             })
         }
-        if (subCategory && subCategory != "اقتصادی ترین") {
+        if (subCategory && subCategory != "پرفروش ترین" && subCategory != "اقتصادی ترین") {
             matchStage.push({
                 $match: {
                     "subCategory": subCategory
                 }
             })
+        } else if (subCategory == "پرفروش ترین") {
+            console.log('2')
+            matchStage.push({
+                $match: {
+                    "subCategory": "پیتزاها"
+                }
+            })
+        } else if (subCategory == "اقتصادی ترین") {
+            console.log('3')
+            matchStage.push({
+                $match: {
+                    "subCategory": "ساندویچ ها"
+                }
+            })
         }
+
         const pipeLine = [
             ...matchStage,
             {

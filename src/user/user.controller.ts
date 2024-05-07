@@ -25,7 +25,6 @@ export class UserController {
         @Req() request: Request,
         @GetCurrentUser('phone') phone: string,
     ) {
-        console.log(request.header, request.headers)
         const projection = {
             hashRT: 0,
             otp: 0
