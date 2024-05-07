@@ -51,7 +51,7 @@ export class PaymentService {
             const description = "درگاه خرید ترخینه";
             const ZARINPALL_OPTION = {
                 merchant: "zibal",
-                amount,
+                amount: +(+amount * 10),
                 description,
                 callbackUrl: this.configService.get<string>("PRODUCTION_PAYMENT_CALLBACK_URL"),
             }
@@ -100,7 +100,7 @@ export class PaymentService {
     async paymentVerify(
         authority: string,
         response: Response
-    ): Promise<Response> {
+    ): Promise<void> {
         try {
             const payment = await this.orderService.findByAuthority(
                 authority
@@ -129,17 +129,10 @@ export class PaymentService {
                         payment.userPhone
                     )
                 ])
-                return response
-                    .status(HttpStatus.OK)
-                    .json({
-                        statusCode: HttpStatus.OK,
-                        message: "برداخت با موفقیت انجام شد"
-                    })
+                return response.redirect(`https://tarkhineh.liara.run/payment/verify?trackId=${authority}&success=1`)
             } else {
-                throw new HttpException(
-                    "برداخت ناموفق.در صورت کسر وجه طی ۲۴ ساعت برگشت میخورد",
-                    HttpStatus.BAD_GATEWAY
-                )
+                return response.redirect(`https://tarkhineh.liara.run/payment/verify?trackId=${authority}&success=0`)
+
             }
         } catch (error) {
             if (error instanceof HttpException) {

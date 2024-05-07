@@ -13,9 +13,9 @@ export class PaymentController {
     ) { }
 
     @UseGuards(JwtGuard)
-    @ApiOperation({ summary: "payment gateway "})
+    @ApiOperation({ summary: "payment gateway " })
     @ApiTags('payment')
-    @ApiBody({ type:PaymentGatewayDto , required: false })
+    @ApiBody({ type: PaymentGatewayDto, required: false })
     @ApiResponse({
         type: OkResponseMessage,
         status: HttpStatus.OK
@@ -43,7 +43,7 @@ export class PaymentController {
     async paymentVerify(
         @Query("trackId") authority: string,
         @Res() response: Response
-    ): Promise<Response> {
+    ): Promise<void> {
         return this.paymentService.paymentVerify(
             authority,
             response

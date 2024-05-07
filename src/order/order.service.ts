@@ -135,16 +135,31 @@ export class OrderService {
             } else if (filterQuery == "تحویل شده") {
                 return [];
             }
-            let userOrder: any = await this.orderRepository.find(
-                userOrderData,
+            let userOrder: any = await this.orderRepository.aggregate([
                 {
-                    authority: 0
+                    $match: userOrderData
+                },
+                {
+                    $project: {
+                        authority: 0
+                    }
+                },
+                {
+                    $sort: {
+                        createdAt: 1
+                    }
                 }
-            )
-            let orderData = userOrder;
+            ])
+
+            let orderData = [...userOrder];
             let orders: any = await this.orderRepository.aggregate([
                 {
                     $match: userOrderData
+                },
+                {
+                    $sort: {
+                        createdAt: 1
+                    }
                 },
                 {
                     $project: {
@@ -189,26 +204,36 @@ export class OrderService {
                     address: true
                 }
             )
+            for (let index = 0; index < orderData.length; index++) {
+                orderData[index].carts = orders[index];
+            }
             orderData.forEach(
                 order => {
-                    orders.forEach(
-                        userOrder => {
-                            userAddress.address.forEach(
-                                address => {
-                                    console.log(address._id == new ObjectId(order.addressId))
-                                    if (address._id.toHexString() == order.addressId) {
-                                        console.log(order, "ss")
-                                        order.addressId = address;
-                                    }
-                                }
-                            )
-                            order.carts = userOrder
+                    userAddress.address.forEach(
+                        address => {
+                            if (address._id.toHexString() == order.addressId) {
+                                order.addressId = address;
+                            }
                         }
                     )
                 }
             )
-            return orderData;
+            orderData.forEach(
+                order => {
+                    let totalDiscount = 0;
+                    order.carts.order.forEach(
+                        (or: any, index: number) => {
+                            or.totalQuantity = or.totalQuantity[index];
+                            totalDiscount += +or.price * +or.totalQuantity
+                        }
+                    )
+                    order.totalDiscount = totalDiscount;
+                }
+            )
+
+            return userOrder
         } catch (error) {
+            console.log(error)
             if (error instanceof HttpException) {
                 throw error;
             } else {
