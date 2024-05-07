@@ -6,9 +6,7 @@ import * as cookieParser from 'cookie-parser';
 import { VersioningType } from '@nestjs/common';
 import helmet from 'helmet';
 import * as compression from 'compression'
-import { AllowOrigins, ErrorValidation, HOST, PORT,  basicAuthConfig,  compressionConfig } from '@app/common';
-import * as basicAuth from "express-basic-auth"
-import { SwaggerDocument } from './swagger';
+import { AllowOrigins, ErrorValidation, HOST, PORT, compressionConfig } from '@app/common';
 
 async function bootstrap() {
 
@@ -26,7 +24,7 @@ async function bootstrap() {
 
   app.enableCors({ credentials: true, origin: AllowOrigins });
 
-//app.use(SwaggerDocument.PATH, basicAuth(basicAuthConfig));
+  //app.use(SwaggerDocument.PATH, basicAuth(basicAuthConfig));
 
   SwaggerInit(app);
 

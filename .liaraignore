@@ -1,6 +1,8 @@
 # compiled output
 /dist
 /node_modules
+/.eslintrc.js
+/.prettierrc
 
 # Logs
 logs
