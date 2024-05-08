@@ -3,8 +3,7 @@ import { Response } from 'express';
 import { UserService } from '../user/user.service';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { } from '@app/common';
-import { calculatePrice, getPersianDate, ZarinPallResponse, INTERNAL_SERVER_ERROR_MESSAGE, generateInvoiceNumber } from '@app/common';
+import { calculatePrice, generateInvoiceNumber } from '@app/common';
 import { OrderService } from 'src/order/order.service';
 import { CreateOrderDto } from 'src/order/dto';
 import { AdminDiscountCodeService } from 'src/admin';
@@ -49,15 +48,15 @@ export class PaymentService {
                 amount = user.carts.totalPayment
             }
             const description = "درگاه خرید ترخینه";
-            const ZARINPALL_OPTION = {
+            const ZIABL_OPTION = {
                 merchant: "zibal",
                 amount: +(+amount * 10),
                 description,
                 callbackUrl: this.configService.get<string>("PRODUCTION_PAYMENT_CALLBACK_URL"),
             }
             const requestResult = await axios.post(
-                this.configService.get<string>("ZARINPALL_REQUEST_URL"),
-                ZARINPALL_OPTION
+                this.configService.get<string>("ZIABL_REQUEST_URL"),
+                ZIABL_OPTION
             ).then(result => result.data)
             const { trackId, result } = requestResult;
             const invoiceNumber = generateInvoiceNumber();
@@ -78,7 +77,7 @@ export class PaymentService {
                 orderData
             )
             if (result == 100 && trackId) {
-                const gatewayURL = `${this.configService.get<string>("ZARINPALL_GATEWAY")}/${trackId}`;
+                const gatewayURL = `${this.configService.get<string>("ZIABL_GATEWAY")}/${trackId}`;
                 return response.status(HttpStatus.OK).json({
                     statusCode: HttpStatus.OK,
                     gatewayURL
@@ -109,7 +108,7 @@ export class PaymentService {
                 merchant: "zibal",
                 trackId: authority
             })
-            const verifyResult: any = await fetch(process.env.ZARINPALL_VERIFY_URL, {
+            const verifyResult: any = await fetch(process.env.ZIABL_VERIFY_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: verifyBody
