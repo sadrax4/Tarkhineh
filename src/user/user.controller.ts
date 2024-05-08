@@ -24,7 +24,7 @@ export class UserController {
         @Res() response: Response,
         @Req() request: Request,
         @GetCurrentUser('phone') phone: string,
-    ) {
+    ): Promise<Response> {
         const projection = {
             hashRT: 0,
             otp: 0
@@ -48,7 +48,7 @@ export class UserController {
     @Get("list")
     async getUserList(
         @Res() response: Response
-    ) {
+    ): Promise<Response> {
         const users = await this.userService.findAllUsers();
         return response
             .status(HttpStatus.OK)
