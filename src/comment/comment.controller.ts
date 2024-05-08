@@ -52,7 +52,7 @@ export class CommentController {
     }
 
     @UseGuards(AdminGuard)
-    @ApiOperation({ summary: "reply to comment by comment-id " })
+    @ApiOperation({ summary: "reply to comment via comment-id " })
     @ApiTags('comment')
     @ApiBody({ type: ReplyCommentDto })
     @ApiConsumes(MIMETYPE.JSON)
@@ -77,7 +77,7 @@ export class CommentController {
 
     @UseGuards(AdminGuard)
     @ApiTags('comment')
-    @ApiOperation({ summary: "edit reply comment by comment-id " })
+    @ApiOperation({ summary: "edit reply comment via comment-id " })
     @ApiBody({ type: ReplyCommentDto })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
@@ -101,7 +101,7 @@ export class CommentController {
 
     @UseGuards(AdminGuard)
     @ApiTags('comment')
-    @ApiOperation({ summary: "show comment by comment-id " })
+    @ApiOperation({ summary: "show comment via comment-id " })
     @ApiBody({
         type: IsShowCommentDto
     })
@@ -125,7 +125,7 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
-    @ApiOperation({ summary: "delete comment by comment-id " })
+    @ApiOperation({ summary: "delete comment via comment-id " })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
         type: OkResponseMessage,
@@ -145,7 +145,7 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
-    @ApiOperation({ summary: "get user comments by user-id " })
+    @ApiOperation({ summary: "get user comments via user-id " })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
         type: OkResponseMessage,
@@ -164,7 +164,7 @@ export class CommentController {
 
     @UseGuards(JwtGuard)
     @ApiTags('comment')
-    @ApiOperation({ summary: "get food comments by food-id " })
+    @ApiOperation({ summary: "get food comments via food-id " })
     @ApiConsumes(MIMETYPE.JSON)
     @ApiFoundResponse({
         type: OkResponseMessage,

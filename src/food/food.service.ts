@@ -594,11 +594,11 @@ export class FoodService {
                 pipeLine
             );
             foods.forEach(
-                fd => {
-                    if (fd.discount > 0) {
-                        fd.newPrice = calculatePrice(fd.price, fd.discount);
+                food => {
+                    if (food.discount > 0) {
+                        food.newPrice = calculatePrice(food.price, food.discount);
                     }
-                    fd.isFavorite = true
+                    food.isFavorite = true
                 }
             )
             return foods;

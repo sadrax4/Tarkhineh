@@ -10,8 +10,6 @@ import { AccessCookieConfig, generateFakePhone } from '@app/common';
 import { calculatePrice } from '@app/common';
 import { AdminDiscountCodeService } from 'src/admin';
 import { RedeemDiscountCodeDto } from 'src/payment/dto';
-import { unsubscribe } from 'diagnostics_channel';
-import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class CartService {
@@ -137,13 +135,6 @@ export class CartService {
                     delete food?.foodId;
                 }
             )
-            // if (discountCode) {
-            //     const percentage = await this.adminDiscountCodeService.checkDiscountCode(
-            //         discountCode
-            //     )
-            //     totalDiscount += (totalPayment - (calculatePrice(totalPayment, percentage)));
-            //     totalPayment = calculatePrice(totalPayment, percentage);
-            // }
             const data = carts?.foodDetail ? carts.foodDetail : [];
             const detail = {
                 totalPrice: totalPayment,
