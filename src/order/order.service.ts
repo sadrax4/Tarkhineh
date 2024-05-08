@@ -59,13 +59,13 @@ export class OrderService {
             const payment = await this.orderRepository.findOne({ authority })
             if (!payment) {
                 throw new HttpException(
-                    "تراکنشی در انتظار برداخت یافت نشد",
+                    "تراکنشی در انتظار پرداخت یافت نشد",
                     HttpStatus.NOT_FOUND
                 )
             }
             if (payment.verify) {
                 throw new HttpException(
-                    "تراکنش قبلا برداخت شده است",
+                    "تراکنش قبلا پرداخت شده است",
                     HttpStatus.NOT_FOUND
                 )
             }

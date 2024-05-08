@@ -303,7 +303,7 @@ export class ProfileService {
             return response
                 .status(HttpStatus.OK)
                 .json({
-                    message: "بروفایل کاربر با موفقیت به روز رسانی شد",
+                    message: "پروفایل کاربر با موفقیت به روز رسانی شد",
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
@@ -349,7 +349,7 @@ export class ProfileService {
             return response
                 .status(HttpStatus.OK)
                 .json({
-                    message: "بروفایل کاربر با موفقیت به حذف شد",
+                    message: "پروفایل کاربر با موفقیت به حذف شد",
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {

@@ -1,6 +1,8 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { SwaggerDocument } from "./swagger.enum";
+import { SwaggerTheme } from "swagger-themes";
+import { SwaggerThemeNameEnum } from "swagger-themes/build/enums/swagger-theme-name";
 
 export function SwaggerInit(
     app: INestApplication
@@ -17,5 +19,10 @@ export function SwaggerInit(
         .addTag(SwaggerDocument.TAG5)
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup(SwaggerDocument.PATH, app, document);
+    const theme = new SwaggerTheme();
+    const options = {
+        explorer: true,
+        customCss: theme.getBuffer(SwaggerThemeNameEnum.GRUVBOX)
+    };
+    SwaggerModule.setup(SwaggerDocument.PATH, app, document, options);
 }

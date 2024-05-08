@@ -57,6 +57,7 @@
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "swagger-themes": "^1.4.3",
     "uid": "^2.0.2"
   },
   "devDependencies": {

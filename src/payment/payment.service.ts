@@ -47,11 +47,11 @@ export class PaymentService {
             } else {
                 amount = user.carts.totalPayment
             }
-            const amoutToIRT = +(+amount * 10);
+            const amountToIRT = +(+amount * 10);
             const description = "درگاه خرید ترخینه";
             const ZIABL_OPTION = {
                 merchant: "zibal",
-                amount: amoutToIRT,
+                amount: amountToIRT,
                 description,
                 callbackUrl: this.configService.get<string>("PRODUCTION_PAYMENT_CALLBACK_URL"),
             }
