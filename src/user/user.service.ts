@@ -1051,7 +1051,7 @@ export class UserService {
                     }
                 }
             ])
-            return user[0];
+            return user[0] ? user[0] : { carts: 0 };
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
@@ -1086,5 +1086,5 @@ export class UserService {
                 );
             }
         }
-    }   
+    }
 }
