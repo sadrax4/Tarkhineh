@@ -285,8 +285,6 @@ export class CartService {
                     return typeof item == 'number';
                 }
             )
-            console.log(userFoodQuantity);
-
             const [foodPrice] = await Promise.all([
                 this.foodService.getPrice(
                     incrementFood.foodId

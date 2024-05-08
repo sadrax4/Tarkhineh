@@ -155,14 +155,12 @@ export class FoodService {
                 }
             })
         } else if (subCategory == "پرفروش ترین") {
-            console.log('2')
             matchStage.push({
                 $match: {
                     "subCategory": "پیتزاها"
                 }
             })
         } else if (subCategory == "اقتصادی ترین") {
-            console.log('3')
             matchStage.push({
                 $match: {
                     "subCategory": "ساندویچ ها"

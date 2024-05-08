@@ -115,9 +115,9 @@ export class PaymentService {
                 body: verifyBody
             }).then(result => result.json());
             if (verifyResult.result == Number(100)) {
-                const refId = 'ss';
-                const cardPan = 'ss';
-                const cardHash = 'ss';
+                const refId = 'test';
+                const cardPan = 'test';
+                const cardHash = 'test';
                 await Promise.all([
                     this.orderService.updatePayment(
                         authority,
@@ -129,10 +129,9 @@ export class PaymentService {
                         payment.userPhone
                     )
                 ])
-                return response.redirect(`https://tarkhineh.liara.run/payment/verify?trackId=${authority}&success=1`)
+                return response.redirect(`${this.configService.get<string>("PAYMENT_VERIFY_CALLBACK_URL")}${authority}&success=1`)
             } else {
-                return response.redirect(`https://tarkhineh.liara.run/payment/verify?trackId=${authority}&success=0`)
-
+                return response.redirect(`${this.configService.get<string>("PAYMENT_VERIFY_CALLBACK_URL")}${authority}&success=0`)
             }
         } catch (error) {
             if (error instanceof HttpException) {
