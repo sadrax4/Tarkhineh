@@ -1007,7 +1007,7 @@ export class UserService {
                     $project: userCartProjection
                 }
             ])
-            return user[0].carts;
+            return user[0]?.carts;
         } catch (error) {
             if (error instanceof HttpException) {
                 throw error;
