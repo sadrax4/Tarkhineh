@@ -12,7 +12,7 @@ export class HomeController {
     ) { }
 
     @UseGuards(JwtGuard)
-    @ApiOperation({ summary: " search in the home " })
+    @ApiOperation({ summary: " main page search " })
     @ApiTags('home')
     @ApiResponse({
         type: OkResponseMessage,
