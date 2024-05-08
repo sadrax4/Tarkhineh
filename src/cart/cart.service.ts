@@ -135,11 +135,17 @@ export class CartService {
                     delete food?.foodId;
                 }
             )
+            let cardQunatity = 0;
+            carts?.foodDetail?.forEach(
+                cart => {
+                    cardQunatity += cart.quantity;
+                }
+            )
             const data = carts?.foodDetail ? carts.foodDetail : [];
             const detail = {
                 totalPrice: totalPayment,
                 totalDiscount,
-                cardQunatity: carts?.foodDetail?.length
+                cardQunatity
             }
             return response
                 .status(HttpStatus.OK)
@@ -149,6 +155,7 @@ export class CartService {
                     statusCode: HttpStatus.OK
                 })
         } catch (error) {
+            console.log(error);
             if (error instanceof HttpException) {
                 throw error;
             } else {
