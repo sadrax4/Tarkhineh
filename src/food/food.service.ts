@@ -184,7 +184,7 @@ export class FoodService {
             },
             {
                 $sort: {
-                    "subCategory": 1
+                    "subCategory": -1
                 }
             }
         ]
