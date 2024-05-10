@@ -26,7 +26,7 @@ export class UserService {
             const blackListPhones = await this.adminUserService.getAllBlacklist();
             if (blackListPhones.includes(createUser.phone)) {
                 throw new HttpException(
-                    "متاسفانه این شماره امکان ثبت نام ندارد",
+                    "متاسفانه این شماره در لیست سیاه قرار دارد",
                     HttpStatus.BAD_REQUEST
                 )
             }
