@@ -2,7 +2,7 @@ import { Body, Controller, Query } from '@nestjs/common';
 import { GetCurrentUser, OkResponseMessage } from '@app/common';
 import { Get, HttpStatus, Injectable, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtGuard } from 'src/auth/guards';
+import { JwtGuard, PublicGuard } from 'src/auth/guards';
 import { HomeService } from './home.service';
 import { Response } from 'express';
 @Controller('home')
@@ -11,7 +11,7 @@ export class HomeController {
         private homeService: HomeService
     ) { }
 
-    @UseGuards(JwtGuard)
+    @UseGuards(PublicGuard)
     @ApiOperation({ summary: " main page search " })
     @ApiTags('home')
     @ApiResponse({
