@@ -17,7 +17,6 @@ export const userCartProjection = {
     "imageUrl": 0,
     "role": 0,
     "carts.foodDetails.comments": 0,
-    "carts.foodDetails.ingredients": 0,
     "carts.foodDetails.description": 0,
     "carts.foodDetails.category": 0,
     "carts.foodDetails.images": 0,

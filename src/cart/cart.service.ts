@@ -142,6 +142,7 @@ export class CartService {
                 }
             )
             const data = carts?.foodDetail ? carts.foodDetail : [];
+            console.log(data)
             const detail = {
                 totalPrice: totalPayment,
                 totalDiscount,
