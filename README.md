@@ -30,40 +30,39 @@
 
 <h1 align="center">
 توسعه دهندگاه
-
-<p align="start" dir="rtl">
-برنامه نویس فرانت اند :   علی اصفهانی 
-</p>
-<p dir="rtl">
-<a href="https://www.linkedin.com/in/ali-esfahani-baa6b3237/">لینکدین</a>  <a href="https://github.com/alifcpr">گیت هاب<a/>
-</p>
-
-<p align="start" dir="rtl">
-برنامه نویس فرانت اند :   صدرا سلیمانی 
-</p>
-<p dir="rtl">
-<a href="https://www.linkedin.com/in/sadra-soleimani-48465a255/">لینکدین</a>  <a href="https://github.com/sadrax4">گیت هاب<a/>
-</p>
-
-<p align="start" dir="rtl">
-توسعه دهنده ui/ux : احسان عزتی
-</p>
-<p dir="rtl">
-<a href="https://www.linkedin.com/in/ehsan-ezzati-b282331b5">لینکدین</a> 
-</p>
-
-<p align="start" dir="rtl">
-توسعه دهنده ui/ux : سردار وظیفه
-</p>
-<p dir="rtl">
-<a href="https://www.linkedin.com/in/sardar-wazifeh">لینکدین</a> 
-</p>
-
-<p align="start" dir="rtl">
-توسعه دهنده ui/ux : آرزو محمد علیزاده
-</p>
-<p dir="rtl">
-<a href="https://www.linkedin.com/in/arezoo-mohammadalizadeh">لینکدین</a> 
-</p>
-
 <h1/>
+
+<h4 align="start" dir="rtl">
+برنامه نویس فرانت اند :   علی اصفهانی 
+</h4>
+<h4 dir="rtl">
+<a href="https://www.linkedin.com/in/ali-esfahani-baa6b3237/">لینکدین</a>  <a href="https://github.com/alifcpr">گیت هاب<a/>
+</h4>
+
+<h4 align="start" dir="rtl">
+برنامه نویس بک اند :   صدرا سلیمانی 
+</h4>
+<h4 dir="rtl">
+<a href="https://www.linkedin.com/in/sadra-soleimani-48465a255/">لینکدین</a>  <a href="https://github.com/sadrax4">گیت هاب<a/>
+</h4>
+
+<h4 align="start" dir="rtl">
+توسعه دهنده ui/ux : احسان عزتی
+</h4>
+<h4 dir="rtl">
+<a href="https://www.linkedin.com/in/ehsan-ezzati-b282331b5">لینکدین</a> 
+</h4>
+
+<h4 align="start" dir="rtl">
+توسعه دهنده ui/ux : سردار وظیفه
+</h4>
+<h4 dir="rtl">
+<a href="https://www.linkedin.com/in/sardar-wazifeh">لینکدین</a> 
+</h4>
+
+<h4 align="start" dir="rtl">
+توسعه دهنده ui/ux : آرزو محمد علیزاده
+</h4>
+<h4 dir="rtl">
+<a href="https://www.linkedin.com/in/arezoo-mohammadalizadeh">لینکدین</a> 
+</h4>
