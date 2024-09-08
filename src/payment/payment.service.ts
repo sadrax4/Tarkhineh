@@ -53,7 +53,7 @@ export class PaymentService {
                 merchant: "zibal",
                 amount: amountToIRT,
                 description,
-                callbackUrl: this.configService.get<string>("PRODUCTION_PAYMENT_CALLBACK_URL"),
+                callbackUrl: this.configService.get<string>("PROD_PAYMENT_CALLBACK_URL"),
             }
             const requestResult = await axios.post(
                 this.configService.get<string>("ZIABL_REQUEST_URL"),
